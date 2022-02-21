@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MailApp</string>
+    <string name="UsernameTxt">Enter your Username</string>
+    <string name="LoginBtn">Log In</string>
+    <string name="SignUpBtn">Sign Up</string>
+    <string name="PasswordTxt">Enter Your Password</string>
 </resources>
