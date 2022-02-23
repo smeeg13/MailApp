@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <include layout="@layout/appbar"
-        android:layout_gravity ="top"
+    <include
+        android:id="@+id/myAppBar"
+        layout="@layout/appbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+        android:layout_gravity="top" />
 
     <!-- Bottom Menu -->
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -31,6 +33,20 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_home_24"
         app:backgroundTint="@color/darkBlue"
-        app:layout_anchor="@id/bottomAppBar" />
+        app:layout_anchor="@id/bottomAppBar"
+        tools:ignore="SpeakableTextPresentCheck"
+        android:contentDescription="TODO" />
+
+    <TextView
+        android:id="@+id/HomeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="60dp"
+        android:text="Dashboard"
+        android:textSize="24sp"
+        app:layout_anchor="@+id/myAppBar"
+        app:layout_anchorGravity="bottom|center" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

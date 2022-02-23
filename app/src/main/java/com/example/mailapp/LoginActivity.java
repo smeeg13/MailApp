@@ -22,28 +22,32 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mail =  findViewById(R.id.inputEmailLogin);
-        pwd = findViewById(R.id.inputPasswordLogin);
-        loginBtn = findViewById(R.id.LoginBtn);
-
+        }
+    public void SignUpLink(View view){
         SignUpbtn = findViewById(R.id.SignupLinkBtn);
-        SignUpbtn.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this,RegisterActivity.class)));
+    SignUpbtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        }
+    });
     }
 
     /** Called when the user taps the Login button */
     public void Login(View view) {
+        mail =  findViewById(R.id.inputEmailLogin);
+        pwd = findViewById(R.id.inputPasswordLogin);
+        loginBtn = findViewById(R.id.LoginBtn);
 
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
 
         if (stmail.equals("HES") && stpwd.equals("1234"))
         {
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString("uname",stmail);
-//            intent.putExtras(bundle);
-            Toast.makeText(getBaseContext(), "Connection Starting",Toast.LENGTH_SHORT).show();
-            startActivity(intent);
+//
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+           // Toast.makeText(getBaseContext(), "Connection Starting",Toast.LENGTH_SHORT).show();
+
         }
         else if (stmail.equals("") )
         {

@@ -53,27 +53,27 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
         String stConfpwd = inputConfirmPwd.getText().toString();
 
-        //Check if all entries has been completed
-        if (CheckIfEmpty())
-        {
-            Toast.makeText(getApplicationContext(), "Make Sure all Fields are completed",Toast.LENGTH_SHORT).show();
-        }
-        else if (!CheckEmailIsValid(stmail)) //Check if the email entered is a real email or if there's a mistake
+
+        if (!CheckEmailIsValid(stmail)) //Check if the email entered is a real email or if there's a mistake
         {
             showError(inputEmail,"Email is not Valid");
             Toast.makeText(getApplicationContext(), "The Email entered is not valid", Toast.LENGTH_SHORT).show();
         }
-        else if (!CheckStrongPassword(stpwd)) //Check if the password entered is strong enough (true = strong)
+        if (!CheckStrongPassword(stpwd)) //Check if the password entered is strong enough (true = strong)
         {
             showError(inputPassword,"Password is Too Weak");
             Toast.makeText(getApplicationContext(), "Your Password is Too Weak, please change it", Toast.LENGTH_SHORT).show();
         }
-        else if (!stpwd.equals(stConfpwd)) //Check if the confirm password is the same as the password
+        if (!stpwd.equals(stConfpwd)) //Check if the confirm password is the same as the password
         {
             showError(inputConfirmPwd,"Password are not the Same");
             Toast.makeText(getApplicationContext(), "The two passwords fields should be the same", Toast.LENGTH_SHORT).show();
         }
-        else {
+        //Check if all entries has been completed
+        if (CheckIfEmpty())
+        {
+            Toast.makeText(getApplicationContext(), "Make Sure all Fields are completed",Toast.LENGTH_SHORT).show();
+        }else {
             Toast.makeText(getApplicationContext(), "Creation of the account In Progress", Toast.LENGTH_LONG).show();
 
 //            //Now every field should be correct so the account will be created
@@ -82,9 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     /** To Check if all the fields have been completed */
     public boolean CheckIfEmpty() {
         boolean anyisempty = true;
@@ -92,35 +89,41 @@ public class RegisterActivity extends AppCompatActivity {
         if (inputFullName.getText().toString().equals("")){
             showError(inputFullName, "Can not be empty");
             return true;
-        }else if (inputEmail.getText().toString().equals(""))
+        }
+        if (inputEmail.getText().toString().equals(""))
         {
             showError(inputEmail, "Can not be empty");
             return true;
-        } else if (inputPhone.getText().toString().equals(""))
+        }
+        if (inputPhone.getText().toString().equals(""))
         {
             showError(inputPhone, "Can not be empty");
             return true;
-        } else if (inputAddress.getText().toString().equals(""))
+        }
+        if (inputAddress.getText().toString().equals(""))
         {
             showError(inputAddress, "Can not be empty");
             return true;
         }
-        else if (inputZIP.getText().toString().equals(""))
+
+        if (inputZIP.getText().toString().equals(""))
         {
             showError(inputZIP, "Can not be empty");
             return true;
         }
-        else if (inputLocation.getText().toString().equals(""))
+
+        if (inputLocation.getText().toString().equals(""))
         {
             showError(inputLocation, "Can not be empty");
             return true;
         }
-        else if (inputPassword.getText().toString().equals(""))
+
+        if (inputPassword.getText().toString().equals(""))
         {
             showError(inputPassword, "Can not be empty");
             return true;
         }
-        else if (inputConfirmPwd.getText().toString().equals("")) {
+        if (inputConfirmPwd.getText().toString().equals("")) {
             showError(inputConfirmPwd, "Can not be empty");
             return true;
         }

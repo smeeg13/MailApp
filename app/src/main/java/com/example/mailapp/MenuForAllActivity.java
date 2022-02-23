@@ -31,8 +31,15 @@ public class MenuForAllActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.settings:
-                Toast.makeText(this,"Settings will open",Toast.LENGTH_SHORT).show();
-                break;
+//                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+////                    @Override
+////                    public boolean onMenuItemClick(MenuItem menuItem) {
+////                        startActivity(new Intent(getApplicationContext(),SettingActivity.class));
+////                        return false;
+////                    }
+////                });
+//                Toast.makeText(this,"Settings will open",Toast.LENGTH_SHORT).show();
+//                break;
         }
         return true;
     }
