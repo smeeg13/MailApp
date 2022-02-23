@@ -1,8 +1,20 @@
 <resources>
     <string name="app_name">MailApp</string>
-    <string name="UsernameTxt">Username</string>
-    <string name="PasswordTxt">Password</string>
+    <string name="UsernameTxt">Firstname.Lastname</string>
+    <string name="PasswordTxt">Your password</string>
     <string name="LoginBtn">Login</string>
     <string name="SignUpBtn">Sign Up</string>
     <string name="WelcomeTxt">Welcome</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="EmailTxt">Your email</string>
+    <string name="PhoneTxt">Your phone</string>
+    <string name="AddressTxt">Your address</string>
+    <string name="ConfirmPasswordTxt">Confirm your password</string>
+    <string name="CreateAccountBtn">Create Account</string>
+    <string name="title_activity_home_screen_two">HomeScreen_Two</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
 </resources>
