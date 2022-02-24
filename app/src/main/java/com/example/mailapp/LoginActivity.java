@@ -22,16 +22,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        }
-    public void SignUpLink(View view){
+
         SignUpbtn = findViewById(R.id.SignupLinkBtn);
-    SignUpbtn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
+
         }
-    });
-    }
+
 
     /** Called when the user taps the Login button */
     public void Login(View view) {
@@ -44,25 +40,20 @@ public class LoginActivity extends AppCompatActivity {
 
         if (stmail.equals("HES") && stpwd.equals("1234"))
         {
-//
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-           // Toast.makeText(getBaseContext(), "Connection Starting",Toast.LENGTH_SHORT).show();
-
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
-        else if (stmail.equals("") )
-        {
-            showError(mail, "Cannot be empty");
-            Toast.makeText(getBaseContext(), "Enter Both Email And Password",Toast.LENGTH_SHORT).show();
-            if ( stpwd.equals(""))
+        else{
+            if (stmail.equals("") || stpwd.equals(""))
             {
+                showError(mail, "Cannot be empty");
                 showError(pwd, "Cannot be empty");
-                Toast.makeText(getApplicationContext(), "Enter Both Email And Password",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Enter Both Email And Password",Toast.LENGTH_SHORT).show();
             }
-        }
-        else {
-            showError(mail, "Wrong informations");
-            showError(pwd, "Wrong informations");
-            Toast.makeText(getBaseContext(), "Wrong Email or Password entered", Toast.LENGTH_SHORT).show();
+            else {
+                showError(mail, "Wrong informations");
+                showError(pwd, "Wrong informations");
+                Toast.makeText(getBaseContext(), "Wrong Email or Password entered", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

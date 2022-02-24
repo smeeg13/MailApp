@@ -1,55 +1,68 @@
 package com.example.mailapp;
 
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-public class HomeActivity extends MenuForAllActivity {
+import com.example.mailapp.databinding.ActivityHomeBinding;
+
+public class HomeActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private BottomAppBar bottomAppBar;
-    private FloatingActionButton homeBtn;
+    ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
-        toolbar = findViewById(R.id.myAppBar);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        toolbar =findViewById(R.id.myToolBar);
         setSupportActionBar(toolbar);
 
-        homeBtn =findViewById(R.id.HomeIcon);
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-                startActivity(intent);
+        remplaceFragment(new HomeFragment());
+        binding.topNavBar.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.settings:
+                    remplaceFragment(new SettingsFragment());
+                    break;
+                case R.id.Logout:
+                    remplaceFragment(new LogoutFragment());
+                    break;
             }
+            return true;
         });
 
-        bottomAppBar = findViewById(R.id.bottomAppBar);
-        bottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.profile)
-                {
-                    Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                }
-                if (item.getItemId() == R.id.map)
-                {
-                   // Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-                   // startActivity(intent);
-                }
-                return false;
+        binding.bottomNavBar.setSelectedItemId(R.id.Home);
 
+        binding.bottomNavBar.setOnItemSelectedListener(item2 -> {
+
+            switch (item2.getItemId()){
+                case R.id.AddNewMail:
+                    remplaceFragment(new AddNewFragment());
+                    break;
+                case R.id.Home:
+                    remplaceFragment(new HomeFragment());
+                    break;
+                case R.id.Map:
+                    remplaceFragment(new MapFragment());
+                    break;
+                case R.id.MyAccount:
+                    remplaceFragment(new MyAccountFragment());
+                    break;
             }
+            return true;
         });
+    }
+
+    private void remplaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
     }
 }

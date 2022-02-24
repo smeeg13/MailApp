@@ -27,31 +27,21 @@
             android:value="YOUR_API_KEY" />
 
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
+            android:theme="@style/Theme.MailAppNoBar"
+            tools:ignore="ExtraText"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".RegisterActivity"
-            android:exported="false"
-            android:parentActivityName=".LoginActivity">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
-        </activity>
-        <activity
-            android:name=".HomeActivity"
-            android:parentActivityName=".LoginActivity"
-            android:theme="@style/Theme.BasicPages"
+            android:theme="@style/Theme.MailAppNoBar"
             tools:ignore="ExtraText">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -59,9 +49,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" />
         </activity>
+
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:name=".HomeActivity"
+            android:parentActivityName=".LoginActivity"
+            android:exported="false">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
     </application>
 
 </manifest>
