@@ -7,17 +7,21 @@
     tools:context=".HomeActivity">
 
     <include
-        layout ="@layout/appbar"/>
+        layout ="@layout/appbar"
+        />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/topNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue"
+        app:itemIconTint="@color/white"
+        app:itemRippleColor="@color/white"
         app:itemTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/first_menu"/>
+        app:menu="@menu/first_menu" />
 
     <FrameLayout
         android:id="@+id/frameLayout"

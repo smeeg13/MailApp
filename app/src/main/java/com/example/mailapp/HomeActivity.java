@@ -1,5 +1,6 @@
 package com.example.mailapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,29 +13,43 @@ import com.example.mailapp.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-    ActivityHomeBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        createMenus();
+    }
+
+    private void remplaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void createMenus(){
+        Toolbar toolbar = null;
+        ActivityHomeBinding binding = null;
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
         toolbar =findViewById(R.id.myToolBar);
         setSupportActionBar(toolbar);
 
         remplaceFragment(new HomeFragment());
+
         binding.topNavBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.settings:
                     remplaceFragment(new SettingsFragment());
                     break;
                 case R.id.Logout:
-                    remplaceFragment(new LogoutFragment());
+                    startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                     break;
             }
             return true;
         });
+        binding.topNavBar.setSelected(false);
 
         binding.bottomNavBar.setSelectedItemId(R.id.Home);
 
@@ -56,13 +71,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             return true;
         });
-    }
+        setContentView(binding.getRoot());
 
-    private void remplaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.frameLayout, fragment);
-        fragmentTransaction.commit();
     }
 }
