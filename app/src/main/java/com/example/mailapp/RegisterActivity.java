@@ -1,6 +1,7 @@
 package com.example.mailapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +11,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mailapp.DataBase.PostWorkerDatabase;
+import com.example.mailapp.DataBase.Dao.PostWorkerDao;
+import com.example.mailapp.DataBase.Tables.PostWorker;
+
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText inputFullName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
+    EditText inputfirstname,inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     TextView btnLogin;
     Button btnRegister;
-
 
 
     @Override
@@ -25,7 +29,9 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Take back all the values entered by the new user
-        inputFullName = findViewById(R.id.InputFullname);
+
+        inputfirstname = findViewById(R.id.inputfirstname);
+        inputLastName = findViewById(R.id.InputFullname);
         inputEmail = findViewById(R.id.InputEmail);
         inputPhone =  findViewById(R.id.InputPhone);
         inputAddress =  findViewById(R.id.InputAddress);
@@ -38,13 +44,14 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.LoginLinkBtn);
 
         //Creation of the link back to Login Page
-        btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this,LoginActivity.class)));
+       // btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this,LoginActivity.class)));
     }
 
     /** Called when the user taps the Login button */
     public void Register(View view) {
         //Transform fields from the user in string And add them to an Arraylist
-        String stname = inputFullName.getText().toString();
+        String stlastname = inputLastName.getText().toString();
+        String stfirstname = inputfirstname.getText().toString();
         String stmail = inputEmail.getText().toString();
         String stphone = inputPhone.getText().toString();
         String staddress = inputAddress.getText().toString();
@@ -53,6 +60,23 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
         String stConfpwd = inputConfirmPwd.getText().toString();
 
+        //postWorker = new PostWorker();
+
+        //postWorker.iD_PostWorker = cpt;
+        //postWorker.firstname = stfirstname;
+        //postWorker.lastName = stlastname;
+        //postWorker.address = staddress;
+        //postWorker.login = stmail ;
+        //postWorker.password = stpwd;
+        //postWorker.phone= stphone;
+        //postWorker.region = stloca;
+        //postWorker.zip  = stzip;
+        //add that user to the database
+        //database.postWorkerDao().insertAll(postWorker);
+
+        //TODO input checkers are temporarily disabled
+
+        startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
 
         if (!CheckEmailIsValid(stmail)) //Check if the email entered is a real email or if there's a mistake
         {
@@ -86,8 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean CheckIfEmpty() {
         boolean anyisempty = true;
 
-        if (inputFullName.getText().toString().equals("")){
-            showError(inputFullName, "Can not be empty");
+        if (inputfirstname.getText().toString().equals("")){
+            showError(inputfirstname, "Can not be empty");
             return true;
         }
         if (inputEmail.getText().toString().equals(""))

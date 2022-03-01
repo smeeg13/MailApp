@@ -27,7 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
 
         }
-
+        public void GoToRegister(View view){
+            System.out.println("TEST");
+            startActivity(new Intent(this, RegisterActivity.class));
+        }
 
     /** Called when the user taps the Login button */
     public void Login(View view) {
