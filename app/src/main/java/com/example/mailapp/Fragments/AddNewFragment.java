@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Switch;
 
 import com.example.mailapp.R;
 
@@ -16,6 +19,11 @@ import com.example.mailapp.R;
  * create an instance of this fragment.
  */
 public class AddNewFragment extends Fragment {
+
+    private Switch assignedTo;
+        private EditText mailFrom, mailTo, weight, dueDate, address;
+        private RadioButton letter, packages, aMail,bMail,rMail;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +70,26 @@ public class AddNewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_new, container, false);
+    }
+
+    private void addMail(){
+
+//        private Switch assignedTo;
+//        private EditText mailFrom, mailTo, weight, dueDate, address;
+//        private RadioButton letter, packages, aMail,bMail,rMail;
+
+//        assignedTo = findViewById(R.id.AssignedToNew);
+//        mailFrom = findViewById(R.id.MailFromInputNew);
+//        mailTo = findViewById(R.id.MailToInputNew);
+//        weight = findViewById(R.id.WeightNew);
+//        dueDate = findViewById(R.id.DateNew);
+//        address = findViewById(R.id.AddressNew);
+//        letter = findViewById(R.id.LetterTypeNew);
+//        packages = findViewById(R.id.PackageTypeNew);
+//        aMail = findViewById(R.id.ATypeNew);
+//        bMail = findViewById(R.id.BTypeNew);
+//        rMail = findViewById(R.id.RTypeNew);
+
+
     }
 }

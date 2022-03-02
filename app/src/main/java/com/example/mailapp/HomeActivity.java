@@ -9,9 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.PostWorkerDatabase;
-import com.example.mailapp.DataBase.Tables.PostWorker;
 import com.example.mailapp.Fragments.AddNewFragment;
 import com.example.mailapp.Fragments.HomeFragment;
 import com.example.mailapp.Fragments.MapFragment;

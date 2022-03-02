@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     public void Login(View view) {
         mail = findViewById(R.id.inputEmailLogin);
         pwd = findViewById(R.id.inputPasswordLogin);
-        loginBtn = findViewById(R.id.LoginBtn);
+        loginBtn = findViewById(R.id.AddMailBtn);
 
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
