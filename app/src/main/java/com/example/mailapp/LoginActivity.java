@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Page For the Login
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private EditText mail, pwd;
@@ -22,37 +25,33 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         SignUpbtn = findViewById(R.id.SignupLinkBtn);
+
+        //Creating a link to the register page if client don't have an account
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
+    }
 
-        }
-        public void GoToRegister(View view){
-            System.out.println("TEST");
-            startActivity(new Intent(this, RegisterActivity.class));
-        }
-
-    /** Called when the user taps the Login button */
+    /**
+     * Called when the user taps the Login button
+     */
     public void Login(View view) {
-        mail =  findViewById(R.id.inputEmailLogin);
+        mail = findViewById(R.id.inputEmailLogin);
         pwd = findViewById(R.id.inputPasswordLogin);
         loginBtn = findViewById(R.id.LoginBtn);
 
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
 
-        if (stmail.equals("HES") && stpwd.equals("1234"))
-        {
+        // TODO Check on the Database if infos are rights
+
+        if (stmail.equals("HES") && stpwd.equals("1234")) {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-        }
-        else{
-            if (stmail.equals("") || stpwd.equals(""))
-            {
+        } else {
+            if (stmail.equals("") || stpwd.equals("")) {
                 showError(mail, "Cannot be empty");
                 showError(pwd, "Cannot be empty");
-                Toast.makeText(getBaseContext(), "Enter Both Email And Password",Toast.LENGTH_SHORT).show();
-            }
-            else {
+                Toast.makeText(getBaseContext(), "Enter Both Email And Password", Toast.LENGTH_SHORT).show();
+            } else {
                 showError(mail, "Wrong informations");
                 showError(pwd, "Wrong informations");
                 Toast.makeText(getBaseContext(), "Wrong Email or Password entered", Toast.LENGTH_SHORT).show();
@@ -60,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void showError(EditText input, String s){
+    private void showError(EditText input, String s) {
         input.setError(s);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.mailapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,17 +10,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mailapp.DataBase.PostWorkerDatabase;
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.Tables.PostWorker;
-
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+/**
+ * Page to create an account
+ */
 public class RegisterActivity extends AppCompatActivity {
-    EditText inputfirstname,inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
-    TextView btnLogin;
-    Button btnRegister;
 
+    private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
+    private ArrayList<EditText> inputs = new ArrayList<>();
+    private TextView btnLogin;
+    private Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,27 +29,37 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Take back all the values entered by the new user
-
         inputfirstname = findViewById(R.id.inputfirstname);
+        inputs.add(inputfirstname);
         inputLastName = findViewById(R.id.InputFullname);
+        inputs.add(inputLastName);
         inputEmail = findViewById(R.id.InputEmail);
-        inputPhone =  findViewById(R.id.InputPhone);
-        inputAddress =  findViewById(R.id.InputAddress);
-        inputZIP =  findViewById(R.id.InputZip);
-        inputLocation =  findViewById(R.id.InputLocation);
-        inputPassword =  findViewById(R.id.InputPassword);
-        inputConfirmPwd =  findViewById(R.id.InputConfirmPassword);
+        inputs.add(inputEmail);
+        inputPhone = findViewById(R.id.InputPhone);
+        inputs.add(inputPhone);
+        inputAddress = findViewById(R.id.InputAddress);
+        inputs.add(inputAddress);
+        inputZIP = findViewById(R.id.InputZip);
+        inputs.add(inputZIP);
+        inputLocation = findViewById(R.id.InputLocation);
+        inputs.add(inputLocation);
+        inputPassword = findViewById(R.id.InputPassword);
+        inputs.add(inputPassword);
+        inputConfirmPwd = findViewById(R.id.InputConfirmPassword);
+        inputs.add(inputConfirmPwd);
 
         btnRegister = findViewById(R.id.RegisterBtn);
         btnLogin = findViewById(R.id.LoginLinkBtn);
 
         //Creation of the link back to Login Page
-       // btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this,LoginActivity.class)));
+        btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
 
-    /** Called when the user taps the Login button */
+    /**
+     * Called when the user taps on the Create Account button
+     */
     public void Register(View view) {
-        //Transform fields from the user in string And add them to an Arraylist
+        //Transform fields from the user in string
         String stlastname = inputLastName.getText().toString();
         String stfirstname = inputfirstname.getText().toString();
         String stmail = inputEmail.getText().toString();
@@ -60,153 +70,151 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
         String stConfpwd = inputConfirmPwd.getText().toString();
 
-        //postWorker = new PostWorker();
-
-        //postWorker.iD_PostWorker = cpt;
-        //postWorker.firstname = stfirstname;
-        //postWorker.lastName = stlastname;
-        //postWorker.address = staddress;
-        //postWorker.login = stmail ;
-        //postWorker.password = stpwd;
-        //postWorker.phone= stphone;
-        //postWorker.region = stloca;
-        //postWorker.zip  = stzip;
-        //add that user to the database
-        //database.postWorkerDao().insertAll(postWorker);
-
-        //TODO input checkers are temporarily disabled
-
-        startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
-
-        if (!CheckEmailIsValid(stmail)) //Check if the email entered is a real email or if there's a mistake
+        if (!InputsAreGood())
+            Toast.makeText(getApplicationContext(), "Make Sure all Fields are Valid",Toast.LENGTH_SHORT).show();
+        else
         {
-            showError(inputEmail,"Email is not Valid");
-            Toast.makeText(getApplicationContext(), "The Email entered is not valid", Toast.LENGTH_SHORT).show();
-        }
-        if (!CheckStrongPassword(stpwd)) //Check if the password entered is strong enough (true = strong)
-        {
-            showError(inputPassword,"Password is Too Weak");
-            Toast.makeText(getApplicationContext(), "Your Password is Too Weak, please change it", Toast.LENGTH_SHORT).show();
-        }
-        if (!stpwd.equals(stConfpwd)) //Check if the confirm password is the same as the password
-        {
-            showError(inputConfirmPwd,"Password are not the Same");
-            Toast.makeText(getApplicationContext(), "The two passwords fields should be the same", Toast.LENGTH_SHORT).show();
-        }
-        //Check if all entries has been completed
-        if (CheckIfEmpty())
-        {
-            Toast.makeText(getApplicationContext(), "Make Sure all Fields are completed",Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getApplicationContext(), "Creation of the account In Progress", Toast.LENGTH_LONG).show();
+            //TODO Save Data in The Database
+                //postWorker = new PostWorker();
 
-//            //Now every field should be correct so the account will be created
-//            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-//            startActivity(intent);
+                //postWorker.iD_PostWorker = cpt;
+                //postWorker.firstname = stfirstname;
+                //postWorker.lastName = stlastname;
+                //postWorker.address = staddress;
+                //postWorker.login = stmail ;
+                //postWorker.password = stpwd;
+                //postWorker.phone= stphone;
+                //postWorker.region = stloca;
+                //postWorker.zip  = stzip;
+                //add that user to the database
+                //database.postWorkerDao().insertAll(postWorker);
+
+            //Launching the login page after saving data in the Database
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+            //To "notify" the customer his account has been created
+            Toast.makeText(getApplicationContext(), "Account Created",Toast.LENGTH_LONG).show();
         }
     }
 
-    /** To Check if all the fields have been completed */
-    public boolean CheckIfEmpty() {
-        boolean anyisempty = true;
+    /**
+     * To know if all the fields are checked and Valid
+     * Return true if all is ok
+     */
+    public boolean InputsAreGood() {
+        int IsOk = 0;
 
-        if (inputfirstname.getText().toString().equals("")){
-            showError(inputfirstname, "Can not be empty");
-            return true;
-        }
-        if (inputEmail.getText().toString().equals(""))
-        {
-            showError(inputEmail, "Can not be empty");
-            return true;
-        }
-        if (inputPhone.getText().toString().equals(""))
-        {
-            showError(inputPhone, "Can not be empty");
-            return true;
-        }
-        if (inputAddress.getText().toString().equals(""))
-        {
-            showError(inputAddress, "Can not be empty");
-            return true;
+        boolean[] booleans = new boolean[4];
+
+        //Check if all entries has been completed
+        booleans[0] = CheckEmpty();
+        booleans[1] = CheckEmailInvalid(inputEmail.getText().toString());
+        booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
+        booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPwd.getText().toString());
+
+        for (boolean b : booleans){
+            if (b){
+                IsOk++;
+            }
         }
 
-        if (inputZIP.getText().toString().equals(""))
-        {
-            showError(inputZIP, "Can not be empty");
-            return true;
-        }
+        return IsOk <= 0;
+    }
 
-        if (inputLocation.getText().toString().equals(""))
-        {
-            showError(inputLocation, "Can not be empty");
-            return true;
-        }
+    /**
+     * To Check if all the fields have been completed
+     * Return true if the 1 input is Empty
+     */
+    public boolean CheckEmpty() {
+        int IsEmpty = 0;
 
-        if (inputPassword.getText().toString().equals(""))
-        {
-            showError(inputPassword, "Can not be empty");
-            return true;
+        //For each check if empty
+        for (EditText in : inputs) {
+            if (in.getText().toString().isEmpty()) {
+                showError(in, "Can not be empty");
+                //If empty add 1 to IsEmpty
+                IsEmpty++;
+            }
         }
-        if (inputConfirmPwd.getText().toString().equals("")) {
-            showError(inputConfirmPwd, "Can not be empty");
+        return IsEmpty > 0;
+    }
+
+    /**
+     * To Check if the Confirm password entered is the same as the Password
+     * Return true if the two Pwd are not the same
+     */
+    public boolean CheckSamePwd(String pwd, String ConfPwd){
+
+        if (!inputPassword.getText().toString().equals(inputConfirmPwd.getText().toString())){
+            showError(inputConfirmPwd, "Password are not the Same");
             return true;
         }
         else
             return false;
     }
 
-    /** To Check if the password entered is strong or not */
-    public boolean CheckStrongPassword(String password){
-        boolean isStrong = false;
-        int passwordLength=8, upChars=0, lowChars=0;
-        int special=0, digits=0;
+
+    /**
+     * To Check if the password entered is strong or not
+     * Return true if the Pwd is Weak
+     */
+    public boolean CheckPasswordWeak(String password) {
+        boolean isWeak = true;
+        int passwordLength = 8, upChars = 0, lowChars = 0;
+        int special = 0, digits = 0;
         char ch;
 
         int totalChar = password.length();
-        if(totalChar<passwordLength)
-        {
+        if (totalChar < passwordLength) {
             System.out.println("\nThe Password is invalid !");
-            return false;
-        }
-        else
-        {
-            for(int i=0; i<totalChar; i++)
-            {
+            return true;
+        } else {
+            for (int i = 0; i < totalChar; i++) {
                 ch = password.charAt(i);
-                if(Character.isUpperCase(ch))
+                if (Character.isUpperCase(ch))
                     upChars = 1;
-                else if(Character.isLowerCase(ch))
+                else if (Character.isLowerCase(ch))
                     lowChars = 1;
-                else if(Character.isDigit(ch))
+                else if (Character.isDigit(ch))
                     digits = 1;
                 else
                     special = 1;
             }
         }
-        if(upChars==1 && lowChars==1 && digits==1 && special==1) {
+        if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
             System.out.println("\nThe Password is Strong.");
-            isStrong = true;
-        }
-        else
+            isWeak = false;
+        } else
             System.out.println("\nThe Password is Weak.");
 
-        return isStrong;
+        return isWeak;
     }
 
-    /** To Check if the email entered is a Valid */
-    public boolean CheckEmailIsValid(String email)
-    {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+    /**
+     * To Check if the email entered is Valid
+     * Return true if the Email is Invalid
+     */
+    public boolean CheckEmailInvalid(String myemail) {
+        String email = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
 
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
+        Pattern pat = Pattern.compile(email);
+        if (myemail == null)
+            return true;
+
+        if (!pat.matcher(myemail).matches()) {
+            showError(inputEmail, "Email is not Valid");
+            return true;
+        } else
             return false;
-        return pat.matcher(email).matches();
     }
-    private void showError(EditText input, String s){
+
+    /**
+     * To Add the Red Info with a message in the field
+     */
+    private void showError(EditText input, String s) {
         input.setError(s);
     }
 }
