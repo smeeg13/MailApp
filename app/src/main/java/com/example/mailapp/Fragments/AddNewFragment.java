@@ -7,9 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.Switch;
 
 import com.example.mailapp.R;
 
@@ -19,11 +16,6 @@ import com.example.mailapp.R;
  * create an instance of this fragment.
  */
 public class AddNewFragment extends Fragment {
-
-    private Switch assignedTo;
-        private EditText mailFrom, mailTo, weight, dueDate, address;
-        private RadioButton letter, packages, aMail,bMail,rMail;
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

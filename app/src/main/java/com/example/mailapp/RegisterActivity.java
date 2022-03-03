@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mailapp.DataBase.Dao.PostWorkerDao;
+import com.example.mailapp.DataBase.MyDatabase;
+import com.example.mailapp.DataBase.Tables.PostWorker;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -22,11 +26,16 @@ public class RegisterActivity extends AppCompatActivity {
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
 
+    private PostWorker postWorker;
+    private PostWorkerDao postWorkerDao;
+    private MyDatabase myDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        //Data base conneciton
+        myDatabase = MyDatabase.getInstance(this.getBaseContext());
         //Take back all the values entered by the new user
         inputfirstname = findViewById(R.id.RegisterFirstnameEditText);
         inputs.add(inputfirstname);
@@ -67,31 +76,30 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
         String stConfpwd = inputConfirmPwd.getText().toString();
 
-        if (!InputsAreGood())
-            Toast.makeText(getApplicationContext(), "Make Sure all Fields are Valid",Toast.LENGTH_SHORT).show();
-        else
-        {
+       if (!InputsAreGood())
+            Toast.makeText(getApplicationContext(), "Make Sure all Fields are Valid", Toast.LENGTH_SHORT).show();
+        else {
             //TODO Save Data in The Database
-                //postWorker = new PostWorker();
+            postWorker = new PostWorker();
 
-                //postWorker.iD_PostWorker = cpt;
-                //postWorker.firstname = stfirstname;
-                //postWorker.lastName = stlastname;
-                //postWorker.address = staddress;
-                //postWorker.login = stmail ;
-                //postWorker.password = stpwd;
-                //postWorker.phone= stphone;
-                //postWorker.region = stloca;
-                //postWorker.zip  = stzip;
-                //add that user to the database
-                //database.postWorkerDao().insertAll(postWorker);
-
+            // postWorker.iD_PostWorker is automatic implemented
+            postWorker.setFirstname(stfirstname);
+            postWorker.setLastName(stlastname);
+            postWorker.setAddress(staddress);
+            postWorker.setLogin(stmail);
+            postWorker.setPassword(stpwd);
+            postWorker.setPhone(stphone);
+            postWorker.setRegion(stloca);
+            postWorker.setZip(stzip);
+            //add that user to the database
+            myDatabase.postWorkerDao().addPostWorker(postWorker);
+            System.out.println("POST WORKER ADDED");
             //Launching the login page after saving data in the Database
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
             //To "notify" the customer his account has been created
-            Toast.makeText(getApplicationContext(), "Account Created",Toast.LENGTH_LONG).show();
-        }
+            Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_LONG).show();
+      }
     }
 
     /**
@@ -109,8 +117,8 @@ public class RegisterActivity extends AppCompatActivity {
         booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
         booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPwd.getText().toString());
 
-        for (boolean b : booleans){
-            if (b){
+        for (boolean b : booleans) {
+            if (b) {
                 IsOk++;
             }
         }
@@ -139,13 +147,12 @@ public class RegisterActivity extends AppCompatActivity {
      * To Check if the Confirm password entered is the same as the Password
      * Return true if the two Pwd are not the same
      */
-    public boolean CheckSamePwd(String pwd, String ConfPwd){
+    public boolean CheckSamePwd(String pwd, String ConfPwd) {
 
-        if (!inputPassword.getText().toString().equals(inputConfirmPwd.getText().toString())){
+        if (!inputPassword.getText().toString().equals(inputConfirmPwd.getText().toString())) {
             showError(inputConfirmPwd, "Password are not the Same");
             return true;
-        }
-        else
+        } else
             return false;
     }
 

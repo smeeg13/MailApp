@@ -16,6 +16,7 @@ import com.example.mailapp.Fragments.MyAccountFragment;
 import com.example.mailapp.Fragments.SettingsFragment;
 import com.example.mailapp.databinding.ActivityHomeBinding;
 
+
 public class HomeActivity extends AppCompatActivity {
 
 

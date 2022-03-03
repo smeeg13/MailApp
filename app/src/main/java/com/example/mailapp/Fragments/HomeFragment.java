@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.PostWorkerDatabase;
+import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.PostWorker;
 import com.example.mailapp.R;
 
@@ -23,7 +23,7 @@ public class HomeFragment extends Fragment {
     TextView textView;
     PostWorker postWorker;
     PostWorkerDao postWorkerDao;
-    PostWorkerDatabase postWorkerDatabase;
+    MyDatabase myDatabase;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
+
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -64,7 +65,7 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        postWorkerDatabase = PostWorkerDatabase.getInstance(this.getContext());
+        myDatabase = MyDatabase.getInstance(this.getContext());
 
     }
 

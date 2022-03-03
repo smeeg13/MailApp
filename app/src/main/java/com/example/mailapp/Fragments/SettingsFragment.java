@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mailapp.DataBase.Dao.PostWorkerDao;
+import com.example.mailapp.DataBase.MyDatabase;
+import com.example.mailapp.DataBase.Tables.PostWorker;
 import com.example.mailapp.R;
 
 /**
@@ -16,6 +19,10 @@ import com.example.mailapp.R;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
+
+    PostWorker postWorker;
+    PostWorkerDao postWorkerDao;
+    MyDatabase myDatabase;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,6 +62,7 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override

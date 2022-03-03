@@ -28,6 +28,9 @@ public interface PostWorkerDao {
             "lastname LIKE :last LIMIT 1")
     PostWorker findByName(String first, String last);
 
+    @Query("DELETE FROM PostWorker")
+    void deleteAll();
+
     @Insert
     void insertAll(PostWorker... postWorkers);
 
