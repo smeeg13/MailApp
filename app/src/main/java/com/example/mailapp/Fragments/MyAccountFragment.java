@@ -115,15 +115,6 @@ public class MyAccountFragment extends Fragment {
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
-        // for (int i = 0; i <10 ; i++) {
-        //    postWorker = new PostWorker();
-        //     postWorker.login = "abdulla";
-        //     postWorker.password = "wow";
-        //     myDatabase.postWorkerDao().addPostWorker(postWorker);
-        // }
-
-        //inputTitle = (TextView) v.findViewById(R.id.AccountFirstnameLastnameTitle);
-       // inputTitle.setText(postWorker.firstname);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
         inputEmail = v.findViewById(R.id.AccountEmailTextView);
         inputPhone = v.findViewById(R.id.AccountPhoneTextView);

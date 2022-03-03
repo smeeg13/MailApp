@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Creation of the link back to Login Page
         btnLogin = findViewById(R.id.RegisterLoginBtn);
+        // ONCLICK LOGIN BUTTON
         btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
 
@@ -74,7 +75,6 @@ public class RegisterActivity extends AppCompatActivity {
         String stzip = inputZIP.getText().toString();
         String stloca = inputLocation.getText().toString();
         String stpwd = inputPassword.getText().toString();
-        String stConfpwd = inputConfirmPwd.getText().toString();
 
        if (!InputsAreGood())
             Toast.makeText(getApplicationContext(), "Make Sure all Fields are Valid", Toast.LENGTH_SHORT).show();
