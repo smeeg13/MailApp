@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">MailApp</string>
+
+    <!-- Input-->
+
+    <!-- Button-->
+
+
     <string name="FirstnameTxt">Firstname</string>
     <string name="LastnameTxt">Lastname</string>
     <string name="PasswordTxt">Your password</string>
@@ -28,14 +34,12 @@
     <string name="create_my_account">Create my Account</string>
     <string name="already_have_an_account">Already Have an Account ?</string>
     <string name="login">Login</string>
-    <string name="sierre">Sierre</string>
-    <string name="_3960">3960</string>
     <string name="register">Register</string>
     <string name="assigned_to_me">Assigned To Me ?</string>
     <string name="no">NO</string>
     <string name="yes">YES</string>
     <string name="add_mail">Add Mail</string>
-    <string name="mailfrom">Mail From</string>
+    <string name="mail_from">Mail From</string>
     <string name="mail_to">Mail To</string>
     <string name="mail_type">Mail Type</string>
     <string name="shipping_type">Shipping Type</string>
@@ -44,7 +48,7 @@
     <string name="name">Name</string>
     <string name="a_mail">A-Mail</string>
     <string name="b_mail">B-Mail</string>
-    <string name="weight">weight</string>
+    <string name="weight">Weight</string>
     <string name="letter">Letter</string>
     <string name="recommended">Recommended</string>
     <string name="address">Address</string>

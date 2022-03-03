@@ -16,7 +16,6 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText mail, pwd;
-    private Button loginBtn;
     private TextView SignUpbtn;
 
 
@@ -25,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        SignUpbtn = findViewById(R.id.SignupLinkBtn);
+        SignUpbtn = findViewById(R.id.LoginSignupBtn);
 
         //Creating a link to the register page if client don't have an account
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
@@ -35,9 +34,8 @@ public class LoginActivity extends AppCompatActivity {
      * Called when the user taps the Login button
      */
     public void Login(View view) {
-        mail = findViewById(R.id.inputEmailLogin);
-        pwd = findViewById(R.id.inputPasswordLogin);
-        loginBtn = findViewById(R.id.AddMailBtn);
+        mail = findViewById(R.id.LoginEmailEditText);
+        pwd = findViewById(R.id.LoginPasswordEditText);
 
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();

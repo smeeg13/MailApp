@@ -77,18 +77,18 @@ public class AddNewFragment extends Fragment {
 //        private Switch assignedTo;
 //        private EditText mailFrom, mailTo, weight, dueDate, address;
 //        private RadioButton letter, packages, aMail,bMail,rMail;
-
-//        assignedTo = findViewById(R.id.AssignedToNew);
-//        mailFrom = findViewById(R.id.MailFromInputNew);
-//        mailTo = findViewById(R.id.MailToInputNew);
-//        weight = findViewById(R.id.WeightNew);
-//        dueDate = findViewById(R.id.DateNew);
-//        address = findViewById(R.id.AddressNew);
-//        letter = findViewById(R.id.LetterTypeNew);
-//        packages = findViewById(R.id.PackageTypeNew);
-//        aMail = findViewById(R.id.ATypeNew);
-//        bMail = findViewById(R.id.BTypeNew);
-//        rMail = findViewById(R.id.RTypeNew);
+//
+//        assignedTo = findViewById(R.id.AddAssignedToSwitch);
+//        mailFrom = findViewById(R.id.AddMailFromEditText);
+//        mailTo = findViewById(R.id.AddMailToEditText);
+//        weight = findViewById(R.id.AddWeightEditText);
+//        dueDate = findViewById(R.id.AddShipDateTextView);
+//        address = findViewById(R.id.AddAddressTextView);
+//        letter = findViewById(R.id.AddLetterRadioBtn);
+//        packages = findViewById(R.id.AddPackageRadioBtn);
+//        aMail = findViewById(R.id.AddAMailRadioBtn);
+//        bMail = findViewById(R.id.AddBMailRadioBtn);
+//        rMail = findViewById(R.id.AddRecomMailRadioBtn);
 
 
     }

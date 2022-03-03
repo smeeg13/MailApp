@@ -8,7 +8,7 @@
     android:background="@color/white">
 
     <Switch
-        android:id="@+id/AssignedToNew"
+        android:id="@+id/AddAssignedToSwitch"
         android:layout_width="177dp"
         android:layout_height="48dp"
         android:layout_gravity="start|top"
@@ -24,7 +24,7 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
-        android:id="@+id/IDNoNew"
+        android:id="@+id/AddIDTextView"
         android:layout_width="84dp"
         android:layout_height="22dp"
         android:layout_gravity="start"
@@ -35,11 +35,11 @@
         android:textSize="14sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/AssignedToNew"
+        app:layout_constraintStart_toEndOf="@+id/AddAssignedToSwitch"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/MailFromNew"
+        android:id="@+id/AddMailFromTextView"
         android:layout_width="211dp"
         android:layout_height="20dp"
         android:layout_marginTop="12dp"
@@ -49,38 +49,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AssignedToNew" />
+        app:layout_constraintTop_toBottomOf="@+id/AddAssignedToSwitch" />
 
     <TextView
-        android:id="@+id/MailToNew"
+        android:id="@+id/AddMailToTextView"
         android:layout_width="211dp"
         android:layout_height="20dp"
         android:layout_marginTop="12dp"
         android:text="@string/mail_to"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/MailFromInputNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddMailFromEditText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/MailFromInputNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailFromInputNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddMailFromEditText"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailFromEditText" />
 
     <EditText
-        android:id="@+id/MailFromInputNew"
+        android:id="@+id/AddMailFromEditText"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:ems="10"
         android:hint="@string/name"
         android:inputType="textPersonName"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/MailFromNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddMailFromTextView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/MailFromNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailFromNew"
+        app:layout_constraintStart_toStartOf="@+id/AddMailFromTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailFromTextView"
         tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/MailToInputNew"
+        android:id="@+id/AddMailToEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -88,74 +88,74 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/MailToNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddMailToTextView"
         app:layout_constraintHorizontal_bias="0.222"
-        app:layout_constraintStart_toStartOf="@+id/MailToNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailToNew"
+        app:layout_constraintStart_toStartOf="@+id/AddMailToTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailToTextView"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/DateInputNew"
+        android:id="@+id/AddShipDateEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="date"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/DateNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddShipDateTextView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/DateNew"
-        app:layout_constraintTop_toBottomOf="@+id/DateNew"
+        app:layout_constraintStart_toStartOf="@+id/AddShipDateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddShipDateTextView"
         tools:ignore="SpeakableTextPresentCheck"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/AddressInputNew"
+        android:id="@+id/AddAddressEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPostalAddress"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/AddressNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddAddressTextView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/AddressNew"
-        app:layout_constraintTop_toBottomOf="@+id/AddressNew"
+        app:layout_constraintStart_toStartOf="@+id/AddAddressTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddAddressTextView"
         tools:ignore="SpeakableTextPresentCheck"
         android:autofillHints="" />
 
     <TextView
-        android:id="@+id/DateNew"
+        android:id="@+id/AddShipDateTextView"
         android:layout_width="211dp"
         android:layout_height="20dp"
         android:layout_marginTop="12dp"
         android:text="@string/due_date_for_shipping"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/ShipTypeNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddShipTypeTextView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/ATypeNew"
-        app:layout_constraintTop_toBottomOf="@+id/BTypeNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/AddBMailRadioBtn" />
 
     <RadioButton
-        android:id="@+id/ATypeNew"
+        android:id="@+id/AddAMailRadioBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
         android:text="@string/a_mail"
-        app:layout_constraintStart_toStartOf="@+id/ShipTypeNew"
-        app:layout_constraintTop_toBottomOf="@+id/ShipTypeNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddShipTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddShipTypeTextView" />
 
     <RadioButton
-        android:id="@+id/BTypeNew"
+        android:id="@+id/AddBMailRadioBtn"
         android:layout_width="90dp"
         android:layout_height="48dp"
         android:text="@string/b_mail"
-        app:layout_constraintEnd_toStartOf="@+id/RTypeNew"
-        app:layout_constraintStart_toEndOf="@+id/ATypeNew"
-        app:layout_constraintTop_toBottomOf="@+id/ShipTypeNew" />
+        app:layout_constraintEnd_toStartOf="@+id/AddRecomMailRadioBtn"
+        app:layout_constraintStart_toEndOf="@+id/AddAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/AddShipTypeTextView" />
 
     <EditText
-        android:id="@+id/WeightNew"
+        android:id="@+id/AddWeightEditText"
         android:layout_width="88dp"
         android:layout_height="48dp"
         android:layout_marginEnd="48dp"
@@ -165,78 +165,78 @@
         android:textColorHint="#757575"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/MailTypeNew"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailTypeTextView"
         android:autofillHints="" />
 
     <RadioButton
-        android:id="@+id/LetterTypeNew"
+        android:id="@+id/AddLetterRadioBtn"
         android:layout_width="109dp"
         android:layout_height="48dp"
         android:text="@string/letter"
-        app:layout_constraintEnd_toStartOf="@+id/PackageTypeNew"
+        app:layout_constraintEnd_toStartOf="@+id/AddPackageRadioBtn"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/MailTypeNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailTypeNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddMailTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailTypeTextView" />
 
     <RadioButton
-        android:id="@+id/PackageTypeNew"
+        android:id="@+id/AddPackageRadioBtn"
         android:layout_width="109dp"
         android:layout_height="48dp"
         android:layout_marginEnd="4dp"
         android:text="@string/packages"
-        app:layout_constraintEnd_toStartOf="@+id/WeightNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailTypeNew" />
+        app:layout_constraintEnd_toStartOf="@+id/AddWeightEditText"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailTypeTextView" />
 
     <TextView
-        android:id="@+id/MailTypeNew"
+        android:id="@+id/AddMailTypeTextView"
         android:layout_width="211dp"
         android:layout_height="20dp"
         android:layout_marginTop="12dp"
         android:text="@string/mail_type"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/MailToInputNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddMailToEditText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/MailToInputNew"
-        app:layout_constraintTop_toBottomOf="@+id/MailToInputNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddMailToEditText"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailToEditText" />
 
     <RadioButton
-        android:id="@+id/RTypeNew"
+        android:id="@+id/AddRecomMailRadioBtn"
         android:layout_width="131dp"
         android:layout_height="48dp"
         android:layout_marginEnd="44dp"
         android:text="@string/recommended"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ShipTypeNew" />
+        app:layout_constraintTop_toBottomOf="@+id/AddShipTypeTextView" />
 
     <TextView
-        android:id="@+id/ShipTypeNew"
+        android:id="@+id/AddShipTypeTextView"
         android:layout_width="211dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:text="@string/shipping_type"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/MailTypeNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddMailTypeTextView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/MailTypeNew"
-        app:layout_constraintTop_toBottomOf="@+id/PackageTypeNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddMailTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/AddPackageRadioBtn" />
 
     <TextView
-        android:id="@+id/AddressNew"
+        android:id="@+id/AddAddressTextView"
         android:layout_width="211dp"
         android:layout_height="20dp"
         android:layout_marginTop="12dp"
         android:text="@string/address"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/DateInputNew"
+        app:layout_constraintEnd_toEndOf="@+id/AddShipDateEditText"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/DateInputNew"
-        app:layout_constraintTop_toBottomOf="@+id/DateInputNew" />
+        app:layout_constraintStart_toStartOf="@+id/AddShipDateEditText"
+        app:layout_constraintTop_toBottomOf="@+id/AddShipDateEditText" />
 
     <Button
-        android:id="@+id/AddMailBtn"
+        android:id="@+id/HomeSeeMailsBtn"
         android:layout_width="254dp"
         android:layout_height="48dp"
         android:layout_marginStart="48dp"

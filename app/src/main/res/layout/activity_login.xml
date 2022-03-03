@@ -9,10 +9,10 @@
 
 
     <TextView
-        android:id="@+id/TitleLogin"
+        android:id="@+id/PageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textColorHint="@color/material_on_primary_emphasis_medium"
@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.116" />
 
     <EditText
-        android:id="@+id/inputEmailLogin"
+        android:id="@+id/LoginEmailEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -45,10 +45,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/PageTitle" />
 
     <EditText
-        android:id="@+id/inputPasswordLogin"
+        android:id="@+id/LoginPasswordEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -63,13 +63,13 @@
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/inputEmailLogin"
+        app:layout_constraintEnd_toEndOf="@+id/LoginEmailEditText"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/inputEmailLogin"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmailLogin" />
+        app:layout_constraintStart_toStartOf="@+id/LoginEmailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/LoginEmailEditText" />
 
     <Button
-        android:id="@+id/AddMailBtn"
+        android:id="@+id/HomeSeeMailsBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -88,20 +88,20 @@
         app:rippleColor="@color/black" />
 
     <TextView
-        android:id="@+id/SignupLinkTxt"
+        android:id="@+id/LoginSignupTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Don't have an Account ? "
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/SignupLinkBtn"
+        app:layout_constraintEnd_toStartOf="@+id/LoginSignupBtn"
         app:layout_constraintHorizontal_bias="0.982"
-        app:layout_constraintStart_toStartOf="@+id/AddMailBtn"
-        app:layout_constraintTop_toBottomOf="@+id/AddMailBtn" />
+        app:layout_constraintStart_toStartOf="@+id/HomeSeeMailsBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeSeeMailsBtn" />
 
     <TextView
-        android:id="@+id/SignupLinkBtn"
+        android:id="@+id/LoginSignupBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -114,6 +114,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AddMailBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/HomeSeeMailsBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

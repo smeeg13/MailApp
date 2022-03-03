@@ -12,7 +12,7 @@
 
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/HomeSearchBar"
         android:layout_width="384dp"
         android:layout_height="38dp"
         android:layout_marginTop="4dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/AddMailBtn"
+        android:id="@+id/HomeSeeMailsBtn"
         android:layout_width="272dp"
         android:layout_height="36dp"
         android:layout_marginStart="48dp"
@@ -37,11 +37,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/HomeSearchBar"
         app:rippleColor="@color/black" />
 
     <Button
-        android:id="@+id/addMailBtn"
+        android:id="@+id/HomeAMailBtn"
         android:layout_width="91dp"
         android:layout_height="36dp"
         android:layout_marginTop="12dp"
@@ -50,14 +50,14 @@
         android:text="@string/a_mail"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/addMailBtn2"
+        app:layout_constraintEnd_toStartOf="@+id/HomeBMailBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
         app:rippleColor="@color/black" />
 
     <Button
-        android:id="@+id/addMailBtn2"
+        android:id="@+id/HomeBMailBtn"
         android:layout_width="91dp"
         android:layout_height="36dp"
         android:layout_marginTop="12dp"
@@ -66,14 +66,14 @@
         android:text="@string/b_mail"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/addMailBtn3"
+        app:layout_constraintEnd_toStartOf="@+id/HomeRecomMailBtn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addMailBtn"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintStart_toEndOf="@+id/HomeAMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
         app:rippleColor="@color/black" />
 
     <Button
-        android:id="@+id/addMailBtn3"
+        android:id="@+id/HomeRecomMailBtn"
         android:layout_width="142dp"
         android:layout_height="36dp"
         android:layout_marginTop="12dp"
@@ -84,12 +84,12 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/addMailBtn2"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintStart_toEndOf="@+id/HomeBMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
         app:rippleColor="@color/black" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/HomeLocationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -97,11 +97,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AddMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeSeeMailsBtn"
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/HomeShipTypeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -109,10 +109,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        app:layout_constraintTop_toBottomOf="@+id/HomeLocationScrollView"
         tools:ignore="MissingConstraints" />
 
     <ScrollView
+        android:id="@+id/HomeTodayScrollView"
         android:layout_width="386dp"
         android:layout_height="406dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -127,13 +128,13 @@
     </ScrollView>
 
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
+        android:id="@+id/HomeLocationScrollView"
         android:layout_width="412dp"
         android:layout_height="114dp"
         android:layout_marginTop="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/HomeLocationTextView">
 
         <LinearLayout
             android:layout_width="wrap_content"

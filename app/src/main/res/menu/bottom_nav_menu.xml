@@ -3,18 +3,18 @@
 
     <item android:title="@string/add_new"
         android:icon="@drawable/ic_add_white"
-        android:id="@+id/AddNewMail"/>
+        android:id="@+id/AddNewBtn"/>
 
     <item android:title="@string/home"
         android:icon="@drawable/ic_home_white"
-        android:id="@+id/Home"/>
+        android:id="@+id/HomeBtn"/>
 
     <item android:title="@string/map"
         android:icon="@drawable/ic_location_white"
-        android:id="@+id/Map"/>
+        android:id="@+id/MapBtn"/>
 
     <item android:title="@string/my_account"
         android:icon="@drawable/ic_person_white"
-        android:id="@+id/MyAccount"/>
+        android:id="@+id/AccountBtn"/>
 
 </menu>

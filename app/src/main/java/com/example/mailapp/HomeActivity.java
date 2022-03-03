@@ -30,13 +30,13 @@ public class HomeActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.replace(R.id.HomeFrameLayout, fragment);
         fragmentTransaction.commit();
     }
 
     public void createMenus(){
-        Toolbar toolbar = null;
-        ActivityHomeBinding binding = null;
+        Toolbar toolbar;
+        ActivityHomeBinding binding;
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
 
         toolbar =findViewById(R.id.myToolBar);
@@ -44,34 +44,34 @@ public class HomeActivity extends AppCompatActivity {
 
         remplaceFragment(new HomeFragment());
 
-        binding.topNavBar.setOnItemSelectedListener(item -> {
+        binding.HomeTopNavBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.settings:
+                case R.id.SettingsBtn:
                     remplaceFragment(new SettingsFragment());
                     break;
-                case R.id.Logout:
+                case R.id.LogoutBtn:
                     startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                     break;
             }
             return true;
         });
-        binding.topNavBar.setSelected(false);
+        binding.HomeTopNavBar.setSelected(false);
 
-        binding.bottomNavBar.setSelectedItemId(R.id.Home);
+        binding.HomeBottomNavBar.setSelectedItemId(R.id.HomeBtn);
 
-        binding.bottomNavBar.setOnItemSelectedListener(item2 -> {
+        binding.HomeBottomNavBar.setOnItemSelectedListener(item2 -> {
 
             switch (item2.getItemId()){
-                case R.id.AddNewMail:
+                case R.id.AddNewBtn:
                     remplaceFragment(new AddNewFragment());
                     break;
-                case R.id.Home:
+                case R.id.HomeBtn:
                     remplaceFragment(new HomeFragment());
                     break;
-                case R.id.Map:
+                case R.id.MapBtn:
                     remplaceFragment(new MapFragment());
                     break;
-                case R.id.MyAccount:
+                case R.id.AccountBtn:
                     remplaceFragment(new MyAccountFragment());
                     break;
             }

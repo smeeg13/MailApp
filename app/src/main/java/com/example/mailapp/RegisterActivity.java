@@ -21,7 +21,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
-    private Button btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,29 +28,27 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         //Take back all the values entered by the new user
-        inputfirstname = findViewById(R.id.inputfirstname);
+        inputfirstname = findViewById(R.id.RegisterFirstnameEditText);
         inputs.add(inputfirstname);
-        inputLastName = findViewById(R.id.InputFullname);
+        inputLastName = findViewById(R.id.RegisterLastnameEditText);
         inputs.add(inputLastName);
-        inputEmail = findViewById(R.id.InputEmail);
+        inputEmail = findViewById(R.id.RegisterEmailEditText);
         inputs.add(inputEmail);
-        inputPhone = findViewById(R.id.InputPhone);
+        inputPhone = findViewById(R.id.RegisterPhoneEditText);
         inputs.add(inputPhone);
-        inputAddress = findViewById(R.id.InputAddress);
+        inputAddress = findViewById(R.id.RegisterAddressEditText);
         inputs.add(inputAddress);
-        inputZIP = findViewById(R.id.InputZip);
+        inputZIP = findViewById(R.id.RegisterZIPEditText);
         inputs.add(inputZIP);
-        inputLocation = findViewById(R.id.InputLocation);
+        inputLocation = findViewById(R.id.RegisterCityEditText);
         inputs.add(inputLocation);
-        inputPassword = findViewById(R.id.InputPassword);
+        inputPassword = findViewById(R.id.RegisterPasswordEditText);
         inputs.add(inputPassword);
-        inputConfirmPwd = findViewById(R.id.InputConfirmPassword);
+        inputConfirmPwd = findViewById(R.id.RegisterConfirmPwdEditText);
         inputs.add(inputConfirmPwd);
 
-        btnRegister = findViewById(R.id.RegisterBtn);
-        btnLogin = findViewById(R.id.LoginLinkBtn);
-
         //Creation of the link back to Login Page
+        btnLogin = findViewById(R.id.RegisterLoginBtn);
         btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
 
@@ -117,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                 IsOk++;
             }
         }
-
         return IsOk <= 0;
     }
 
