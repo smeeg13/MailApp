@@ -14,6 +14,7 @@ import com.example.mailapp.Fragments.HomeFragment;
 import com.example.mailapp.Fragments.MapFragment;
 import com.example.mailapp.Fragments.MyAccountFragment;
 import com.example.mailapp.Fragments.SettingsFragment;
+import com.example.mailapp.SessionManagement.SessionManagement;
 import com.example.mailapp.databinding.ActivityHomeBinding;
 
 
@@ -42,15 +43,17 @@ public class HomeActivity extends AppCompatActivity {
 
         toolbar =findViewById(R.id.myToolBar);
         setSupportActionBar(toolbar);
-
+        SessionManagement sessionManagement = new SessionManagement(HomeActivity.this);
         remplaceFragment(new HomeFragment());
 
         binding.HomeTopNavBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.SettingsBtn:
+
                     remplaceFragment(new SettingsFragment());
                     break;
                 case R.id.LogoutBtn:
+                    sessionManagement.removeSession();
                     startActivity(new Intent(getApplicationContext(),LoginActivity.class));
                     break;
             }
