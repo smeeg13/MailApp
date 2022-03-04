@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         if (checkLogin(stmail, stpwd)) {
             Intent intent   = new Intent(getApplicationContext(),HomeActivity.class);
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
         } else {

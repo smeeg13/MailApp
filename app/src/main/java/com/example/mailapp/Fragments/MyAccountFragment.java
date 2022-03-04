@@ -15,45 +15,31 @@ import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.PostWorker;
 import com.example.mailapp.R;
+import com.example.mailapp.SessionManagement.SessionManagement;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyAccountFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 
 public class MyAccountFragment extends Fragment {
-    TextView inputEmail, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword,inputTitle, inputAddress;
+    TextView inputEmail,inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
     FloatingActionButton inputfloatingEditButton;
     ImageView inputaccountImage;
     Boolean aBoolean = true;
     PostWorker postWorker;
     PostWorkerDao postWorkerDao;
     MyDatabase myDatabase;
+    SessionManagement sessionManagement;
+    View v;
 
     public MyAccountFragment() {
         // Required empty public constructor
     }
 
-    public MyAccountFragment newInstance(String param1, String param2) {
-        MyAccountFragment fragment = new MyAccountFragment();
-        Bundle args = new Bundle();
-
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //connection to database
-        //initialize();
-        //linking all views in order to set them enabled
 
     }
 
@@ -64,6 +50,13 @@ public class MyAccountFragment extends Fragment {
             aBoolean = false;
         } else {
             enableEdit(false);
+            //TODO save all the modification to the database
+            postWorker.setZip(inputZip.getText().toString());
+            postWorker.setRegion(inputLocation.getText().toString());
+            postWorker.setAddress(inputAddress.getText().toString());
+            postWorker.setPhone(inputPhone.getText().toString());
+            myDatabase.postWorkerDao().updatePostWorker(postWorker.getiD_PostWorker(), postWorker.getRegion(), postWorker.getZip(), postWorker.getAddress(), postWorker.getPhone());
+           // initialize(v);
             aBoolean = true;
         }
     }
@@ -71,8 +64,10 @@ public class MyAccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_my_account, container, false);
+         v = inflater.inflate(R.layout.fragment_my_account, container, false);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
+        sessionManagement = new SessionManagement(this.getContext());
+
         initialize(v);
         inputfloatingEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,16 +107,29 @@ public class MyAccountFragment extends Fragment {
     }
 
     public void initialize(View v) {
+        String firstname,lastname;
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
+        postWorker = myDatabase.postWorkerDao().getPostWorkerByid(sessionManagement.getSession());
+        inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
+        firstname = postWorker.getFirstname()+" ";
+        lastname = postWorker.getLastName();
+        inputFirstnameAndLastname.setText(firstname + lastname);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
         inputEmail = v.findViewById(R.id.AccountEmailTextView);
+        inputEmail.setText(postWorker.getLogin());
         inputPhone = v.findViewById(R.id.AccountPhoneTextView);
+        inputPhone.setText(postWorker.getPhone());
         inputAddress = v.findViewById(R.id.AccountAddressTextView);
+        inputAddress.setText(postWorker.getAddress());
         inputZip = v.findViewById(R.id.AccountZipTextView);
+        inputZip.setText(postWorker.getZip());
         inputLocation = v.findViewById(R.id.AccountLocationTextView);
+        inputLocation.setText(postWorker.getRegion());
         inputPassword = v.findViewById(R.id.AccountPasswordTextView);
         inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
     }
+
+
 }

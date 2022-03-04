@@ -31,6 +31,9 @@ public interface PostWorkerDao {
     @Query("DELETE FROM PostWorker")
     void deleteAll();
 
+    @Query("UPDATE PostWorker SET region = :region, zip = :zip, address = :address, phone = :phone WHERE iD_PostWorker = :idPostWorker")
+    void updatePostWorker(int idPostWorker,String region,String zip, String address, String phone);
+
     @Insert
     void insertAll(PostWorker... postWorkers);
 
