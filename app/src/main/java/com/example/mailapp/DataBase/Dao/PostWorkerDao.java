@@ -32,7 +32,10 @@ public interface PostWorkerDao {
     void deleteAll();
 
     @Query("UPDATE PostWorker SET region = :region, zip = :zip, address = :address, phone = :phone WHERE iD_PostWorker = :idPostWorker")
-    void updatePostWorker(int idPostWorker,String region,String zip, String address, String phone);
+    void updatePostWorkerLocation(int idPostWorker, String region, String zip, String address, String phone);
+
+    @Query("UPDATE PostWorker SET background = :background WHERE iD_PostWorker = :idPostWorker")
+    void updatePostWorkerBackGround(int idPostWorker,String background);
 
     @Insert
     void insertAll(PostWorker... postWorkers);
@@ -44,7 +47,7 @@ public interface PostWorkerDao {
     void deletePostWorker(PostWorker postWorker);
 
     @Update
-    void updatePostWorker(PostWorker postWorker);
+    void updatePostWorkerLocation(PostWorker postWorker);
 
 
 }

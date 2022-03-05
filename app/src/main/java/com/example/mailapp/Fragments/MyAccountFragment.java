@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,9 +16,6 @@ import com.example.mailapp.DataBase.Tables.PostWorker;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MyAccountFragment extends Fragment {
@@ -48,6 +44,7 @@ public class MyAccountFragment extends Fragment {
         if (aBoolean == true) {
             enableEdit(true);
             aBoolean = false;
+            inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_save_24);
         } else {
             enableEdit(false);
             //TODO save all the modification to the database
@@ -55,8 +52,9 @@ public class MyAccountFragment extends Fragment {
             postWorker.setRegion(inputLocation.getText().toString());
             postWorker.setAddress(inputAddress.getText().toString());
             postWorker.setPhone(inputPhone.getText().toString());
-            myDatabase.postWorkerDao().updatePostWorker(postWorker.getiD_PostWorker(), postWorker.getRegion(), postWorker.getZip(), postWorker.getAddress(), postWorker.getPhone());
+            myDatabase.postWorkerDao().updatePostWorkerLocation(postWorker.getiD_PostWorker(), postWorker.getRegion(), postWorker.getZip(), postWorker.getAddress(), postWorker.getPhone());
            // initialize(v);
+            inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
             aBoolean = true;
         }
     }

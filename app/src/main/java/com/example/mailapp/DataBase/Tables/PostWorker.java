@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+
 @Entity(tableName = "PostWorker")
 public class PostWorker {
 
@@ -37,6 +39,8 @@ public class PostWorker {
     public String zip;
     @ColumnInfo(name = "region")
     public String region;
+    @ColumnInfo(name = "background")
+    public String background;
 
     public PostWorker() {
 
@@ -112,5 +116,44 @@ public class PostWorker {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
+
+    public void postWorkerToString(PostWorker postWorker) {
+
+        System.out.println("/////////////////");
+        System.out.println("ID of post worker : " + postWorker.getiD_PostWorker());
+        System.out.println("Login :" + postWorker.getLogin());
+        System.out.println("Firstname :" + postWorker.getFirstname());
+        System.out.println("Lastname :" + postWorker.getLastName());
+        System.out.println("Phone :" + postWorker.getPhone());
+        System.out.println("Address :" + postWorker.getAddress());
+        System.out.println("Region :" + postWorker.getRegion());
+        System.out.println("Zip :" + postWorker.getZip());
+        System.out.println("Background :" + postWorker.getBackground());
+
+    }
+
+    public  void postWorkersListToString(List<PostWorker> postWorkers) {
+        for (PostWorker postWorker : postWorkers) {
+            System.out.println("/////////////////");
+            System.out.println("ID of post worker : " + postWorker.getiD_PostWorker());
+            System.out.println("Login :" + postWorker.getLogin());
+            System.out.println("Firstname :" + postWorker.getFirstname());
+            System.out.println("Lastname :" + postWorker.getLastName());
+            System.out.println("Phone :" + postWorker.getPhone());
+            System.out.println("Address :" + postWorker.getAddress());
+            System.out.println("Region :" + postWorker.getRegion());
+            System.out.println("Zip :" + postWorker.getZip());
+            System.out.println("Background :" + postWorker.getBackground());
+
+        }
     }
 }

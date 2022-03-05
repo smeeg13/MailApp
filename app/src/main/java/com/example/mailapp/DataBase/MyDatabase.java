@@ -11,10 +11,10 @@ import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.Tables.Mail;
 import com.example.mailapp.DataBase.Tables.PostWorker;
 
-@Database(entities = {PostWorker.class,Mail.class},version = 2)
+@Database(entities = {PostWorker.class, Mail.class}, version = 5)
 public abstract class MyDatabase extends RoomDatabase {
-//TODO For better performance user singleton pattern https://www.youtube.com/watch?v=qO56SL856xc&ab_channel=yoursTRULY
-    private static final String DB_NAME ="MyDatabase_DB";
+    //TODO For better performance user singleton pattern https://www.youtube.com/watch?v=qO56SL856xc&ab_channel=yoursTRULY
+    private static final String DB_NAME = "MyDatabase_DB";
     private static MyDatabase instance;
 
 
@@ -27,6 +27,7 @@ public abstract class MyDatabase extends RoomDatabase {
         return instance;
     }
 
-   public abstract PostWorkerDao postWorkerDao();
+    public abstract PostWorkerDao postWorkerDao();
+
     public abstract MailDao mailDao();
 }

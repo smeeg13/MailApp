@@ -54,5 +54,8 @@
     <string name="address">Address</string>
     <string name="packages">Packages</string>
     <string name="see_all_mails">See All Mails</string>
-
+    <string-array name="locationsAvailables_array">
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
 </resources>
