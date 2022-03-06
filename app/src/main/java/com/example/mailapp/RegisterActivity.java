@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.Enums.ToastsMsg;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -77,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
 
        if (!InputsAreGood())
-            Toast.makeText(getApplicationContext(), "Make Sure all Fields are Valid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), ToastsMsg.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
         else {
             //TODO Save Data in The Database
             postWorker = new PostWorker();
@@ -93,12 +94,12 @@ public class RegisterActivity extends AppCompatActivity {
             postWorker.setZip(stzip);
             //add that user to the database
             myDatabase.postWorkerDao().addPostWorker(postWorker);
-            System.out.println("POST WORKER ADDED");
+            System.out.println("## POST WORKER ADDED");
             //Launching the login page after saving data in the Database
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
             //To "notify" the customer his account has been created
-            Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), ToastsMsg.ACCOUNT_CREATED.toString(), Toast.LENGTH_LONG).show();
       }
     }
 
@@ -169,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         int totalChar = password.length();
         if (totalChar < passwordLength) {
-            System.out.println("\nThe Password is invalid !");
+            System.out.println("\n## The Password is invalid !");
             return true;
         } else {
             for (int i = 0; i < totalChar; i++) {
@@ -185,10 +186,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
         if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
-            System.out.println("\nThe Password is Strong.");
+            System.out.println("\n## The Password is Strong.");
             isWeak = false;
         } else
-            System.out.println("\nThe Password is Weak.");
+            System.out.println("\n## The Password is Weak.");
 
         return isWeak;
     }
@@ -208,7 +209,7 @@ public class RegisterActivity extends AppCompatActivity {
             return true;
 
         if (!pat.matcher(myemail).matches()) {
-            showError(inputEmail, "Email is not Valid");
+            showError(inputEmail, "## Email is not Valid");
             return true;
         } else
             return false;
@@ -217,7 +218,7 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * To Add the Red Info with a message in the field
      */
-    private void showError(EditText input, String s) {
+    public static void showError(EditText input, String s) {
         input.setError(s);
     }
 }

@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/LoginEmailEditText" />
 
     <Button
-        android:id="@+id/HomeSeeMailsBtn"
+        android:id="@+id/AddMailBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -97,8 +97,8 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/LoginSignupBtn"
         app:layout_constraintHorizontal_bias="0.982"
-        app:layout_constraintStart_toStartOf="@+id/HomeSeeMailsBtn"
-        app:layout_constraintTop_toBottomOf="@+id/HomeSeeMailsBtn" />
+        app:layout_constraintStart_toStartOf="@+id/AddMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/AddMailBtn" />
 
     <TextView
         android:id="@+id/LoginSignupBtn"
@@ -114,6 +114,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeSeeMailsBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/AddMailBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

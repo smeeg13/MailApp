@@ -16,6 +16,8 @@ public class Mail {
     @PrimaryKey(autoGenerate = true)
     public int iD_Mail;
 
+    //TODO add the link with postworker
+
     @ColumnInfo(name = "mailFrom")
     public String mailFrom;
     @ColumnInfo(name = "mailTo")

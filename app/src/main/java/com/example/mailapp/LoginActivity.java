@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.Enums.ToastsMsg;
 import com.example.mailapp.SessionManagement.SessionManagement;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         int session = sessionManagement.getSession();
         // -1 is the default number of the session, if someone is connected it will be not -1
         if (session != -1){
-            System.out.println("POST WORKER ID IS "+session);
+            System.out.println("## POST WORKER ID IS "+session);
             // if the user is still in the session he will go straight to the home activity
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             showError(mail, "Wrong informations");
             showError(pwd, "Wrong informations");
-            Toast.makeText(getBaseContext(), "Wrong Email or Password entered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), ToastsMsg.WRONG_INFO.toString(), Toast.LENGTH_SHORT).show();
         }
     }
     private boolean checkLogin(String login, String password) {
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }
         }
-        System.out.println("POST WORKER HAS NOT BEEN FOUND");
+        System.out.println("## POST WORKER HAS NOT BEEN FOUND");
         return false;
     }
 
