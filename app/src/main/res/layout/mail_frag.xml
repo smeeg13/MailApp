@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Fragments.MailFrag">
+
+    <ViewStub
+        android:id="@+id/child_fragment_will_be_displayed_here"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        tools:layout_editor_absoluteX="291dp"
+        tools:layout_editor_absoluteY="640dp"
+        tools:ignore="MissingConstraints" />
+
+    <Switch
+        android:id="@+id/MailAssignedToSwitch"
+        android:layout_width="177dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="16dp"
+        android:showText="true"
+        android:text="@string/assigned_to_me"
+        android:textOff="@string/no"
+        android:textOn="@string/yes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints,UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/MailIDTextView"
+        android:layout_width="84dp"
+        android:layout_height="22dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="#CFCFCF"
+        android:text="@string/id_111232"
+        android:textSize="14sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/MailAssignedToSwitch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/MailMailFromTextView"
+        android:layout_width="139dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/mail_from"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/MailAssignedToSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/MailAssignedToSwitch" />
+
+    <TextView
+        android:id="@+id/MailMailToTextView"
+        android:layout_width="138dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/mail_to"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/MailIDTextView"
+        app:layout_constraintStart_toEndOf="@+id/MailMailFromTextView"
+        app:layout_constraintTop_toBottomOf="@+id/MailAssignedToSwitch" />
+
+    <EditText
+        android:id="@+id/MailMailFromEditText"
+        android:layout_width="137dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/MailMailFromTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/MailMailFromTextView"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailFromTextView"
+        tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+
+    <EditText
+        android:id="@+id/MailMailToEditText"
+        android:layout_width="137dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/MailMailToTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/MailMailFromEditText"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailToTextView" />
+
+    <EditText
+        android:id="@+id/MailAddressEditText"
+        android:layout_width="304dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/address"
+        android:inputType="textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/MailAddressTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/MailAddressTextView"
+        app:layout_constraintTop_toBottomOf="@+id/MailAddressTextView"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/MailZipEditText"
+        android:layout_width="104dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/zip"
+        android:inputType="number|textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/MailAddressEditText"
+        app:layout_constraintTop_toBottomOf="@+id/MailAddressEditText"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/MailCityEditText"
+        android:layout_width="206dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/city"
+        android:inputType="textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/MailAddressEditText"
+        app:layout_constraintStart_toEndOf="@+id/MailZipEditText"
+        app:layout_constraintTop_toBottomOf="@+id/MailAddressEditText"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/MailShipDateTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/due_date_for_shipping"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/MailRecomMailRadioBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/MailAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailBMailRadioBtn" />
+
+    <RadioButton
+        android:id="@+id/MailBMailRadioBtn"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:text="@string/b_mail"
+        app:layout_constraintEnd_toStartOf="@+id/MailRecomMailRadioBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/MailAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailShipTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/MailAMailRadioBtn"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="21dp"
+        android:text="@string/a_mail"
+        app:layout_constraintEnd_toStartOf="@+id/MailBMailRadioBtn"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MailShipTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/MailRecomMailRadioBtn"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:text="@string/recommended"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/MailBMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailShipTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/MailLetterRadioBtn"
+        android:layout_width="106dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/letter"
+        app:layout_constraintEnd_toStartOf="@+id/MailPackageRadioBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/MailPackageRadioBtn"
+        android:layout_width="109dp"
+        android:layout_height="48dp"
+        android:text="@string/packages"
+        app:layout_constraintEnd_toStartOf="@+id/MailWeightEditText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/MailLetterRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailTypeTextView" />
+
+    <EditText
+        android:id="@+id/MailWeightEditText"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/weight"
+        android:inputType="numberDecimal"
+        android:textColorHint="#757575"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/MailPackageRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailTypeTextView" />
+
+    <TextView
+        android:id="@+id/MailMailTypeTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/mail_type"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/MailMailToEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/MailMailFromEditText"
+        app:layout_constraintTop_toBottomOf="@+id/MailMailFromEditText" />
+
+    <TextView
+        android:id="@+id/MailShipTypeTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/shipping_type"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/MailWeightEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/MailLetterRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/MailPackageRadioBtn" />
+
+    <TextView
+        android:id="@+id/MailAddressTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/address"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/MailShipDateEditText"
+        app:layout_constraintStart_toStartOf="@+id/MailShipDateEditText"
+        app:layout_constraintTop_toBottomOf="@+id/MailShipDateEditText" />
+
+    <TextView
+        android:id="@+id/MailShipDateEditText"
+        android:layout_width="209dp"
+        android:layout_height="28dp"
+        app:layout_constraintEnd_toEndOf="@+id/MailShipDateTextView"
+        app:layout_constraintStart_toStartOf="@+id/MailShipDateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/MailShipDateTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

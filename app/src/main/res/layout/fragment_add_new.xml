@@ -275,6 +275,7 @@
         android:layout_width="209dp"
         android:layout_height="28dp"
         android:layout_marginTop="4dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/AddShipDateTextView"
         app:layout_constraintStart_toStartOf="@+id/AddShipDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/AddShipDateTextView" />

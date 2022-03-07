@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -34,14 +35,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class AddNewFragment extends Fragment {
+public class AddNewFragment extends MailFrag {
 
     private ArrayList<EditText> editTexts = new ArrayList<>();
 
     private Button addmail;
     private EditText mailFrom, mailTo, weight, address, zip, city;
     private RadioButton letter, packages, amail, bmail, recmail;
-    private String mailType, shipType;
+    private String mailType, shipType = "B-Mail";
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
     private Mail mail;
@@ -72,13 +73,20 @@ public class AddNewFragment extends Fragment {
         sessionManagement = new SessionManagement(this.getContext());
 
         initialize(v);
-        chooseMailType();
-        chooseShippingType();
+        chooseMailType(letter, packages, weight);
+        chooseShippingType(amail, bmail, recmail, dueDate);
+        bmail.setChecked(true);
+        calculateShipDate(shipType);
         addNewMail(v);
         return v;
     }
 
-    private void initialize(View v) {
+    @Override
+    protected void loadLayoutFromResIdToViewStub(View coreFragmentView, ViewGroup container) {
+
+    }
+
+    public void initialize(View v) {
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
@@ -111,7 +119,7 @@ public class AddNewFragment extends Fragment {
             public void onClick(View view) {
 
                 //Check if every fields are completed
-                boolean anyisempty = checkEmpty();
+                boolean anyisempty = checkEmpty(editTexts, letter, packages, amail, bmail, recmail,dueDate);
 
                 if (anyisempty) {
                     Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
@@ -141,34 +149,6 @@ public class AddNewFragment extends Fragment {
         });
     }
 
-    /**
-     * To Check if all the fields have been completed
-     * Return true if the 1 input is Empty
-     */
-    public boolean checkEmpty() {
-        int IsEmpty = 0;
-
-        //For each check if empty
-        for (EditText in : editTexts) {
-            if (in.getText().toString().isEmpty()) {
-                showError(in, "Can not be empty");
-                //If empty add 1 to IsEmpty
-                IsEmpty++;
-            }
-        }
-        //Check if letter or package has been choosed
-        if (!letter.isChecked() && !packages.isChecked()) {
-            IsEmpty++;
-        }
-        //Check if shipping type has been choosed
-        if (!amail.isChecked() && !bmail.isChecked() && !recmail.isChecked()) {
-            IsEmpty++;
-        }
-
-        System.out.println("## One or more fields are empty !");
-
-        return IsEmpty > 0;
-    }
 
     private boolean isAssignedToMe() {
         boolean isForMe = false;
@@ -180,71 +160,7 @@ public class AddNewFragment extends Fragment {
         return isForMe;
     }
 
-    public String chooseMailType(){
-        //Selecting letter
-        letter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (letter.isChecked()){
-                    packages.setChecked(false);
-                    weight.setEnabled(false);
-                    weight.setText("0");
-                    mailType = "letter";
-                }
-            }
-        });
-
-        packages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (packages.isChecked()){
-                    letter.setChecked(false);
-                    weight.setEnabled(true);
-                    mailType = "packages";
-                }
-            }
-        });
-        System.out.println("## Mail type choosed : "+ mailType);
-
-        return  mailType;
-    }
-
-    public String chooseShippingType() {
-        amail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bmail.setChecked(false);
-                recmail.setChecked(false);
-                shipType = "A-Mail";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-
-        bmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                amail.setChecked(false);
-                recmail.setChecked(false);
-                shipType = "B-Mail";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-        recmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                amail.setChecked(false);
-                bmail.setChecked(false);
-                shipType = "Recommended";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-        System.out.println("## Shipping type choosed : "+ shipType);
-        return shipType;
-    }
-
-    public String calculateShipDate() {
+    public void calculateShipDate(String shipType) {
         String dueDatestr = "";  // Start date
         Calendar c = Calendar.getInstance();
         try {
@@ -252,6 +168,7 @@ public class AddNewFragment extends Fragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
 
         switch (shipType) {
             case "A-Mail":
@@ -274,8 +191,7 @@ public class AddNewFragment extends Fragment {
         }
 
         System.out.println("## Shipping Due Date According to ship type : "+ dueDatestr);
-
-        return dueDatestr;
+        dueDate.setText(dueDatestr);
     }
 
     private void openMailDetail(){
@@ -288,13 +204,6 @@ public class AddNewFragment extends Fragment {
         System.out.println("## Go to Mail Detail");
         System.out.println("## mail from send : "+ mailfromstr);
 
-    }
-
-    private void replaceFragment(Fragment newfragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
-        fragmentTransaction.commit();
     }
 
 }

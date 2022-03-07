@@ -2,15 +2,20 @@ package com.example.mailapp.Fragments;
 
 import static com.example.mailapp.RegisterActivity.showError;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Switch;
@@ -22,6 +27,7 @@ import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.Mail;
 import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.Enums.ToastsMsg;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,14 +39,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class MailDetailFragment extends Fragment {
+public class MailDetailFragment extends MailFrag {
     private FloatingActionButton EditButton;
+    private FloatingActionButton DeleteButton;
+
     private Boolean aBoolean = true;
 
     private ArrayList<EditText> editTexts = new ArrayList<>();
     private EditText mailFrom, mailTo, weight, address, zip, city;
     private RadioButton letter, packages, amail, bmail, recmail;
-    private String mailType, shipType;
+    private String mailType;
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
 
@@ -53,6 +61,8 @@ public class MailDetailFragment extends Fragment {
     private View v;
     private DateFormat df = new SimpleDateFormat("dd MMMM yyyy");
     private String Todaydate = df.format(Calendar.getInstance().getTime());
+    TextView shipType ;
+    String shipTypeStr ;
 
     public MailDetailFragment() {
         // Required empty public constructor
@@ -61,6 +71,8 @@ public class MailDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
     }
 
     @Override
@@ -91,9 +103,23 @@ public class MailDetailFragment extends Fragment {
                 editMode();
             }
         });
+        DeleteButton = v.findViewById(R.id.DetailDeleteButton);
+        DeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteMail();
+            }
+        });
+
 
         return v;
     }
+
+    @Override
+    protected void loadLayoutFromResIdToViewStub(View coreFragmentView, ViewGroup container) {
+
+    }
+
 
     public void initialize(View v) {
 
@@ -121,6 +147,9 @@ public class MailDetailFragment extends Fragment {
         assignedToMe= v.findViewById(R.id.DetailAssignedToSwitch);
         dueDate = v.findViewById(R.id.DetailShipDateEditText);
 
+        shipType = v.findViewById(R.id.DetailShipDateEditText);
+         shipTypeStr = shipType.getText().toString() ;
+
         //By default not enable
         enableEdit(false);
     }
@@ -132,8 +161,9 @@ public class MailDetailFragment extends Fragment {
             aBoolean = false;
             EditButton.setImageResource(R.drawable.ic_baseline_save_24);
         } else {
-            if (checkEmpty()){
-                Toast.makeText(getActivity().getBaseContext(), "Check if all fields are completed", Toast.LENGTH_SHORT).show();
+            if (checkEmpty(editTexts, letter, packages,amail,
+                    bmail,  recmail,dueDate)){
+                Toast.makeText(getActivity().getBaseContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
 
             }else {
                 enableEdit(false);
@@ -166,8 +196,9 @@ public class MailDetailFragment extends Fragment {
             assignedToMe.setEnabled(true);
             System.out.println("## Is enabled");
 
-            chooseMailType();
-            chooseShippingType();
+            mailType = chooseMailType(letter, packages, weight);
+            String shipType = chooseShippingType(amail, bmail, recmail, dueDate);
+            calculateShipDate(shipTypeStr);
 
         } else {
             mailFrom.setEnabled(false);
@@ -186,98 +217,42 @@ public class MailDetailFragment extends Fragment {
         }
     }
 
-    /**
-     * To Check if all the fields have been completed
-     * Return true if the 1 input is Empty
-     */
-    public boolean checkEmpty() {
-        int IsEmpty = 0;
+    private void deleteMail(){
 
-        //For each check if empty
-        for (EditText in : editTexts) {
-            if (in.getText().toString().isEmpty()) {
-                showError(in, "Can not be empty");
-                //If empty add 1 to IsEmpty
-                IsEmpty++;
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setCancelable(true);
+        builder.setTitle("Deleting Mail ");
+        builder.setMessage("Are you sure you want to delete it ? ");
+        builder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO Delete mail on the DB
+                        System.out.println("## Mail Has Been Deleted");
+                        Toast.makeText(getActivity().getBaseContext(), ToastsMsg.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
+                        //Go back to home fragment
+                        replaceFragment(new HomeFragment());
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Do Nothing
             }
-        }
-        //Check if letter or package has been choosed
-        if (!letter.isChecked() && !packages.isChecked()) {
-            IsEmpty++;
-        }
-        //Check if shipping type has been choosed
-        if (!amail.isChecked() && !bmail.isChecked() && !recmail.isChecked()) {
-            IsEmpty++;
-        }
-
-        System.out.println("## One or more fields are empty !");
-
-        return IsEmpty > 0;
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    public String chooseMailType(){
-        //Selecting letter
-        letter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    public void calculateShipDate(String shipTypeStr) {
+        shipTypeStr = shipType.getText().toString();
+        if (shipTypeStr.equals("")){
+            shipTypeStr = "B-Mail";
+            bmail.setChecked(true);
+            amail.setChecked(false);
+            recmail.setChecked(false);
+        }
 
-                if (letter.isChecked()){
-                    packages.setChecked(false);
-                    weight.setEnabled(false);
-                    weight.setText("0");
-                    mailType = "letter";
-                }
-            }
-        });
-
-        packages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (packages.isChecked()){
-                    letter.setChecked(false);
-                    weight.setEnabled(true);
-                    mailType = "packages";
-                }
-            }
-        });
-        return  mailType;
-    }
-
-    public String chooseShippingType() {
-        amail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bmail.setChecked(false);
-                recmail.setChecked(false);
-                shipType = "A-Mail";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-
-        bmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                amail.setChecked(false);
-                recmail.setChecked(false);
-                shipType = "B-Mail";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-        recmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                amail.setChecked(false);
-                bmail.setChecked(false);
-                shipType = "Recommended";
-                dueDate.setText(calculateShipDate());
-            }
-        });
-
-        return shipType;
-    }
-
-    public String calculateShipDate() {
         String dueDatestr = "";  // Start date
         Calendar c = Calendar.getInstance();
         try {
@@ -286,7 +261,7 @@ public class MailDetailFragment extends Fragment {
             e.printStackTrace();
         }
 
-        switch (shipType) {
+        switch (shipTypeStr) {
             case "A-Mail":
                 //A-mail are send in 1 day
                 c.add(Calendar.DATE, 1);  // number of days to add
@@ -305,6 +280,8 @@ public class MailDetailFragment extends Fragment {
                 dueDatestr = df.format(c.getTime());
                 break;
         }
-        return dueDatestr;
+
+        System.out.println("## Shipping Due Date According to ship type : "+ dueDatestr);
+        dueDate.setText(dueDatestr);
     }
 }

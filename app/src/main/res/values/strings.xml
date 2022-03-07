@@ -57,6 +57,8 @@
     <string name="by_shipping_type">By Shipping Type</string>
     <string name="zip">ZIP</string>
     <string name="city">City</string>
+    <string name="del">DEL</string>
+    <string name="edit">EDIT</string>
     <string-array name="locationsAvailables_array">
         <item>White</item>
         <item>Black</item>

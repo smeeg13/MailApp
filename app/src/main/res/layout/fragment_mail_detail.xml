@@ -257,6 +257,7 @@
         android:layout_width="209dp"
         android:layout_height="28dp"
         android:layout_marginTop="4dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/DetailShipDateTextView"
         app:layout_constraintStart_toStartOf="@+id/DetailShipDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/DetailShipDateTextView" />
@@ -274,7 +275,8 @@
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintVertical_bias="0.976"
+        android:contentDescription="@string/edit" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/DetailDeleteButton"
@@ -288,6 +290,7 @@
         app:layout_constraintHorizontal_bias="0.774"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintVertical_bias="0.976"
+        android:contentDescription="@string/del" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
