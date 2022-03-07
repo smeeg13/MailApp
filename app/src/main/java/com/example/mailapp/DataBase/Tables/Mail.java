@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.List;
 
-@Entity
+@Entity (tableName = "Mail")
 public class Mail {
 //
     public Mail() {
@@ -159,5 +159,8 @@ public class Mail {
         }
 
 
+    }
+
+    public void setCity(String toString) {
     }
 }

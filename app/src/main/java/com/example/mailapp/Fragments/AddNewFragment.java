@@ -24,6 +24,7 @@ import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
 import com.example.mailapp.DataBase.Tables.Mail;
 import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.Enums.Status;
 import com.example.mailapp.Enums.ToastsMsg;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
@@ -125,16 +126,19 @@ public class AddNewFragment extends MailFrag {
                     Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     //TODO show mail detail page after registered it in DB
+                    mail = new Mail();
+                    mail.setMailFrom(mailFrom.getText().toString());
+                    mail.setMailTo(mailTo.getText().toString());
+                    mail.setMailType(mailType);
+                    mail.setShippingType(shipType);
+                    mail.setAddress(address.getText().toString());
+                    mail.setStatus(Status.IN_PROGRESS.toString());
+                    mail.setReceiveDate(Todaydate);
+                    mail.setShippedDate(dueDate.getText().toString());
+                    mail.setLocationName(city.getText().toString());
+                    mail.setZip(zip.getText().toString());
 
-//                    mail = new Mail();
-//                    mail.setMailFrom(mailFrom.getText().toString());
-//                    mail.setMailTo(mailTo.getText().toString());
-//                    mail.setMailType(mailType);
-//                    mail.setShippingType(shipType);
-//                    mail.setAddress(address.getText().toString());
-//                    mail.setStatus("In progress");
-//                    mail.setReceiveDate(Todaydate);
-//                    //  mail.setShippedDate("");
+                    myDatabase.mailDao().insertAll(mail);
 
                     if (isAssignedToMe()){
                         //TODO Link with the connected profile
