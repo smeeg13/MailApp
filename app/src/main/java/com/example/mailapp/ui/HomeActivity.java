@@ -1,4 +1,4 @@
-package com.example.mailapp;
+package com.example.mailapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.mailapp.Fragments.AddNewFragment;
-import com.example.mailapp.Fragments.HomeFragment;
-import com.example.mailapp.Fragments.MapFragment;
-import com.example.mailapp.Fragments.MyAccountFragment;
-import com.example.mailapp.Fragments.SettingsFragment;
+import com.example.mailapp.ui.Fragments.HomeFragment;
+import com.example.mailapp.ui.Fragments.MapFragment;
+import com.example.mailapp.ui.Fragments.MyAccountFragment;
+import com.example.mailapp.ui.Fragments.SettingsFragment;
+import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.example.mailapp.databinding.ActivityHomeBinding;
-
 
 public class HomeActivity extends AppCompatActivity {
 

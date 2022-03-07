@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.os.Bundle;
 

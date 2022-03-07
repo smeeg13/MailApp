@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,12 +16,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mailapp.DataBase.Dao.MailDao;
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.Mail;
-import com.example.mailapp.DataBase.Entities.PostWorker;
-import com.example.mailapp.Enums.ToastsMsg;
+import com.example.mailapp.database.dao.MailDao;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,9 +46,9 @@ public class MailDetailFragment extends MailFrag {
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
 
-    private Mail mail;
+    private MailEntity mailEntity;
     private MailDao mailDao;
-    private PostWorker postWorker;
+    private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
     private SessionManagement sessionManagement;
@@ -157,7 +157,7 @@ public class MailDetailFragment extends MailFrag {
         } else {
             if (checkEmpty(editTexts, letter, packages,amail,
                     bmail,  recmail,dueDate)){
-                Toast.makeText(getActivity().getBaseContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getBaseContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
 
             }else {
                 enableEdit(false);
@@ -223,7 +223,7 @@ public class MailDetailFragment extends MailFrag {
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO Delete mail on the DB
                         System.out.println("## Mail Has Been Deleted");
-                        Toast.makeText(getActivity().getBaseContext(), ToastsMsg.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
                         //Go back to home fragment
                         replaceFragment(new HomeFragment());
                     }

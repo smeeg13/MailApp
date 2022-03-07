@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.os.Bundle;
 
@@ -9,15 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.PostWorker;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 
 
 public class HomeFragment extends Fragment {
     TextView inputConnectedAs;
-    PostWorker postWorker;
+    PostWorkerEntity postWorkerEntity;
     PostWorkerDao postWorkerDao;
     MyDatabase myDatabase;
 

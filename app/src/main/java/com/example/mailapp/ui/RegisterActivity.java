@@ -1,6 +1,4 @@
-package com.example.mailapp;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.mailapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +7,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.PostWorker;
-import com.example.mailapp.Enums.ToastsMsg;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.R;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -26,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
 
-    private PostWorker postWorker;
+    private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
 
@@ -76,30 +77,30 @@ public class RegisterActivity extends AppCompatActivity {
         String stloca = inputLocation.getText().toString();
         String stpwd = inputPassword.getText().toString();
 
-       if (!InputsAreGood())
-            Toast.makeText(getApplicationContext(), ToastsMsg.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
+        if (!InputsAreGood())
+            Toast.makeText(getApplicationContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
         else {
             //TODO Save Data in The Database
-            postWorker = new PostWorker();
+            postWorkerEntity = new PostWorkerEntity();
 
             // postWorker.iD_PostWorker is automatic implemented
-            postWorker.setFirstname(stfirstname);
-            postWorker.setLastName(stlastname);
-            postWorker.setAddress(staddress);
-            postWorker.setLogin(stmail);
-            postWorker.setPassword(stpwd);
-            postWorker.setPhone(stphone);
-            postWorker.setRegion(stloca);
-            postWorker.setZip(stzip);
+            postWorkerEntity.setFirstname(stfirstname);
+            postWorkerEntity.setLastname(stlastname);
+            postWorkerEntity.setAddress(staddress);
+            postWorkerEntity.setEmail(stmail);
+            postWorkerEntity.setPassword(stpwd);
+            postWorkerEntity.setPhone(stphone);
+            postWorkerEntity.setCity(stloca);
+            postWorkerEntity.setZip(stzip);
             //add that user to the database
-            myDatabase.postWorkerDao().addPostWorker(postWorker);
+            myDatabase.postWorkerDao().insert(postWorkerEntity);
             System.out.println("## POST WORKER ADDED");
             //Launching the login page after saving data in the Database
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
             //To "notify" the customer his account has been created
-            Toast.makeText(getApplicationContext(), ToastsMsg.ACCOUNT_CREATED.toString(), Toast.LENGTH_LONG).show();
-      }
+            Toast.makeText(getApplicationContext(), Messages.ACCOUNT_CREATED.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

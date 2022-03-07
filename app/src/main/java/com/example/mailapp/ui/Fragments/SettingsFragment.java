@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.os.Bundle;
 
@@ -12,9 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.PostWorker;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 
@@ -25,7 +25,7 @@ import com.example.mailapp.SessionManagement.SessionManagement;
  */
 public class SettingsFragment extends Fragment {
 
-    PostWorker postWorker;
+    PostWorkerEntity postWorkerEntity;
     PostWorkerDao postWorkerDao;
     MyDatabase myDatabase;
     View v;
@@ -92,8 +92,8 @@ public class SettingsFragment extends Fragment {
                 System.out.println(inputSpinner.getSelectedItem());
 
                 myDatabase.postWorkerDao().updatePostWorkerBackGround(sessionManagement.getSession(),inputSpinner.getSelectedItem().toString());
-                PostWorker p = myDatabase.postWorkerDao().getPostWorkerByid(sessionManagement.getSession());
-                postWorker.postWorkerToString(postWorker);
+                PostWorkerEntity p = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
+                postWorkerEntity.postWorkerToString(postWorkerEntity);
             }
 
             @Override

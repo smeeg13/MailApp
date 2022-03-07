@@ -1,6 +1,4 @@
-package com.example.mailapp;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.mailapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,11 +7,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.PostWorker;
-import com.example.mailapp.Enums.ToastsMsg;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+
+import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mail, pwd;
     private TextView SignUpbtn;
 
-    private PostWorker postWorker;
+    private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
 
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         myDatabase = MyDatabase.getInstance(this.getBaseContext());
         // Creating a link to the register page if client don't have an account
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
-        List<PostWorker> list;
+        List<PostWorkerEntity> list;
         list = myDatabase.postWorkerDao().getAll();
         postWorkersListToString(list);
         //PostWorker admin =  new PostWorker();
@@ -79,23 +81,23 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             showError(mail, "Wrong informations");
             showError(pwd, "Wrong informations");
-            Toast.makeText(getBaseContext(), ToastsMsg.WRONG_INFO.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), Messages.WRONG_INFO.toString(), Toast.LENGTH_SHORT).show();
         }
     }
     private boolean checkLogin(String login, String password) {
-        List<PostWorker> list;
+        LiveData<List<PostWorkerEntity>> list;
         list = myDatabase.postWorkerDao().getAll();
         System.out.println(mail.getText().toString());
         System.out.println(pwd.getText().toString());
-        for  (PostWorker postWorker : list) {
-            if (postWorker.getLogin().equals(login) && postWorker.getPassword().equals(password)) {
+        for  (PostWorkerEntity postWorkerEntity : list) {
+            if (postWorkerEntity.getEmail().equals(login) && postWorkerEntity.getPassword().equals(password)) {
                 System.out.println("login cible "+login);
-                System.out.println("postworker login"+ postWorker.getLogin());
+                System.out.println("postworker login"+ postWorkerEntity.getEmail());
                 System.out.println("password cible "+login);
-                System.out.println("postworker password"+ postWorker.getPassword());
+                System.out.println("postworker password"+ postWorkerEntity.getPassword());
                 System.out.println("POST WORKER HAS BEEN FOUND");
                 SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
-                sessionManagement.saveSession(postWorker);
+                sessionManagement.saveSession(postWorkerEntity);
                 return true;
             }
         }
@@ -107,18 +109,18 @@ public class LoginActivity extends AppCompatActivity {
         input.setError(s);
     }
 
-    public void postWorkersListToString(List<PostWorker> postWorkers) {
-        for (PostWorker postWorker : postWorkers) {
+    public void postWorkersListToString(List<PostWorkerEntity> postWorkerEntities) {
+        for (PostWorkerEntity postWorkerEntity : postWorkerEntities) {
             System.out.println("/////////////////");
-            System.out.println("ID of post worker :" + postWorker.getiD_PostWorker());
-            System.out.println("Login :" + postWorker.getLogin());
-            System.out.println("Passowrd :"+postWorker.getPassword());
-            System.out.println("Firstname :" + postWorker.getFirstname());
-            System.out.println("Lastname :" + postWorker.getLastName());
-            System.out.println("Phone :" + postWorker.getPhone());
-            System.out.println("Address :" + postWorker.getAddress());
-            System.out.println("Region :" + postWorker.getRegion());
-            System.out.println("Zip :" + postWorker.getZip());
+            System.out.println("ID of post worker :" + postWorkerEntity.getIdPostWorker());
+            System.out.println("Login :" + postWorkerEntity.getEmail());
+            System.out.println("Passowrd :"+ postWorkerEntity.getPassword());
+            System.out.println("Firstname :" + postWorkerEntity.getFirstname());
+            System.out.println("Lastname :" + postWorkerEntity.getLastname());
+            System.out.println("Phone :" + postWorkerEntity.getPhone());
+            System.out.println("Address :" + postWorkerEntity.getAddress());
+            System.out.println("Region :" + postWorkerEntity.getCity());
+            System.out.println("Zip :" + postWorkerEntity.getZip());
 
 
         }

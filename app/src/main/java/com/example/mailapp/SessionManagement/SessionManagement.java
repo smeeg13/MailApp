@@ -3,7 +3,7 @@ package com.example.mailapp.SessionManagement;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mailapp.DataBase.Entities.PostWorker;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 
 public class SessionManagement {
 
@@ -18,9 +18,9 @@ public class SessionManagement {
 
     }
 
-    public void saveSession(PostWorker postWorker) {
+    public void saveSession(PostWorkerEntity postWorkerEntity) {
         //save session of postWorker whenever user is logged in
-        int id = postWorker.getiD_PostWorker();
+        int id = postWorkerEntity.getIdPostWorker();
 
         editor.putInt(SESSION_KEY, id).commit();
     }

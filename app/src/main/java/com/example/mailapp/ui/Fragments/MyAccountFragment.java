@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.os.Bundle;
 
@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.PostWorker;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,7 +23,7 @@ public class MyAccountFragment extends Fragment {
     FloatingActionButton inputfloatingEditButton;
     ImageView inputaccountImage;
     Boolean aBoolean = true;
-    PostWorker postWorker;
+    PostWorkerEntity postWorkerEntity;
     PostWorkerDao postWorkerDao;
     MyDatabase myDatabase;
     SessionManagement sessionManagement;
@@ -48,11 +48,12 @@ public class MyAccountFragment extends Fragment {
         } else {
             enableEdit(false);
             //TODO save all the modification to the database
-            postWorker.setZip(inputZip.getText().toString());
-            postWorker.setRegion(inputLocation.getText().toString());
-            postWorker.setAddress(inputAddress.getText().toString());
-            postWorker.setPhone(inputPhone.getText().toString());
-            myDatabase.postWorkerDao().updatePostWorkerLocation(postWorker.getiD_PostWorker(), postWorker.getRegion(), postWorker.getZip(), postWorker.getAddress(), postWorker.getPhone());
+            postWorkerEntity.setZip(inputZip.getText().toString());
+            postWorkerEntity.setCity(inputLocation.getText().toString());
+            postWorkerEntity.setAddress(inputAddress.getText().toString());
+            postWorkerEntity.setPhone(inputPhone.getText().toString());
+            //TODO check if all fields are good
+            myDatabase.postWorkerDao().update(postWorkerEntity);
            // initialize(v);
             inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
             aBoolean = true;
@@ -109,22 +110,22 @@ public class MyAccountFragment extends Fragment {
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
-        postWorker = myDatabase.postWorkerDao().getPostWorkerByid(sessionManagement.getSession());
+        postWorkerEntity = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
-        firstname = postWorker.getFirstname()+" ";
-        lastname = postWorker.getLastName();
+        firstname = postWorkerEntity.getFirstname()+" ";
+        lastname = postWorkerEntity.getLastname();
         inputFirstnameAndLastname.setText(firstname + lastname);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
         inputEmail = v.findViewById(R.id.AccountEmailTextView);
-        inputEmail.setText(postWorker.getLogin());
+        inputEmail.setText(postWorkerEntity.getEmail());
         inputPhone = v.findViewById(R.id.AccountPhoneTextView);
-        inputPhone.setText(postWorker.getPhone());
+        inputPhone.setText(postWorkerEntity.getPhone());
         inputAddress = v.findViewById(R.id.AccountAddressTextView);
-        inputAddress.setText(postWorker.getAddress());
+        inputAddress.setText(postWorkerEntity.getAddress());
         inputZip = v.findViewById(R.id.AccountZipTextView);
-        inputZip.setText(postWorker.getZip());
+        inputZip.setText(postWorkerEntity.getZip());
         inputLocation = v.findViewById(R.id.AccountLocationTextView);
-        inputLocation.setText(postWorker.getRegion());
+        inputLocation.setText(postWorkerEntity.getCity());
         inputPassword = v.findViewById(R.id.AccountPasswordTextView);
         inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
     }

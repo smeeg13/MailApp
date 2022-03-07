@@ -1,4 +1,4 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import static com.example.mailapp.R.*;
 
@@ -17,11 +17,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.mailapp.DataBase.Dao.MailDao;
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.Mail;
-import com.example.mailapp.DataBase.Entities.PostWorker;
+import com.example.mailapp.database.dao.MailDao;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 
@@ -39,9 +39,9 @@ public abstract class MailFrag extends Fragment{
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
 
-    private Mail mail;
+    private MailEntity mailEntity;
     private MailDao mailDao;
-    private PostWorker postWorker;
+    private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
     private SessionManagement sessionManagement;

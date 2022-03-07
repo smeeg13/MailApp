@@ -1,7 +1,6 @@
-package com.example.mailapp.Fragments;
+package com.example.mailapp.ui.Fragments;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +11,21 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mailapp.DataBase.Dao.MailDao;
-import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Entities.Mail;
-import com.example.mailapp.DataBase.Entities.PostWorker;
 import com.example.mailapp.Enums.Status;
-import com.example.mailapp.Enums.ToastsMsg;
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
+import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.dao.MailDao;
+import com.example.mailapp.database.dao.PostWorkerDao;
+import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 
 public class AddNewFragment extends MailFrag {
 
@@ -39,9 +37,9 @@ public class AddNewFragment extends MailFrag {
     private String mailType, shipType = "B-Mail";
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
-    private Mail mail;
+    private MailEntity mailEntity;
     private MailDao mailDao;
-    private PostWorker postWorker;
+    private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
     private SessionManagement sessionManagement;
@@ -69,7 +67,7 @@ public class AddNewFragment extends MailFrag {
         initialize(v);
         mailType = chooseMailType(letter, packages, weight);
         shipType = chooseShippingType(amail, bmail, recmail, dueDate);
-       // bmail.setChecked(true);
+        // bmail.setChecked(true);
         calculateShipDate(shipType,dueDate);
         addNewMail(v);
         return v;
@@ -116,25 +114,25 @@ public class AddNewFragment extends MailFrag {
                 boolean anyisempty = checkEmpty(editTexts, letter, packages, amail, bmail, recmail,dueDate);
 
                 if (anyisempty) {
-                     System.out.println("## One or more fields are empty !");
-                    Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
+                    System.out.println("## One or more fields are empty !");
+                    Toast.makeText(getActivity().getApplicationContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     //TODO show mail detail page after registered it in DB
-                    mail = new Mail();
-                    mail.setMailFrom(mailFrom.getText().toString());
-                    mail.setMailTo(mailTo.getText().toString());
-                    mail.setMailType(mailType);
-                    mail.setShippingType(shipType);
-                    mail.setAddress(address.getText().toString());
-                    mail.setStatus(Status.IN_PROGRESS.toString());
-                    mail.setReceiveDate(Todaydate);
-                    mail.setShippedDate(dueDate.getText().toString());
-                    mail.setLocationName(city.getText().toString());
-                    mail.setZip(zip.getText().toString());
+                    mailEntity = new MailEntity();
+                    mailEntity.setMailFrom(mailFrom.getText().toString());
+                    mailEntity.setMailTo(mailTo.getText().toString());
+                    mailEntity.setMailType(mailType);
+                    mailEntity.setShippingType(shipType);
+                    mailEntity.setAddress(address.getText().toString());
+                    mailEntity.setStatus(Status.IN_PROGRESS.toString());
+                    mailEntity.setReceiveDate(Todaydate);
+                    mailEntity.setShippedDate(dueDate.getText().toString());
+                    mailEntity.setCity(city.getText().toString());
+                    mailEntity.setZip(zip.getText().toString());
 
-                    myDatabase.mailDao().insertAll(mail);
-                    mail.toString();
-                    Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                    myDatabase.mailDao().insert(mailEntity);
+                    mailEntity.toString();
+                    Toast.makeText(getActivity().getApplicationContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
 
                     if (isAssignedToMe()){
                         //TODO Link with the connected profile
@@ -146,7 +144,7 @@ public class AddNewFragment extends MailFrag {
                     System.out.println("## Go to Mail Detail");
                     replaceFragment(new HomeFragment());
                     //Open the detail mail
-                   // openMailDetail();
+                    // openMailDetail();
                 }
             }
         });
@@ -209,5 +207,6 @@ public class AddNewFragment extends MailFrag {
         System.out.println("## mail from send : "+ mailfromstr);
 
     }
+
 
 }
