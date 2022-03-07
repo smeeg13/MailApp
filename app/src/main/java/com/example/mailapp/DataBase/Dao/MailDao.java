@@ -4,8 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.mailapp.DataBase.Tables.Mail;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.Mail;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.mailapp.DataBase.Tables;
+package com.example.mailapp.DataBase.Entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

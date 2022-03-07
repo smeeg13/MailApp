@@ -1,21 +1,15 @@
 package com.example.mailapp.Fragments;
 
-import static com.example.mailapp.RegisterActivity.showError;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Switch;
@@ -25,8 +19,8 @@ import android.widget.Toast;
 import com.example.mailapp.DataBase.Dao.MailDao;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Tables.Mail;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.Mail;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 import com.example.mailapp.Enums.ToastsMsg;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;

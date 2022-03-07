@@ -3,7 +3,7 @@ package com.example.mailapp.SessionManagement;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 
 public class SessionManagement {
 
