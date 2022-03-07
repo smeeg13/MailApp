@@ -8,8 +8,8 @@ import androidx.room.RoomDatabase;
 
 import com.example.mailapp.DataBase.Dao.MailDao;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
-import com.example.mailapp.DataBase.Tables.Mail;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.Mail;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 
 @Database(entities = {PostWorker.class, Mail.class}, version = 5)
 public abstract class MyDatabase extends RoomDatabase {

@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 
 import java.util.List;
 

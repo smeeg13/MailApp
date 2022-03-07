@@ -1,8 +1,7 @@
-package com.example.mailapp.DataBase.Tables;
+package com.example.mailapp.DataBase.Entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.List;

@@ -13,8 +13,6 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,8 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.mailapp.DataBase.Dao.MailDao;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Tables.Mail;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.Mail;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 
@@ -114,7 +112,7 @@ public abstract class MailFrag extends Fragment{
             dueDate.setBackgroundResource(R.drawable.red_bg);
         }
 
-        System.out.println("## One or more fields are empty !");
+       // System.out.println("## One or more fields are empty !");
         return IsEmpty > 0;
     }
 

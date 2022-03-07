@@ -1,17 +1,10 @@
 package com.example.mailapp.Fragments;
 
-import static com.example.mailapp.RegisterActivity.showError;
-
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,8 +15,8 @@ import android.widget.Toast;
 import com.example.mailapp.DataBase.Dao.MailDao;
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Tables.Mail;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.Mail;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 import com.example.mailapp.Enums.Status;
 import com.example.mailapp.Enums.ToastsMsg;
 import com.example.mailapp.R;
@@ -74,10 +67,10 @@ public class AddNewFragment extends MailFrag {
         sessionManagement = new SessionManagement(this.getContext());
 
         initialize(v);
-        chooseMailType(letter, packages, weight);
-        chooseShippingType(amail, bmail, recmail, dueDate);
-        bmail.setChecked(true);
-        calculateShipDate(shipType);
+        mailType = chooseMailType(letter, packages, weight);
+        shipType = chooseShippingType(amail, bmail, recmail, dueDate);
+       // bmail.setChecked(true);
+        calculateShipDate(shipType,dueDate);
         addNewMail(v);
         return v;
     }
@@ -123,6 +116,7 @@ public class AddNewFragment extends MailFrag {
                 boolean anyisempty = checkEmpty(editTexts, letter, packages, amail, bmail, recmail,dueDate);
 
                 if (anyisempty) {
+                     System.out.println("## One or more fields are empty !");
                     Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     //TODO show mail detail page after registered it in DB
@@ -139,6 +133,8 @@ public class AddNewFragment extends MailFrag {
                     mail.setZip(zip.getText().toString());
 
                     myDatabase.mailDao().insertAll(mail);
+                    mail.toString();
+                    Toast.makeText(getActivity().getApplicationContext(), ToastsMsg.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
 
                     if (isAssignedToMe()){
                         //TODO Link with the connected profile
@@ -146,8 +142,11 @@ public class AddNewFragment extends MailFrag {
                     else{
                         //TODO Link to the central
                     }
-                    openMailDetail();
-
+                    //Go back to home page
+                    System.out.println("## Go to Mail Detail");
+                    replaceFragment(new HomeFragment());
+                    //Open the detail mail
+                   // openMailDetail();
                 }
             }
         });
@@ -196,6 +195,7 @@ public class AddNewFragment extends MailFrag {
 
         System.out.println("## Shipping Due Date According to ship type : "+ dueDatestr);
         dueDate.setText(dueDatestr);
+
     }
 
     private void openMailDetail(){

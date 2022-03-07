@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.mailapp.DataBase.Dao.PostWorkerDao;
 import com.example.mailapp.DataBase.MyDatabase;
-import com.example.mailapp.DataBase.Tables.PostWorker;
+import com.example.mailapp.DataBase.Entities.PostWorker;
 import com.example.mailapp.R;
 
 
