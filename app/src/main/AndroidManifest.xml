@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mailapp">
 
     <application
@@ -10,23 +11,56 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MailApp">
 
-        <activity android:name=".HomeScreen"
-            android:parentActivityName=".MainActivity">
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAU9AXHZR9oH8lUXW7nhgq89yAzoFTS6gw" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.MailAppNoBar"
+            tools:ignore="ExtraText"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.MailAppNoBar"
+            tools:ignore="ExtraText">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
+        <activity
+            android:name=".HomeActivity"
+            android:parentActivityName=".LoginActivity"
+            android:exported="false">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+
     </application>
 
 </manifest>

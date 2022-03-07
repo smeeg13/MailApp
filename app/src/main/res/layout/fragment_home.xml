@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Fragments.HomeFragment">
+
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <SearchView
+        android:id="@+id/HomeSearchBar"
+        android:layout_width="384dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="4dp"
+        android:background="#D7DADADA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/HomeSeeAllMailsBtn"
+        android:layout_width="272dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/white"
+        android:text="@string/see_all_mails"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeSearchBar"
+        app:rippleColor="@color/black" />
+
+    <Button
+        android:id="@+id/HomeAMailBtn"
+        android:layout_width="91dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/white"
+        android:text="@string/a_mail"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/HomeBMailBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
+        app:rippleColor="@color/black"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/HomeBMailBtn"
+        android:layout_width="91dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/white"
+        android:text="@string/b_mail"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/HomeRecomMailBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/HomeAMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
+        app:rippleColor="@color/black"
+        tools:ignore="TextContrastCheck,TextContrastCheck" />
+
+    <Button
+        android:id="@+id/HomeRecomMailBtn"
+        android:layout_width="142dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_bg"
+        android:backgroundTint="@color/white"
+        android:text="@string/recommended"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/HomeBMailBtn"
+        app:layout_constraintTop_toBottomOf="@+id/HomeShipTypeTextView"
+        app:rippleColor="@color/black" />
+
+    <TextView
+        android:id="@+id/HomeShipTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/by_shipping_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeProgressBar"
+        tools:ignore="MissingConstraints" />
+
+    <ScrollView
+        android:id="@+id/HomeTodayScrollView"
+        android:layout_width="381dp"
+        android:layout_height="469dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeBMailBtn"
+        app:layout_constraintVertical_bias="1.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/HomeProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="158dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.063"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeSeeAllMailsBtn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

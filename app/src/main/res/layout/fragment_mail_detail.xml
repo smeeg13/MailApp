@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Fragments.MailDetailFragment">
+
+    <Switch
+        android:id="@+id/DetailAssignedToSwitch"
+        android:layout_width="177dp"
+        android:layout_height="48dp"
+        android:layout_gravity="start|top"
+        android:layout_marginTop="16dp"
+        android:showText="true"
+        android:text="@string/assigned_to_me"
+        android:textOff="@string/no"
+        android:textOn="@string/yes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.168"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/DetailIDTextView"
+        android:layout_width="84dp"
+        android:layout_height="22dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/input_bg"
+        android:backgroundTint="#CFCFCF"
+        android:text="@string/id_111232"
+        android:textSize="14sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/DetailAssignedToSwitch"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/DetailMailFromTextView"
+        android:layout_width="139dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="84dp"
+        android:text="@string/mail_from"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/DetailMailToTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/DetailMailToTextView"
+        android:layout_width="138dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="84dp"
+        android:text="@string/mail_to"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/DetailMailFromTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/DetailMailFromEditText"
+        android:layout_width="137dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/DetailMailFromTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailMailFromTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailFromTextView"
+        tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+
+    <EditText
+        android:id="@+id/DetailMailToEditText"
+        android:layout_width="137dp"
+        android:layout_height="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/DetailMailToTextView"
+        app:layout_constraintStart_toStartOf="@+id/DetailMailToTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailToTextView" />
+
+    <EditText
+        android:id="@+id/DetailAddressEditText"
+        android:layout_width="304dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/address"
+        android:inputType="textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/DetailAddressTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailAddressTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailAddressTextView"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/DetailZipEditText"
+        android:layout_width="104dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/zip"
+        android:inputType="number|textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/DetailCityEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailAddressEditText"
+        app:layout_constraintTop_toBottomOf="@+id/DetailAddressEditText"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/DetailCityEditText"
+        android:layout_width="206dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="52dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/city"
+        android:inputType="textPostalAddress"
+        android:minHeight="48dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DetailAddressEditText"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/DetailShipDateTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/due_date_for_shipping"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/DetailShipTypeTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/DetailBMailRadioBtn" />
+
+    <RadioButton
+        android:id="@+id/DetailAMailRadioBtn"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:text="@string/a_mail"
+        app:layout_constraintStart_toStartOf="@+id/DetailShipTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/DetailBMailRadioBtn"
+        android:layout_width="90dp"
+        android:layout_height="48dp"
+        android:text="@string/b_mail"
+        app:layout_constraintEnd_toStartOf="@+id/DetailRecomMailRadioBtn"
+        app:layout_constraintStart_toEndOf="@+id/DetailAMailRadioBtn"
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipTypeTextView" />
+
+    <EditText
+        android:id="@+id/DetailWeightEditText"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="48dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/weight"
+        android:inputType="numberDecimal"
+        android:textColorHint="#757575"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/DetailLetterRadioBtn"
+        android:layout_width="109dp"
+        android:layout_height="48dp"
+        android:text="@string/letter"
+        app:layout_constraintEnd_toStartOf="@+id/DetailPackageRadioBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailMailTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailTypeTextView" />
+
+    <RadioButton
+        android:id="@+id/DetailPackageRadioBtn"
+        android:layout_width="109dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/packages"
+        app:layout_constraintEnd_toStartOf="@+id/DetailWeightEditText"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailTypeTextView" />
+
+    <TextView
+        android:id="@+id/DetailMailTypeTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/mail_type"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/DetailMailToEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailMailFromEditText"
+        app:layout_constraintTop_toBottomOf="@+id/DetailMailFromEditText" />
+
+    <RadioButton
+        android:id="@+id/DetailRecomMailRadioBtn"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="44dp"
+        android:text="@string/recommended"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipTypeTextView" />
+
+    <TextView
+        android:id="@+id/DetailShipTypeTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/shipping_type"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/DetailMailTypeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailPackageRadioBtn" />
+
+    <TextView
+        android:id="@+id/DetailAddressTextView"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/address"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/DetailShipDateEditText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/DetailShipDateEditText"
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipDateEditText" />
+
+    <TextView
+        android:id="@+id/DetailShipDateEditText"
+        android:layout_width="209dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/DetailShipDateTextView"
+        app:layout_constraintStart_toStartOf="@+id/DetailShipDateTextView"
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipDateTextView" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/DetailEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00BCD4"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_edit_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        android:contentDescription="@string/edit" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/DetailDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00BCD4"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_delete_outline_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.774"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976"
+        android:contentDescription="@string/del" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
