@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
+import com.example.mailapp.util.OnAsyncEventListener;
 
 public class PostWorkerViewModel extends AndroidViewModel {
 

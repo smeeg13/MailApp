@@ -133,31 +133,42 @@ public class PostWorkerEntity {
         this.background = background;
     }
 
-    public void postWorkerToString(PostWorkerEntity postWorkerEntity) {
-
-        System.out.println("/////////////////");
-        System.out.println("ID of post worker : " + postWorkerEntity.getIdPostWorker());
-        System.out.println("Login :" + postWorkerEntity.getEmail());
-        System.out.println("Firstname :" + postWorkerEntity.getFirstname());
-        System.out.println("Lastname :" + postWorkerEntity.getLastname());
-        System.out.println("Phone :" + postWorkerEntity.getPhone());
-        System.out.println("Address :" + postWorkerEntity.getAddress());
-        System.out.println("Region :" + postWorkerEntity.getCity());
-        System.out.println("Zip :" + postWorkerEntity.getZip());
-        System.out.println("Background :" + postWorkerEntity.getBackground());
-
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof PostWorkerEntity)) return false;
+        PostWorkerEntity o = (PostWorkerEntity) obj;
+        return o.getIdPostWorker() == (this.getIdPostWorker());
     }
 
-    public  void postWorkersListToString(List<PostWorkerEntity> postWorkerEntities) {
+    @Override
+    public String toString() {
+        return "/////////////////"+
+                "ID : " + idPostWorker+
+                "Email : " + email+
+                "Firstame : " + firstname+
+                "Lastname : " + lastname+
+                "Phone number : " + phone+
+                "Address : "+ address+
+                "City : " + city+
+                "Zip : " + zip+
+                "Backbroung settings : "+ background+
+                "/////////////////";
+    }
+
+
+    public  void postWorkersToString(List<PostWorkerEntity> postWorkerEntities) {
+
         for (PostWorkerEntity postWorkerEntity : postWorkerEntities) {
             System.out.println("/////////////////");
             System.out.println("ID of post worker : " + postWorkerEntity.getIdPostWorker());
-            System.out.println("Login :" + postWorkerEntity.getEmail());
+            System.out.println("Email :" + postWorkerEntity.getEmail());
             System.out.println("Firstname :" + postWorkerEntity.getFirstname());
             System.out.println("Lastname :" + postWorkerEntity.getLastname());
             System.out.println("Phone :" + postWorkerEntity.getPhone());
             System.out.println("Address :" + postWorkerEntity.getAddress());
-            System.out.println("Region :" + postWorkerEntity.getCity());
+            System.out.println("City :" + postWorkerEntity.getCity());
             System.out.println("Zip :" + postWorkerEntity.getZip());
             System.out.println("Background :" + postWorkerEntity.getBackground());
 

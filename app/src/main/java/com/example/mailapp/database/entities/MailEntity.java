@@ -3,6 +3,7 @@ package com.example.mailapp.database.entities;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
@@ -10,7 +11,14 @@ import java.util.List;
 @Entity (tableName = "Mail",
             foreignKeys = @ForeignKey(entity = PostWorkerEntity.class,
                                         parentColumns = "idPostWorker",
-                                        childColumns = "postWorker"))
+                                        childColumns = "postWorker"
+            ),
+            indices = {
+                @Index(
+                        value = {"postworker"}
+                )}
+)
+
 public class MailEntity {
 
     public MailEntity() {
@@ -156,21 +164,31 @@ public class MailEntity {
         this.weight = weight;
     }
 
-    public  void MailToString(MailEntity mailEntity) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof MailEntity)) return false;
+        MailEntity o = (MailEntity) obj;
+        return o.getIdMail() == (this.getIdMail());
+    }
 
-        System.out.println("/////////////////");
-        System.out.println("ID of mail : " + mailEntity.getIdMail());
-        System.out.println("Mail to :" + mailEntity.getMailTo());
-        System.out.println("Mail from :" + mailEntity.getMailFrom());
-        System.out.println("Address :" + mailEntity.getAddress());
-        System.out.println("Location :" + mailEntity.getCity());
-        System.out.println("Zip :" + mailEntity.getZip());
-        System.out.println("Shipped date :" + mailEntity.getShippedDate());
-        System.out.println("Shipping type :" + mailEntity.getShippingType());
-        System.out.println("Receive date :" + mailEntity.getReceiveDate());
-        System.out.println("Status :" + mailEntity.getStatus());
-
-
+    @Override
+    public String toString() {
+        return "/////////////////"+
+                "ID : " + idMail+
+                "Mail from : " + mailFrom+
+                "Mail to : " + mailTo+
+                "Address : " + address+
+                "Location : " + city+
+                "Zip : " + zip+
+                "Mail type : " + mailType+
+                "weight : " + weight+
+                "Shipping type : " + shippingType+
+                "Shipped date : " + shippedDate+
+                "Receive date in central : " + receiveDate+
+                "Status : " + status+
+                "/////////////////";
     }
 
     public void mailsToString(List<MailEntity> mailEntities) {
@@ -184,13 +202,13 @@ public class MailEntity {
             System.out.println("Address :" + mailEntity.getAddress());
             System.out.println("Location :" + mailEntity.getCity());
             System.out.println("Zip :" + mailEntity.getZip());
-            System.out.println("Shipped date :" + mailEntity.getShippedDate());
+            System.out.println("Mail type :" + mailEntity.getMailType());
+            System.out.println("Weight :" + mailEntity.getWeight());
             System.out.println("Shipping type :" + mailEntity.getShippingType());
+            System.out.println("Shipped date :" + mailEntity.getShippedDate());
             System.out.println("Receive date :" + mailEntity.getReceiveDate());
             System.out.println("Status :" + mailEntity.getStatus());
         }
-
-
     }
 
 

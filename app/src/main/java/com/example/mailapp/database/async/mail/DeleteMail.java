@@ -1,30 +1,28 @@
-package com.example.mailapp.database.async;
+package com.example.mailapp.database.async.mail;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.OnAsyncEventListener;
 
-import java.security.Policy;
-
-public class CreatePostWorker extends AsyncTask<PostWorkerEntity, Void, Void> {
+public class DeleteMail extends AsyncTask<MailEntity, Void, Void> {
 
     private MyDatabase database;
     private OnAsyncEventListener callback;
     private Exception exception;
 
-    public CreatePostWorker(Context context, OnAsyncEventListener callback) {
+    public DeleteMail(Context context, OnAsyncEventListener callback) {
         database = MyDatabase.getInstance(context);
         this.callback = callback;
     }
 
     @Override
-    protected Void doInBackground(PostWorkerEntity... params) {
+    protected Void doInBackground(MailEntity... params) {
         try {
-            for (PostWorkerEntity postworker : params)
-                database.postWorkerDao().insert(postworker);
+            for (MailEntity mail : params)
+                database.mailDao().delete(mail);
         } catch (Exception e) {
             exception = e;
         }

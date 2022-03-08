@@ -32,11 +32,6 @@ public abstract class MyDatabase extends RoomDatabase {
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 
-
-
-
-
-
     public static MyDatabase getInstance(final Context context) {
         if (instance == null) {
             synchronized (MyDatabase.class){

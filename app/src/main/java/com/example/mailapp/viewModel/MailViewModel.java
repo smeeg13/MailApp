@@ -14,6 +14,7 @@ import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
+import com.example.mailapp.util.OnAsyncEventListener;
 
 public class MailViewModel  extends AndroidViewModel {
 
@@ -23,24 +24,24 @@ public class MailViewModel  extends AndroidViewModel {
     private Context applicationContext;
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
-    private final MediatorLiveData<MailEntity> observablePostworker;
+    private final MediatorLiveData<MailEntity> observableMail;
 
     public MailViewModel(@NonNull Application application,
-                               final String email, MailRepository repository) {
+                               final int idMail, MailRepository repository) {
         super(application);
 
         this.repository = repository;
 
         applicationContext = application.getApplicationContext();
 
-        observablePostworker = new MediatorLiveData<>();
+        observableMail = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
-        observablePostworker.setValue(null);
+        observableMail.setValue(null);
 
-        LiveData<PostWorkerEntity> postworker = this.repository.getClientByEmail(email, applicationContext);
+        LiveData<MailEntity> mail = this.repository.getMailById(idMail, applicationContext);
 
         // observe the changes of the client entity from the database and forward them
-        observablePostworker.addSource(postworker, observablePostworker::setValue);
+        observableMail.addSource(mail, observableMail::setValue);
     }
 
     /**
@@ -51,39 +52,39 @@ public class MailViewModel  extends AndroidViewModel {
         @NonNull
         private final Application application;
 
-        private final String email;
+        private final int mailID;
 
-        private final PostworkerRepository repository;
+        private final MailRepository repository;
 
-        public Factory(@NonNull Application application, String postworkeremail) {
+        public Factory(@NonNull Application application, int mailID) {
             this.application = application;
-            this.email = postworkeremail;
-            repository = PostworkerRepository.getInstance();
+            this.mailID = mailID;
+            repository = MailRepository.getInstance();
         }
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new PostWorkerViewModel(application, email, repository);
+            return (T) new MailViewModel(application, mailID, repository);
         }
     }
 
     /**
      * Expose the LiveData ClientEntity query so the UI can observe it.
      */
-    public LiveData<PostWorkerEntity> getClient() {
-        return observablePostworker;
+    public LiveData<MailEntity> getMail() {
+        return observableMail;
     }
 
-    public void createClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.insert(postWorker, callback, applicationContext);
+    public void createMail(MailEntity mail, OnAsyncEventListener callback) {
+        repository.insert(mail, callback, applicationContext);
     }
 
-    public void updateClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.update(postWorker, callback, applicationContext);
+    public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
+        repository.update(mail, callback, applicationContext);
     }
 
-    public void deleteClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.delete(postWorker, callback, applicationContext);
+    public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
+        repository.delete(mail, callback, applicationContext);
     }
 }

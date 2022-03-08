@@ -1,4 +1,4 @@
-package com.example.mailapp.database.async;
+package com.example.mailapp.database.async.postworker;
 
 import android.content.Context;
 import android.os.AsyncTask;

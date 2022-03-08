@@ -1,4 +1,4 @@
-package com.example.mailapp.database.async;
+package com.example.mailapp.database.async.postworker;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,12 +7,15 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.util.OnAsyncEventListener;
 
-public class UpdatePostWorker extends AsyncTask<PostWorkerEntity, Void,Void> {
+import java.security.Policy;
+
+public class CreatePostWorker extends AsyncTask<PostWorkerEntity, Void, Void> {
+
     private MyDatabase database;
     private OnAsyncEventListener callback;
     private Exception exception;
 
-    public UpdatePostWorker(Context context, OnAsyncEventListener callback){
+    public CreatePostWorker(Context context, OnAsyncEventListener callback) {
         database = MyDatabase.getInstance(context);
         this.callback = callback;
     }
@@ -20,8 +23,8 @@ public class UpdatePostWorker extends AsyncTask<PostWorkerEntity, Void,Void> {
     @Override
     protected Void doInBackground(PostWorkerEntity... params) {
         try {
-            for (PostWorkerEntity postWorker : params)
-                database.postWorkerDao().update(postWorker);
+            for (PostWorkerEntity postworker : params)
+                database.postWorkerDao().insert(postworker);
         } catch (Exception e) {
             exception = e;
         }

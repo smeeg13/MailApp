@@ -5,14 +5,11 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.async.CreateMail;
-import com.example.mailapp.database.async.CreatePostWorker;
-import com.example.mailapp.database.async.DeleteMail;
-import com.example.mailapp.database.async.DeletePostWorker;
-import com.example.mailapp.database.async.UpdateMail;
-import com.example.mailapp.database.async.UpdatePostWorker;
+import com.example.mailapp.database.async.mail.CreateMail;
+import com.example.mailapp.database.async.mail.DeleteMail;
+import com.example.mailapp.database.async.mail.UpdateMail;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.util.OnAsyncEventListener;
 
 import java.util.List;
 
