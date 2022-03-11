@@ -15,19 +15,24 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
+import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class MyAccountFragment extends Fragment {
-    TextView inputEmail,inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
-    FloatingActionButton inputfloatingEditButton;
-    ImageView inputaccountImage;
-    Boolean aBoolean = true;
-    PostWorkerEntity postWorkerEntity;
-    PostWorkerDao postWorkerDao;
-    MyDatabase myDatabase;
-    SessionManagement sessionManagement;
-    View v;
+    private static final String TAG ="AccountDetails";
+
+    private TextView inputEmail,inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
+    private FloatingActionButton inputfloatingEditButton;
+    private ImageView inputaccountImage;
+    private Boolean aBoolean = true;
+    private PostWorkerEntity postWorkerEntity;
+    private PostWorkerDao postWorkerDao;
+    private MyDatabase myDatabase;
+    private SessionManagement sessionManagement;
+    private View v;
+
+    private PostWorkerViewModel viewModel;
 
     public MyAccountFragment() {
         // Required empty public constructor
@@ -110,7 +115,7 @@ public class MyAccountFragment extends Fragment {
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
-        postWorkerEntity = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
+     //   postWorkerEntity = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
         firstname = postWorkerEntity.getFirstname()+" ";
         lastname = postWorkerEntity.getLastname();

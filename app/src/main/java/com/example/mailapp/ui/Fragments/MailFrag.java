@@ -1,8 +1,8 @@
 package com.example.mailapp.ui.Fragments;
 
 import static com.example.mailapp.R.*;
+import static com.example.mailapp.ui.RegisterActivity.showError;
 
-import static com.example.mailapp.RegisterActivity.showError;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -37,7 +37,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        inputConnectedAs = v.findViewById(R.id.HomeConnectedAsTextView);
+      //  inputConnectedAs = v.findViewById(R.id.HomeConnectedAsTextView);
 
         return v;
     }

@@ -1,19 +1,21 @@
 package com.example.mailapp.database.async.mail;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.OnAsyncEventListener;
 
 public class UpdateMail extends AsyncTask<MailEntity, Void,Void> {
-    private MyDatabase database;
+    private Application application;
     private OnAsyncEventListener callback;
     private Exception exception;
 
-    public UpdateMail(Context context, OnAsyncEventListener callback){
-        database = MyDatabase.getInstance(context);
+    public UpdateMail(Application application, OnAsyncEventListener callback){
+        this.application = application;
         this.callback = callback;
     }
 
@@ -21,7 +23,7 @@ public class UpdateMail extends AsyncTask<MailEntity, Void,Void> {
     protected Void doInBackground(MailEntity... params) {
         try {
             for (MailEntity mail : params)
-                database.mailDao().update(mail);
+                ((BaseApplication)application).getDatabase().mailDao().update(mail);
         } catch (Exception e) {
             exception = e;
         }

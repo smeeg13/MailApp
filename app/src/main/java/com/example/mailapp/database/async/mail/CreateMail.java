@@ -1,22 +1,22 @@
 package com.example.mailapp.database.async.mail;
 
-import android.Manifest;
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.dao.MailDao;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.OnAsyncEventListener;
 
 public class CreateMail extends AsyncTask<MailEntity, Void, Void> {
 
-    private MyDatabase database;
+    private Application application;
     private OnAsyncEventListener callback;
     private Exception exception;
 
-    public CreateMail(Context context, OnAsyncEventListener callback) {
-        database = MyDatabase.getInstance(context);
+    public CreateMail(Application application, OnAsyncEventListener callback) {
+        this.application = application;
         this.callback = callback;
     }
 
@@ -24,7 +24,7 @@ public class CreateMail extends AsyncTask<MailEntity, Void, Void> {
     protected Void doInBackground(MailEntity... params) {
         try {
             for (MailEntity mail : params)
-                database.mailDao().insert(mail);
+                ((BaseApplication)application).getDatabase().mailDao().insert(mail);
         } catch (Exception e) {
             exception = e;
         }

@@ -11,11 +11,12 @@ import java.util.List;
 @Entity (tableName = "Mail",
             foreignKeys = @ForeignKey(entity = PostWorkerEntity.class,
                                         parentColumns = "idPostWorker",
-                                        childColumns = "postWorker"
+                                        childColumns = "postWorker",
+                                        onDelete = ForeignKey.CASCADE
             ),
             indices = {
                 @Index(
-                        value = {"postworker"}
+                        value = {"postWorker"}
                 )}
 )
 
@@ -38,8 +39,8 @@ public class MailEntity {
     public int idMail;
 
     //TODO add the link with postworker
-    @ColumnInfo(name = "postworker")
-    public int postworker;
+    @ColumnInfo(name = "postWorker")
+    public int postWorker;
 
     @ColumnInfo(name = "mailFrom")
     public String mailFrom;
@@ -148,12 +149,12 @@ public class MailEntity {
         return idMail;
     }
 
-    public int getPostworker() {
-        return postworker;
+    public int getPostWorker() {
+        return postWorker;
     }
 
-    public void setPostworker(int postworker) {
-        this.postworker = postworker;
+    public void setPostWorker(int postWorker) {
+        this.postWorker = postWorker;
     }
 
     public int getWeight() {

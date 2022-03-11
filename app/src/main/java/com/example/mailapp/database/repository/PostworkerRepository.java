@@ -1,9 +1,12 @@
 package com.example.mailapp.database.repository;
 
+import android.app.Application;
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.async.postworker.CreatePostWorker;
 import com.example.mailapp.database.async.postworker.DeletePostWorker;
@@ -31,37 +34,38 @@ public class PostworkerRepository {
         return instance;
     }
 
-    public LiveData<List<PostWorkerEntity>> getAllPostworkers(Context context) {
-        return MyDatabase.getInstance(context).postWorkerDao().getAll();
+    public LiveData<List<PostWorkerEntity>> getAllPostworkers(Application application) {
+        return ((BaseApplication) application).getDatabase().postWorkerDao().getAll();
     }
 
-    public LiveData<PostWorkerEntity> getPostworkerById(final int id, Context context) {
-        return MyDatabase.getInstance(context).postWorkerDao().getById(id);
+    public LiveData<PostWorkerEntity> getPostworkerById(final int id, Application application) {
+        return ((BaseApplication) application).getDatabase().postWorkerDao().getById(id);
     }
 
-    public LiveData<PostWorkerEntity> getPostworkerByEmail(final String email, Context context) {
-        return MyDatabase.getInstance(context).postWorkerDao().getByEmail(email);
+    public LiveData<PostWorkerEntity> getPostworkerByEmail(final String email, Application application) {
+        return ((BaseApplication) application).getDatabase().postWorkerDao().getByEmail(email);
+
     }
 
-    public LiveData<PostWorkerEntity> getPostworkerByName(final String firstname, final String lastname, Context context) {
-        return MyDatabase.getInstance(context).postWorkerDao().getByName(firstname, lastname);
+    public LiveData<PostWorkerEntity> getPostworkerByName(final String firstname, final String lastname, Application application) {
+        return ((BaseApplication) application).getDatabase().postWorkerDao().getByName(firstname,lastname);
     }
 
-    public void updateBackgroundSetting(final int idPostWorker, final String background, Context context) {
-        MyDatabase.getInstance(context).postWorkerDao().updatePostWorkerBackGround(idPostWorker, background);
+    public void updateBackgroundSetting(final int idPostWorker, final String background, Application application) {
+        ((BaseApplication) application).getDatabase().postWorkerDao().updatePostWorkerBackGround(idPostWorker,background);
     }
 
 
-    public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Context context) {
-        new CreatePostWorker(context, callback).execute(postWorker);
+    public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
+        new CreatePostWorker(application, callback).execute(postWorker);
     }
 
-    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Context context) {
-        new UpdatePostWorker(context, callback).execute(postWorker);
+    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
+        new UpdatePostWorker(application, callback).execute(postWorker);
     }
 
-    public void delete(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Context context) {
-        new DeletePostWorker(context, callback).execute(postWorker);
+    public void delete(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
+        new DeletePostWorker(application, callback).execute(postWorker);
     }
 
 }

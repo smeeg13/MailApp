@@ -32,7 +32,7 @@ public interface PostWorkerDao {
     LiveData<PostWorkerEntity> getByName(String first, String last);
 
     @Insert
-    void insert(PostWorkerEntity postWorkerEntity)throws SQLiteConstraintException;
+    long insert(PostWorkerEntity postWorkerEntity)throws SQLiteConstraintException;
 
     @Update
     void update(PostWorkerEntity postWorker);

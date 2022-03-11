@@ -32,16 +32,7 @@
         app:layout_constraintBottom_toTopOf="@+id/HomeBottomNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeTopNavBar">
-
-        <TextView
-            android:id="@+id/HomeConnectedAsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:gravity="center"
-            android:text="TextView" />
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/HomeTopNavBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/HomeBottomNavBar"

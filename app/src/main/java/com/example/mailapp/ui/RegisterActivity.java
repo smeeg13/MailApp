@@ -1,7 +1,9 @@
 package com.example.mailapp.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.async.postworker.CreatePostWorker;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.util.OnAsyncEventListener;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -23,20 +27,22 @@ import java.util.regex.Pattern;
  */
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String TAG = "REGISTER";
+
+
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
-
-    private PostWorkerEntity postWorkerEntity;
-    private PostWorkerDao postWorkerDao;
-    private MyDatabase myDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        //Data base conneciton
-        myDatabase = MyDatabase.getInstance(this.getBaseContext());
+
+        initialize();
+       }
+
+    protected void initialize(){
         //Take back all the values entered by the new user
         inputfirstname = findViewById(R.id.RegisterFirstnameEditText);
         inputs.add(inputfirstname);
@@ -64,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when the user taps on the Create Account button
+     * Called when the user click on the Create Account button
      */
     public void Register(View view) {
         //Transform fields from the user in string
@@ -77,29 +83,46 @@ public class RegisterActivity extends AppCompatActivity {
         String stloca = inputLocation.getText().toString();
         String stpwd = inputPassword.getText().toString();
 
-        if (!InputsAreGood())
+        //Check if any is empty or if pwd & email are invalid
+        //& if the 2 pwd entered are same
+        if (!InputsAreGood()){
             Toast.makeText(getApplicationContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
+            inputPassword.setText("");
+            inputConfirmPwd.setText("");
+        }
         else {
-            //TODO Save Data in The Database
-            postWorkerEntity = new PostWorkerEntity();
+            //Create the post worker with info entered
+            PostWorkerEntity newWorker = new PostWorkerEntity(stfirstname,stlastname,staddress, stmail,stpwd,stphone,stloca,stzip);
+            //Save post worker in database
+            new CreatePostWorker(getApplication(), new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "createUserWithEmail: success");
+                    System.out.println("## POST WORKER ADDED");
+                    System.out.println(newWorker.toString());
+                    setResponse(true);
+                }
 
-            // postWorker.iD_PostWorker is automatic implemented
-            postWorkerEntity.setFirstname(stfirstname);
-            postWorkerEntity.setLastname(stlastname);
-            postWorkerEntity.setAddress(staddress);
-            postWorkerEntity.setEmail(stmail);
-            postWorkerEntity.setPassword(stpwd);
-            postWorkerEntity.setPhone(stphone);
-            postWorkerEntity.setCity(stloca);
-            postWorkerEntity.setZip(stzip);
-            //add that user to the database
-            myDatabase.postWorkerDao().insert(postWorkerEntity);
-            System.out.println("## POST WORKER ADDED");
-            //Launching the login page after saving data in the Database
+                @Override
+                public void onFailure(Exception e) {
+                    Log.d(TAG, "createUserWithEmail: failure", e);
+                    setResponse(false);
+                }
+            }).execute(newWorker);
+        }
+    }
+
+    private void setResponse(Boolean response) {
+        if (response) {
+            final SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+            editor.putString(BaseActivity.PREFS_USER, inputEmail.getText().toString());
+            editor.apply();
+            Toast.makeText(this,Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
-            //To "notify" the customer his account has been created
-            Toast.makeText(getApplicationContext(), Messages.ACCOUNT_CREATED.toString(), Toast.LENGTH_LONG).show();
+        } else {
+            inputEmail.setError(Messages.EMAIL_ALREADY_EXIST.toString());
+            inputEmail.requestFocus();
         }
     }
 
@@ -114,7 +137,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Check if all entries has been completed
         booleans[0] = CheckEmpty();
-        booleans[1] = CheckEmailInvalid(inputEmail.getText().toString());
+        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches())
+            booleans[1] = true;
         booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
         booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPwd.getText().toString());
 
@@ -194,26 +218,6 @@ public class RegisterActivity extends AppCompatActivity {
         return isWeak;
     }
 
-    /**
-     * To Check if the email entered is Valid
-     * Return true if the Email is Invalid
-     */
-    public boolean CheckEmailInvalid(String myemail) {
-        String email = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(email);
-        if (myemail == null)
-            return true;
-
-        if (!pat.matcher(myemail).matches()) {
-            showError(inputEmail, "## Email is not Valid");
-            return true;
-        } else
-            return false;
-    }
 
     /**
      * To Add the Red Info with a message in the field

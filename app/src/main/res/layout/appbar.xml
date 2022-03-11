@@ -9,5 +9,10 @@
     app:titleTextColor="@color/white"
     android:id="@+id/myToolBar"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <FrameLayout
+        android:id="@+id/flContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
 </androidx.appcompat.widget.Toolbar>

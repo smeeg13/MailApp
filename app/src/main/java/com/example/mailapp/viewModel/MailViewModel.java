@@ -10,6 +10,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
@@ -21,7 +22,7 @@ public class MailViewModel  extends AndroidViewModel {
 
     private MailRepository repository;
 
-    private Context applicationContext;
+    private Application application;
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<MailEntity> observableMail;
@@ -32,13 +33,13 @@ public class MailViewModel  extends AndroidViewModel {
 
         this.repository = repository;
 
-        applicationContext = application.getApplicationContext();
+        this.application = application;
 
         observableMail = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
         observableMail.setValue(null);
 
-        LiveData<MailEntity> mail = this.repository.getMailById(idMail, applicationContext);
+        LiveData<MailEntity> mail = this.repository.getMailById(idMail, application);
 
         // observe the changes of the client entity from the database and forward them
         observableMail.addSource(mail, observableMail::setValue);
@@ -59,7 +60,7 @@ public class MailViewModel  extends AndroidViewModel {
         public Factory(@NonNull Application application, int mailID) {
             this.application = application;
             this.mailID = mailID;
-            repository = MailRepository.getInstance();
+            repository = ((BaseApplication)application).getMailRepository();
         }
 
         @Override
@@ -77,14 +78,14 @@ public class MailViewModel  extends AndroidViewModel {
     }
 
     public void createMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.insert(mail, callback, applicationContext);
+        repository.insert(mail, callback, application);
     }
 
     public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.update(mail, callback, applicationContext);
+        repository.update(mail, callback, application);
     }
 
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.delete(mail, callback, applicationContext);
+        repository.delete(mail, callback, application);
     }
 }

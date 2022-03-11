@@ -92,7 +92,7 @@ public class SettingsFragment extends Fragment {
                 System.out.println(inputSpinner.getSelectedItem());
 
                 myDatabase.postWorkerDao().updatePostWorkerBackGround(sessionManagement.getSession(),inputSpinner.getSelectedItem().toString());
-                PostWorkerEntity p = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
+             //   PostWorkerEntity p = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
                 postWorkerEntity.toString();
             }
 

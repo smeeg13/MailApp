@@ -10,6 +10,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -19,7 +20,7 @@ public class PostWorkerViewModel extends AndroidViewModel {
 
     private PostworkerRepository repository;
 
-    private Context applicationContext;
+    private Application application;
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<PostWorkerEntity> observablePostworker;
@@ -30,13 +31,13 @@ public class PostWorkerViewModel extends AndroidViewModel {
 
         this.repository = repository;
 
-        applicationContext = application.getApplicationContext();
+        this.application = application;
 
         observablePostworker = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
         observablePostworker.setValue(null);
 
-        LiveData<PostWorkerEntity> postworker = this.repository.getPostworkerByEmail(email, applicationContext);
+        LiveData<PostWorkerEntity> postworker = this.repository.getPostworkerByEmail(email, application);
 
         // observe the changes of the client entity from the database and forward them
         observablePostworker.addSource(postworker, observablePostworker::setValue);
@@ -57,7 +58,7 @@ public class PostWorkerViewModel extends AndroidViewModel {
         public Factory(@NonNull Application application, String postworkeremail) {
             this.application = application;
             this.email = postworkeremail;
-            repository = PostworkerRepository.getInstance();
+            repository = ((BaseApplication)application).getPostworkerRepository();
         }
 
         @Override
@@ -75,14 +76,14 @@ public class PostWorkerViewModel extends AndroidViewModel {
     }
 
     public void createClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.insert(postWorker, callback, applicationContext);
+        repository.insert(postWorker, callback, application);
     }
 
     public void updateClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.update(postWorker, callback, applicationContext);
+        repository.update(postWorker, callback, application);
     }
 
     public void deleteClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
-        repository.delete(postWorker, callback, applicationContext);
+        repository.delete(postWorker, callback, application);
     }
 }

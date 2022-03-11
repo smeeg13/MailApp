@@ -144,16 +144,17 @@ public class PostWorkerEntity {
 
     @Override
     public String toString() {
-        return "/////////////////"+
-                "ID : " + idPostWorker+
-                "Email : " + email+
-                "Firstame : " + firstname+
-                "Lastname : " + lastname+
-                "Phone number : " + phone+
-                "Address : "+ address+
-                "City : " + city+
-                "Zip : " + zip+
-                "Backbroung settings : "+ background+
+        String sep = System.getProperty("line.separator");
+        return "/////////////////"+sep+
+                "ID : " + idPostWorker+sep+
+                " Email : " + email+sep+
+                "Firstame : " + firstname+sep+
+                "Lastname : " + lastname+sep+
+                "Phone number : " + phone+sep+
+                "Address : "+ address+sep+
+                "City : " + city+sep+
+                "Zip : " + zip+sep+
+                "Backbroung settings : "+ background+sep+
                 "/////////////////";
     }
 
@@ -161,16 +162,16 @@ public class PostWorkerEntity {
     public  void postWorkersToString(List<PostWorkerEntity> postWorkerEntities) {
 
         for (PostWorkerEntity postWorkerEntity : postWorkerEntities) {
-            System.out.println("/////////////////");
-            System.out.println("ID of post worker : " + postWorkerEntity.getIdPostWorker());
-            System.out.println("Email :" + postWorkerEntity.getEmail());
-            System.out.println("Firstname :" + postWorkerEntity.getFirstname());
-            System.out.println("Lastname :" + postWorkerEntity.getLastname());
-            System.out.println("Phone :" + postWorkerEntity.getPhone());
-            System.out.println("Address :" + postWorkerEntity.getAddress());
-            System.out.println("City :" + postWorkerEntity.getCity());
-            System.out.println("Zip :" + postWorkerEntity.getZip());
-            System.out.println("Background :" + postWorkerEntity.getBackground());
+            System.out.println("///////////////// ");
+            System.out.println(" ID of post worker : " + postWorkerEntity.getIdPostWorker());
+            System.out.println(" Email :" + postWorkerEntity.getEmail());
+            System.out.println(" Firstname :" + postWorkerEntity.getFirstname());
+            System.out.println(" Lastname :" + postWorkerEntity.getLastname());
+            System.out.println(" Phone :" + postWorkerEntity.getPhone());
+            System.out.println(" Address :" + postWorkerEntity.getAddress());
+            System.out.println(" City :" + postWorkerEntity.getCity());
+            System.out.println(" Zip :" + postWorkerEntity.getZip());
+            System.out.println(" Background :" + postWorkerEntity.getBackground());
 
         }
     }

@@ -19,6 +19,13 @@ public interface MailDao {
     @Query("SELECT * FROM Mail")
     LiveData<List<MailEntity>> getAll();
 
+    @Query("SELECT * FROM Mail WHERE idMail = :id")
+    LiveData<MailEntity> getById(int id);
+
+    @Query("SELECT * FROM Mail WHERE postWorker = :postworker")
+    LiveData<List<MailEntity>> getAllByPostworker(int postworker);
+
+
     @Query("SELECT * FROM Mail WHERE status = :status")
     LiveData<List<MailEntity>> getAllByStatus(String status);
 
@@ -28,11 +35,11 @@ public interface MailDao {
     @Query("SELECT * FROM Mail WHERE city = :city")
     LiveData<List<MailEntity>> getAllByCity(String city);
 
-    @Query("SELECT * FROM Mail WHERE idMail = :id")
-    LiveData<MailEntity> getById(int id);
+    @Query("SELECT * FROM Mail WHERE postWorker = :postworker")
+    LiveData<MailEntity> getByPostworker(int postworker);
 
     @Insert
-    void insert(MailEntity mailEntity)throws SQLiteConstraintException;
+    long insert(MailEntity mailEntity)throws SQLiteConstraintException;
 
     @Update
     void update(MailEntity mailEntity);

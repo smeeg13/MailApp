@@ -12,9 +12,10 @@ public class DatabaseInitializer {
     public static final String TAG = "DatabaseInitializer";
 
     public static void populateDatabase(final MyDatabase db) {
-        Log.i(TAG, Messages.INSERT_DEMO_DATA.toString());
         PopulateDbAsync task = new PopulateDbAsync(db);
         task.execute();
+        Log.i(TAG, Messages.INSERT_DEMO_DATA.toString());
+
     }
 
     private static void addPostWorker(final MyDatabase db, final String email, final String firstname,

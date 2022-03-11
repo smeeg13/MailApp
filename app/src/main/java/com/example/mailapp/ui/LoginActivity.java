@@ -1,21 +1,28 @@
 package com.example.mailapp.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.lifecycle.LiveData;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.database.repository.PostworkerRepository;
 
 import java.util.List;
 
@@ -27,36 +34,31 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mail, pwd;
     private TextView SignUpbtn;
 
-    private PostWorkerEntity postWorkerEntity;
-    private PostWorkerDao postWorkerDao;
-    private MyDatabase myDatabase;
+    PostworkerRepository postworkerRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        postworkerRepository = ((BaseApplication) getApplication()).getPostworkerRepository();
 
+        //Initialisation
+        mail = findViewById(R.id.LoginEmailEditText);
+        pwd = findViewById(R.id.LoginPasswordEditText);
 
-        SignUpbtn = findViewById(R.id.LoginSignupBtn);
-        myDatabase = MyDatabase.getInstance(this.getBaseContext());
         // Creating a link to the register page if client don't have an account
+        SignUpbtn = findViewById(R.id.LoginSignupBtn);
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
-        List<PostWorkerEntity> list;
-        list = myDatabase.postWorkerDao().getAll();
-        postWorkersListToString(list);
-        //PostWorker admin =  new PostWorker();
-        //admin.setLogin("HES");
-        //admin.setPassword("1234");
-        //myDatabase.postWorkerDao().addPostWorker(admin);
 
+        //Create or take back the session
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         int session = sessionManagement.getSession();
         // -1 is the default number of the session, if someone is connected it will be not -1
         if (session != -1){
             System.out.println("## POST WORKER ID IS "+session);
             // if the user is still in the session he will go straight to the home activity
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            startActivity(new Intent(getApplicationContext(), BaseActivity.class));
         }
     }
 
@@ -64,65 +66,92 @@ public class LoginActivity extends AppCompatActivity {
      * Called when the user taps the Login button
      */
     public void Login(View view) {
-        mail = findViewById(R.id.LoginEmailEditText);
-        pwd = findViewById(R.id.LoginPasswordEditText);
+
+        // Reset errors.
+        mail.setError(null);
+        pwd.setError(null);
 
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
 
-        // TODO Check on the Database if infos are rights
 
-        if (checkLogin(stmail, stpwd)) {
-            Intent intent   = new Intent(getApplicationContext(),HomeActivity.class);
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        boolean cancel = false;
+        View focusView = null;
 
+        // Check for a valid password, if the user entered one.
+        if (stpwd.isEmpty()) {
+            showError(pwd, Messages.EMPTY_FIELDS.toString());
+            pwd.setText("");
+            focusView = pwd;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(stmail)) {
+            showError(mail, Messages.EMPTY_FIELDS.toString());
+            focusView = mail;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
         } else {
-            showError(mail, "Wrong informations");
-            showError(pwd, "Wrong informations");
-            Toast.makeText(getBaseContext(), Messages.WRONG_INFO.toString(), Toast.LENGTH_SHORT).show();
+            postworkerRepository.getPostworkerByEmail(stmail, getApplication()).observe(LoginActivity.this, postWorkerEntity -> {
+                if (postWorkerEntity != null) {
+                    if (postWorkerEntity.getPassword().equals(stpwd)) {
+                        // We need an Editor object to make preference changes.
+                        // All objects are from android.context.Context
+                        SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+                        editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
+                        editor.apply();
+
+                        Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        System.out.println("## LOGIN OK");
+                        System.out.println(postWorkerEntity.toString());
+                        mail.setText("");
+                        pwd.setText("");
+                    } else {
+                        showError(pwd, Messages.WRONG_INFO.toString());
+                        pwd.requestFocus();
+                        pwd.setText("");
+                    }
+                } else {
+                    showError(mail, Messages.WRONG_INFO.toString());
+                    mail.requestFocus();
+                    pwd.setText("");
+                }
+            });
         }
-    }
-    private boolean checkLogin(String login, String password) {
-        LiveData<List<PostWorkerEntity>> list;
-        list = myDatabase.postWorkerDao().getAll();
-        System.out.println(mail.getText().toString());
-        System.out.println(pwd.getText().toString());
-        for  (PostWorkerEntity postWorkerEntity : list) {
-            if (postWorkerEntity.getEmail().equals(login) && postWorkerEntity.getPassword().equals(password)) {
-                System.out.println("login cible "+login);
-                System.out.println("postworker login"+ postWorkerEntity.getEmail());
-                System.out.println("password cible "+login);
-                System.out.println("postworker password"+ postWorkerEntity.getPassword());
-                System.out.println("POST WORKER HAS BEEN FOUND");
-                SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
-                sessionManagement.saveSession(postWorkerEntity);
-                return true;
-            }
-        }
-        System.out.println("## POST WORKER HAS NOT BEEN FOUND");
-        return false;
     }
 
     private void showError(EditText input, String s) {
         input.setError(s);
     }
 
-    public void postWorkersListToString(List<PostWorkerEntity> postWorkerEntities) {
-        for (PostWorkerEntity postWorkerEntity : postWorkerEntities) {
-            System.out.println("/////////////////");
-            System.out.println("ID of post worker :" + postWorkerEntity.getIdPostWorker());
-            System.out.println("Login :" + postWorkerEntity.getEmail());
-            System.out.println("Passowrd :"+ postWorkerEntity.getPassword());
-            System.out.println("Firstname :" + postWorkerEntity.getFirstname());
-            System.out.println("Lastname :" + postWorkerEntity.getLastname());
-            System.out.println("Phone :" + postWorkerEntity.getPhone());
-            System.out.println("Address :" + postWorkerEntity.getAddress());
-            System.out.println("Region :" + postWorkerEntity.getCity());
-            System.out.println("Zip :" + postWorkerEntity.getZip());
-
-
-        }
+    /**
+     * Method to show a confirmation box for leaving the app
+     */
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+        ab.setTitle("Confirmation of leaving");
+        ab.setMessage("are you sure to exit?");
+        ab.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //if you want to kill app . from other then your main avtivity.(Launcher)
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+                //if you want to finish just current activity
+               // LoginActivity.this.finish();
+            }
+        });
+        ab.setNegativeButton("no", (dialog, which) -> dialog.dismiss());
+        ab.show();
     }
 }

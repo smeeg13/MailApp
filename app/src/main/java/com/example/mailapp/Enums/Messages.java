@@ -8,6 +8,7 @@ public enum Messages {
     EMPTY_FIELDS("Make Sure all Fields are completed", 100),
     INVALID_FIELDS("Some Fields are NOT Valid", 101),
     WRONG_INFO("Wrong Email or Password entered", 150),
+    EMAIL_ALREADY_EXIST("Email already used",151),
     ACCOUNT_CREATED("Account Created",200),
     MAIL_CREATED("Mail Created", 300),
     MAIL_DELETED("Mail Deleted !", 301);
