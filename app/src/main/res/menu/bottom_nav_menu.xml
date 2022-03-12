@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/add_new"
-        android:icon="@drawable/ic_add_white"
-        android:id="@+id/AddNewBtn"/>
+    <group android:checkableBehavior="single">
+        <item android:title="@string/add_new"
+            android:icon="@drawable/ic_add_white"
+            android:id="@+id/AddNewBtn"/>
 
-    <item android:title="@string/home"
-        android:icon="@drawable/ic_home_white"
-        android:id="@+id/HomeBtn"/>
+        <item android:title="@string/home"
+            android:icon="@drawable/ic_home_white"
+            android:id="@+id/HomeBtn"/>
 
-    <item android:title="@string/map"
-        android:icon="@drawable/ic_location_white"
-        android:id="@+id/MapBtn"/>
+        <item android:title="@string/map"
+            android:icon="@drawable/ic_location_white"
+            android:id="@+id/MapBtn"/>
 
-    <item android:title="@string/my_account"
-        android:icon="@drawable/ic_person_white"
-        android:id="@+id/AccountBtn"/>
-
+        <item android:title="@string/my_account"
+            android:icon="@drawable/ic_person_white"
+            android:id="@+id/AccountBtn"/>
+    </group>
 </menu>

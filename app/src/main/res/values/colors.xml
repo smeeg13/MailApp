@@ -9,5 +9,6 @@
     <color name="blue">#8bbdd9</color>
     <color name="darkBlue">#3F76BF</color>
     <color name="black">#FF000000</color>
+    <color name="lightGrey">#ECECEC</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

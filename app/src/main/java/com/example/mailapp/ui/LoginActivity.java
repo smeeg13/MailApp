@@ -23,6 +23,7 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
+import com.example.mailapp.util.MyAlertDialog;
 
 import java.util.List;
 
@@ -50,16 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         // Creating a link to the register page if client don't have an account
         SignUpbtn = findViewById(R.id.LoginSignupBtn);
         SignUpbtn.setOnClickListener(view1 -> startActivity(new Intent(getApplicationContext(), RegisterActivity.class)));
-
-        //Create or take back the session
-        SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
-        int session = sessionManagement.getSession();
-        // -1 is the default number of the session, if someone is connected it will be not -1
-        if (session != -1){
-            System.out.println("## POST WORKER ID IS "+session);
-            // if the user is still in the session he will go straight to the home activity
-            startActivity(new Intent(getApplicationContext(), BaseActivity.class));
-        }
     }
 
     /**
@@ -137,21 +128,18 @@ public class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder ab = new AlertDialog.Builder(this);
-        ab.setTitle("Confirmation of leaving");
-        ab.setMessage("are you sure to exit?");
-        ab.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                //if you want to kill app . from other then your main avtivity.(Launcher)
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(1);
-                //if you want to finish just current activity
-               // LoginActivity.this.finish();
-            }
+        //TODO Check prq couleru pas comme les autres ???
+        AlertDialog.Builder alert = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
+        alert.setTitle("Confirmation of Disconnection");
+        alert.setMessage("You will be logged out. Are you sure ?");
+        alert.setPositiveButton("Yes, Log Out", (dialog, which) -> {
+            dialog.dismiss();
+            //if you want to kill app . from other then your main avtivity.(Launcher)
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+            //if you want to finish just current activity
+            // LoginActivity.this.finish();
         });
-        ab.setNegativeButton("no", (dialog, which) -> dialog.dismiss());
-        ab.show();
-    }
+        alert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        alert.show();    }
 }

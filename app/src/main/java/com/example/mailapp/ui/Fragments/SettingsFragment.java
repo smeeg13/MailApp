@@ -77,7 +77,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // declaration
-        sessionManagement = new SessionManagement(this.getContext());
+      //  sessionManagement = new SessionManagement(this.getContext());
         myDatabase = MyDatabase.getInstance(this.getContext());
         v = inflater.inflate(R.layout.fragment_settings, container, false);
 
