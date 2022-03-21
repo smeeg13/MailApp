@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -143,15 +144,15 @@ public class MailDetailFragment extends MailFrag {
                 if (mailEntity != null) {
                     mail = mailEntity;
                     idnumber.setText(mail.idMail);
-                    String postworkerOfMail = mail.getPostWorker();
+                    int postworkerOfMail = mail.getIdPostWorker();
                     postworkerAssigned.setText(postworkerOfMail);
-                    if(postworkerOfMail ==null){
+                    if(postworkerOfMail == -1 ){
                         postworkerAssigned.setText("Centrale");
                         //TODO ASSIGNED to central the mail
                     }
-                    if (postworkerOfMail.equals(postWorkerEntity.email))
-                        assignedToMe.setChecked(true);
-                    else
+                    //if (postworkerOfMail.equals(postWorkerEntity.email))
+                    //    assignedToMe.setChecked(true);
+                   // else
                         assignedToMe.setChecked(false);
                     mailFrom.setText(mail.mailFrom);
                     mailTo.setText(mail.mailTo);
@@ -258,7 +259,7 @@ public class MailDetailFragment extends MailFrag {
                 //TODO save all the modification to the database
                 mail.setMailFrom(mailFrom.getText().toString());
                 mail.setMailTo(mailTo.getText().toString());
-                mail.setPostWorker(postworkerAssigned.toString());
+             //   mail.setPostWorker(postworkerAssigned.toString());
                 //TODO SET THE REST OF MAIL
                 mailViewModel.updateMail(mail, new OnAsyncEventListener() {
                     @Override

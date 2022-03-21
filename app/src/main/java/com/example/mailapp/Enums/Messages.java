@@ -12,6 +12,8 @@ public enum Messages {
     ACCOUNT_CREATED("Account Created",200),
     ACCOUNT_UPDATED("Account Updated",200),
     ACCOUNT_UPDATED_FAILED("Account Update Failed",200),
+    ACCOUNT_DELETED("Account Deleted",200),
+    ACCOUNT_DELETED_FAILED("Account Delete Failed",200),
     MAIL_CREATED("Mail Created", 300),
     MAIL_DELETED("Mail Deleted !", 301);
 

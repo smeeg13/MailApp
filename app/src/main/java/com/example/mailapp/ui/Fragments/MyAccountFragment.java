@@ -1,14 +1,17 @@
 package com.example.mailapp.ui.Fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +25,11 @@ import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.ui.BaseActivity;
+import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.lifecycle.ViewModelProviders;
 
 
@@ -33,6 +38,7 @@ public class MyAccountFragment extends Fragment {
 
     private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
+    private Button inputDeleteButton;
     private ImageView inputaccountImage;
     private Boolean aBoolean = true;
     private PostWorkerEntity postWorkerEntity;
@@ -65,12 +71,11 @@ public class MyAccountFragment extends Fragment {
 
         } else {
             enableEdit(false);
-            //TODO save all the modification to the database
+
             postWorkerEntity.setZip(inputZip.getText().toString());
             postWorkerEntity.setCity(inputLocation.getText().toString());
             postWorkerEntity.setAddress(inputAddress.getText().toString());
             postWorkerEntity.setPhone(inputPhone.getText().toString());
-            //TODO check if all fields are good
 
             inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
             aBoolean = true;
@@ -93,7 +98,6 @@ public class MyAccountFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_my_account, container, false);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
-        //sessionManagement = new SessionManagement(this.getContext());
 
 
         initialize(v);
@@ -103,7 +107,12 @@ public class MyAccountFragment extends Fragment {
                 editMode();
             }
         });
-
+        inputDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAccount();
+            }
+        });
 
         return v;
     }
@@ -134,8 +143,37 @@ public class MyAccountFragment extends Fragment {
         }
     }
 
-    public void initialize(View v) {
+    public void deleteAccount() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
+        ab.setTitle("Confirmation of Delete");
+        ab.setMessage("You will be delete your account. Are you sure ?");
+        ab.setPositiveButton("Yes", (dialog, which) -> {
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+            editor.remove(BaseActivity.PREFS_USER);
+            editor.apply();
 
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+            viewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    System.out.println(Messages.ACCOUNT_DELETED);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    System.out.println(Messages.ACCOUNT_DELETED_FAILED);
+                }
+            });
+        });
+        ab.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        ab.show();
+    }
+
+    public void initialize(View v) {
+        inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
         inputEmail = v.findViewById(R.id.AccountEmailTextView);
@@ -153,6 +191,7 @@ public class MyAccountFragment extends Fragment {
 
         viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
         viewModel.getClient().observe(getActivity(), postworker -> {
+
             if (postworker != null) {
 
                 postWorkerEntity = postworker;
@@ -161,7 +200,7 @@ public class MyAccountFragment extends Fragment {
 
                 lastname = postWorkerEntity.getLastname();
 
-                inputFirstnameAndLastname.setText(firstname + lastname);
+                inputFirstnameAndLastname.setText(firstname + " " + lastname);
 
                 inputEmail.setText(postWorkerEntity.getEmail());
 
@@ -175,8 +214,6 @@ public class MyAccountFragment extends Fragment {
 
             }
         });
-
-
 
 
     }
