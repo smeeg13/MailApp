@@ -1,8 +1,10 @@
 package com.example.mailapp.database.entities;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -10,18 +12,20 @@ import java.util.List;
 
 @Entity (tableName = "Mail",
             foreignKeys = @ForeignKey(entity = PostWorkerEntity.class,
-                                        parentColumns = "idPostWorker",
-                                        childColumns = "postWorker",
+                                       parentColumns = "idPostWorker",
+                                            childColumns = "idPostWorker",
                                         onDelete = ForeignKey.CASCADE
-            ),
+           ),
             indices = {
-                @Index(
-                        value = {"postWorker"}
+               @Index(
+                        value = {"idPostWorker"}
                 )}
 )
 
 public class MailEntity {
 
+
+    @Ignore
     public MailEntity() {
     }
 
@@ -33,14 +37,15 @@ public class MailEntity {
         this.city = city;
         this.shippingType = shippingType;
         this.mailType = mailType;
+        this.idPostWorker = idPostWorker;
     }
 
     @PrimaryKey(autoGenerate = true)
     public int idMail;
 
     //TODO add the link with postworker
-    @ColumnInfo(name = "postWorker")
-    public int postWorker;
+    @ColumnInfo(name = "idPostWorker")
+    public int idPostWorker;
 
     @ColumnInfo(name = "mailFrom")
     public String mailFrom;
@@ -149,13 +154,6 @@ public class MailEntity {
         return idMail;
     }
 
-    public int getPostWorker() {
-        return postWorker;
-    }
-
-    public void setPostWorker(int postWorker) {
-        this.postWorker = postWorker;
-    }
 
     public int getWeight() {
         return weight;

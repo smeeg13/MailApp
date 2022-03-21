@@ -10,6 +10,8 @@ public enum Messages {
     WRONG_INFO("Wrong Email or Password entered", 150),
     EMAIL_ALREADY_EXIST("Email already used",151),
     ACCOUNT_CREATED("Account Created",200),
+    ACCOUNT_UPDATED("Account Updated",200),
+    ACCOUNT_UPDATED_FAILED("Account Update Failed",200),
     MAIL_CREATED("Mail Created", 300),
     MAIL_DELETED("Mail Deleted !", 301);
 

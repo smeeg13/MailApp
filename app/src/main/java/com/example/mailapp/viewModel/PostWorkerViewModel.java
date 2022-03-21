@@ -26,7 +26,7 @@ public class PostWorkerViewModel extends AndroidViewModel {
     private final MediatorLiveData<PostWorkerEntity> observablePostworker;
 
     public PostWorkerViewModel(@NonNull Application application,
-                           final String email, PostworkerRepository repository) {
+                               final String email, PostworkerRepository repository) {
         super(application);
 
         this.repository = repository;
@@ -42,6 +42,8 @@ public class PostWorkerViewModel extends AndroidViewModel {
         // observe the changes of the client entity from the database and forward them
         observablePostworker.addSource(postworker, observablePostworker::setValue);
     }
+
+
 
     /**
      * A creator is used to inject the account id into the ViewModel
@@ -75,15 +77,15 @@ public class PostWorkerViewModel extends AndroidViewModel {
         return observablePostworker;
     }
 
-    public void createClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+    public void createPostWorker(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         repository.insert(postWorker, callback, application);
     }
 
-    public void updateClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+    public void updatePostWorker(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         repository.update(postWorker, callback, application);
     }
 
-    public void deleteClient(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+    public void deletePostWorker(PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         repository.delete(postWorker, callback, application);
     }
 }

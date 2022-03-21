@@ -22,7 +22,7 @@ public interface MailDao {
     @Query("SELECT * FROM Mail WHERE idMail = :id")
     LiveData<MailEntity> getById(int id);
 
-    @Query("SELECT * FROM Mail WHERE postWorker = :postworker")
+    @Query("SELECT * FROM Mail WHERE idPostWorker = :postworker")
     LiveData<List<MailEntity>> getAllByPostworker(int postworker);
 
 
@@ -35,7 +35,7 @@ public interface MailDao {
     @Query("SELECT * FROM Mail WHERE city = :city")
     LiveData<List<MailEntity>> getAllByCity(String city);
 
-    @Query("SELECT * FROM Mail WHERE postWorker = :postworker")
+    @Query("SELECT * FROM Mail WHERE idPostWorker = :postworker")
     LiveData<MailEntity> getByPostworker(int postworker);
 
     @Insert

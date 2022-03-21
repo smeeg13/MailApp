@@ -2,19 +2,13 @@ package com.example.mailapp.database.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
 
 @Entity(tableName = "PostWorker")
 public class PostWorkerEntity {
-
-    public PostWorkerEntity(String email,String firstname, String lastname, String password) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-    }
 
     public PostWorkerEntity(String firstname, String lastname, String phone, String email, String password, String address, String zip, String city) {
         this.firstname = firstname;
@@ -49,9 +43,12 @@ public class PostWorkerEntity {
     @ColumnInfo(name = "background")
     public String background;
 
+
+    @Ignore
     public PostWorkerEntity() {
 
     }
+
 
     public int getIdPostWorker() {
         return idPostWorker;
