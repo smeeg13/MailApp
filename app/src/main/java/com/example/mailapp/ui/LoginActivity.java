@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -128,18 +129,25 @@ public class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        //TODO Check prq couleru pas comme les autres ???
-        AlertDialog.Builder alert = new AlertDialog.Builder(this, R.style.AlertDialogCustom);
-        alert.setTitle("Confirmation of Disconnection");
-        alert.setMessage("You will be logged out. Are you sure ?");
-        alert.setPositiveButton("Yes, Log Out", (dialog, which) -> {
-            dialog.dismiss();
-            //if you want to kill app . from other then your main avtivity.(Launcher)
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
-            //if you want to finish just current activity
-            // LoginActivity.this.finish();
-        });
-        alert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        alert.show();    }
+        MyAlertDialog ab = new MyAlertDialog(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+      //  this.setTheme(R.style.AlertDialogCustom);
+    }
+//    @Override
+//    public void onBackPressed() {
+//        //TODO Check prq couleru pas comme les autres ???
+//        AlertDialog.Builder alert = new AlertDialog.Builder(getBaseContext(), R.style.AlertDialogCustom);
+////        alert.setView(R.style.AlertDialogCustom);
+//        alert.setTitle("Confirmation of Disconnection");
+//        alert.setMessage("You will be logged out. Are you sure ?");
+//        alert.setPositiveButton("Yes, Log Out", (dialog, which) -> {
+//            //if you want to kill app . from other then your main avtivity.(Launcher)
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(1);
+//              dialog.dismiss();
+////if you want to finish just current activity
+//            // LoginActivity.this.finish();
+//        });
+//        alert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+//        alert.show();
+//    }
 }

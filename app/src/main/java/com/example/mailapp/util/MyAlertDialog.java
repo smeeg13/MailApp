@@ -7,14 +7,15 @@ import com.example.mailapp.R;
 
 public class MyAlertDialog extends AlertDialog.Builder {
 
-    private final int ThemeID = R.style.AlertDialogCustom;
+    private static int ThemeID = R.style.AlertDialogCustom;
 
     public MyAlertDialog(Context context) {
         super(context);
     }
 
-    public MyAlertDialog(Context context, int themeResId) {
-        super(context, themeResId);
+    public MyAlertDialog(Context context, int idTheme) {
+        super(context,
+                idTheme);
         this.setTitle("Confirmation of Disconnection");
         this.setMessage("You will be logged out. Are you sure ?");
         this.setPositiveButton("Yes, Log Out", (dialog, which) -> {

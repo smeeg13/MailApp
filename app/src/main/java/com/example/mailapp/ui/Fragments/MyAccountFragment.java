@@ -15,6 +15,7 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
+import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,7 +33,7 @@ public class MyAccountFragment extends Fragment {
     private SessionManagement sessionManagement;
     private View v;
 
-    private PostWorkerViewModel viewModel;
+    private PostworkerRepository postworkerRepository;
 
     public MyAccountFragment() {
         // Required empty public constructor

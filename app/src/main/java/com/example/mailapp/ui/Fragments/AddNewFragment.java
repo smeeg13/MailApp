@@ -82,7 +82,6 @@ public class AddNewFragment extends MailFrag {
 
         myDatabase = MyDatabase.getInstance(this.getContext());
 
-        idnumber = v.findViewById(R.id.AddIDTextView);
 
         assignedToMe = v.findViewById(R.id.AddAssignedToSwitch);
         mailFrom = v.findViewById(R.id.AddMailFromEditText);

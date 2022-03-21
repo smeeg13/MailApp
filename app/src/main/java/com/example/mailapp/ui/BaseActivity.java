@@ -126,6 +126,6 @@ public class BaseActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        MyAlertDialog ab = new MyAlertDialog(this,R.style.AlertDialogCustom);
+        MyAlertDialog ab = new MyAlertDialog(this, R.style.AlertDialogCustom);
     }
 }
