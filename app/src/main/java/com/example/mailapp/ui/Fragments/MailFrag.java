@@ -4,10 +4,12 @@ import static com.example.mailapp.R.*;
 import static com.example.mailapp.ui.RegisterActivity.showError;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Switch;
@@ -24,6 +26,8 @@ import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.SessionManagement.SessionManagement;
+import com.example.mailapp.ui.BaseActivity;
+import com.example.mailapp.viewModel.MailViewModel;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,19 +36,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public abstract class MailFrag extends Fragment{
+    private static final String TAG = "MailFragment";
+
     private final ArrayList<EditText> editTexts = new ArrayList<>();
     private EditText mailFrom, mailTo, weight, address, zip, city;
     private RadioButton letter, packages, amail, bmail, recmail;
-    private String mailType;
+    private String mailType, postWorkerAssigned;
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
+    private Button AddBtn, EditBtn, DeleteBtn;
+
+    private boolean isEditMode;
 
     private MailEntity mailEntity;
-    private MailDao mailDao;
     private PostWorkerEntity postWorkerEntity;
-    private PostWorkerDao postWorkerDao;
-    private MyDatabase myDatabase;
-    private SessionManagement sessionManagement;
+    private MailViewModel mailViewModel;
     private View v;
 
 
@@ -53,12 +59,13 @@ public abstract class MailFrag extends Fragment{
                              Bundle savedInstanceState) {
         View coreFragmentView = inflater.inflate(layout.mail_frag, container, false);
 
-       loadLayoutFromResIdToViewStub(coreFragmentView, container);
+        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
+        postWorkerAssigned = settings.getString(BaseActivity.PREFS_USER, null);
+
         initialize(coreFragmentView);
         return coreFragmentView;
     }
 
-    protected abstract void loadLayoutFromResIdToViewStub(View coreFragmentView, ViewGroup container);
 
     public MailFrag() {
         // Required empty public constructor
