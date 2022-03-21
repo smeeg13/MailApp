@@ -40,7 +40,7 @@ public class MailEntity {
 
     //TODO add the link with postworker
     @ColumnInfo(name = "postWorker")
-    public int postWorker;
+    public String postWorker;
 
     @ColumnInfo(name = "mailFrom")
     public String mailFrom;
@@ -149,11 +149,11 @@ public class MailEntity {
         return idMail;
     }
 
-    public int getPostWorker() {
+    public String getPostWorker() {
         return postWorker;
     }
 
-    public void setPostWorker(int postWorker) {
+    public void setPostWorker(String postWorker) {
         this.postWorker = postWorker;
     }
 

@@ -38,11 +38,8 @@ public class AddNewFragment extends MailFrag {
     private TextView idnumber, dueDate;
     private Switch assignedToMe;
     private MailEntity mailEntity;
-    private MailDao mailDao;
     private PostWorkerEntity postWorkerEntity;
-    private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
-    private SessionManagement sessionManagement;
     private View v;
 
     DateFormat df = new SimpleDateFormat("dd MMMM yyyy");
@@ -62,7 +59,6 @@ public class AddNewFragment extends MailFrag {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_add_new, container, false);
-        sessionManagement = new SessionManagement(this.getContext());
 
         initialize(v);
         mailType = chooseMailType(letter, packages, weight);
@@ -73,15 +69,8 @@ public class AddNewFragment extends MailFrag {
         return v;
     }
 
-    @Override
-    protected void loadLayoutFromResIdToViewStub(View coreFragmentView, ViewGroup container) {
-
-    }
 
     public void initialize(View v) {
-
-        myDatabase = MyDatabase.getInstance(this.getContext());
-
 
         assignedToMe = v.findViewById(R.id.AddAssignedToSwitch);
         mailFrom = v.findViewById(R.id.AddMailFromEditText);
@@ -105,46 +94,43 @@ public class AddNewFragment extends MailFrag {
 
     public void addNewMail(View v) {
         addmail =(Button) v.findViewById(R.id.AddMailBtn);
-        addmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        addmail.setOnClickListener(view -> {
 
-                //Check if every fields are completed
-                boolean anyisempty = checkEmpty(editTexts, letter, packages, amail, bmail, recmail,dueDate);
+            //Check if every fields are completed
+            boolean anyisempty = checkEmpty(editTexts, letter, packages, amail, bmail, recmail,dueDate);
 
-                if (anyisempty) {
-                    System.out.println("## One or more fields are empty !");
-                    Toast.makeText(getActivity().getApplicationContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
-                } else {
-                    //TODO show mail detail page after registered it in DB
-                    mailEntity = new MailEntity();
-                    mailEntity.setMailFrom(mailFrom.getText().toString());
-                    mailEntity.setMailTo(mailTo.getText().toString());
-                    mailEntity.setMailType(mailType);
-                    mailEntity.setShippingType(shipType);
-                    mailEntity.setAddress(address.getText().toString());
-                    mailEntity.setStatus(Status.IN_PROGRESS.toString());
-                    mailEntity.setReceiveDate(Todaydate);
-                    mailEntity.setShippedDate(dueDate.getText().toString());
-                    mailEntity.setCity(city.getText().toString());
-                    mailEntity.setZip(zip.getText().toString());
+            if (anyisempty) {
+                System.out.println("## One or more fields are empty !");
+                Toast.makeText(getActivity().getApplicationContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_LONG).show();
+            } else {
+                //TODO show mail detail page after registered it in DB
+                mailEntity = new MailEntity();
+                mailEntity.setMailFrom(mailFrom.getText().toString());
+                mailEntity.setMailTo(mailTo.getText().toString());
+                mailEntity.setMailType(mailType);
+                mailEntity.setShippingType(shipType);
+                mailEntity.setAddress(address.getText().toString());
+                mailEntity.setStatus(Status.IN_PROGRESS.toString());
+                mailEntity.setReceiveDate(Todaydate);
+                mailEntity.setShippedDate(dueDate.getText().toString());
+                mailEntity.setCity(city.getText().toString());
+                mailEntity.setZip(zip.getText().toString());
 
-                    myDatabase.mailDao().insert(mailEntity);
-                    mailEntity.toString();
-                    Toast.makeText(getActivity().getApplicationContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                myDatabase.mailDao().insert(mailEntity);
+                mailEntity.toString();
+                Toast.makeText(getActivity().getApplicationContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
 
-                    if (isAssignedToMe()){
-                        //TODO Link with the connected profile
-                    }
-                    else{
-                        //TODO Link to the central
-                    }
-                    //Go back to home page
-                    System.out.println("## Go to Mail Detail");
-                    replaceFragment(new HomeFragment());
-                    //Open the detail mail
-                    // openMailDetail();
+                if (isAssignedToMe()){
+                    //TODO Link with the connected profile
                 }
+                else{
+                    //TODO Link to the central
+                }
+                //Go back to home page
+                System.out.println("## Go to Mail Detail");
+                replaceFragment(new HomeFragment());
+                //Open the detail mail
+                // openMailDetail();
             }
         });
     }

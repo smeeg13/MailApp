@@ -43,7 +43,7 @@
     <string name="mail_to">Mail To</string>
     <string name="mail_type">Mail Type</string>
     <string name="shipping_type">Shipping Type</string>
-    <string name="due_date_for_shipping">Due Date For Shipping</string>
+    <string name="due_date_for_shipping">Due Date For Shipping : </string>
     <string name="id_111232">"   ID 111232"</string>
     <string name="name">Name</string>
     <string name="a_mail">A-Mail</string>

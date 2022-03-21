@@ -35,14 +35,13 @@ public class DatabaseInitializer {
 
         addPostWorker(db, "ms@gmail.com", "Meg", "Solliard","1234");
         addPostWorker(db, "ab@hes-so.com", "Abdullah", "Binjos","1234");
-        addPostWorker(db, "hv@gmail.com", "Emilie", "Teodoro","1234");
+        addPostWorker(db, "admin", "Emilie", "Teodoro","1234");
         addPostWorker(db, "gm@gmail.com", "Gaétan", "Mottet","1234");
-
+        addPostWorker(db, "centrale", "Centrale","Centrale","Centrale");
         db.mailDao().deleteAll();
 
         addMail(db, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
         addMail(db, "Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
-
     }
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {

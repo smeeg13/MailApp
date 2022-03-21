@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AddNewFragment;
 import com.example.mailapp.ui.Fragments.HomeFragment;
+import com.example.mailapp.ui.Fragments.MailDetailFragment;
 import com.example.mailapp.ui.Fragments.MapFragment;
 import com.example.mailapp.ui.Fragments.MyAccountFragment;
 import com.example.mailapp.ui.Fragments.SettingsFragment;
@@ -29,6 +30,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "SharedPrefs";
     public static final String PREFS_USER = "LoggedIn";
+    public static final String PREFS_MAIL = "";
 
     protected Toolbar toolbar;
     protected ActivityBaseBinding binding;
@@ -88,7 +90,14 @@ public class BaseActivity extends AppCompatActivity {
         binding.HomeBottomNavBar.setOnItemSelectedListener(item2 -> {
             switch (item2.getItemId()) {
                 case AddNewBtn:
-                    remplaceFragment(new AddNewFragment());
+                    MailDetailFragment mailFragment = new MailDetailFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                            .beginTransaction();
+                    Bundle datas = new Bundle();
+                    datas.putInt("mailID", -1);
+                    mailFragment.setArguments(datas);
+                    fragmentTransaction.replace(HomeFrameLayout, mailFragment);
+                   // remplaceFragment(new AddNewFragment());
                     break;
                 case HomeBtn:
                     remplaceFragment(new HomeFragment());
