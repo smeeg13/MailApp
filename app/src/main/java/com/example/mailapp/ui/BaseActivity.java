@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mailapp.databinding.ActivityBaseBinding;
+import com.example.mailapp.ui.Fragments.AboutFragment;
 import com.example.mailapp.ui.Fragments.AddNewFragment;
 import com.example.mailapp.ui.Fragments.HomeFragment;
 import com.example.mailapp.ui.Fragments.MailDetailFragment;
@@ -31,6 +32,7 @@ public class BaseActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "SharedPrefs";
     public static final String PREFS_USER = "LoggedIn";
     public static final String PREFS_MAIL = "";
+    public static final String PREFS_BACKGROUND = "Background";
 
     protected Toolbar toolbar;
     protected ActivityBaseBinding binding;
@@ -78,9 +80,11 @@ public class BaseActivity extends AppCompatActivity {
                 case SettingsBtn:
                     remplaceFragment(new SettingsFragment());
                     break;
-
                 case LogoutBtn:
                     logout();
+                    break;
+                case AboutBtn:
+                    remplaceFragment(new AboutFragment());
                     break;
             }
             return true;
@@ -120,6 +124,7 @@ public class BaseActivity extends AppCompatActivity {
         ab.setPositiveButton("Yes, Log Out", (dialog, which) -> {
             SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
             editor.remove(BaseActivity.PREFS_USER);
+            editor.remove(BaseActivity.PREFS_BACKGROUND);
             editor.apply();
 
             Intent intent= new  Intent(this, LoginActivity.class);

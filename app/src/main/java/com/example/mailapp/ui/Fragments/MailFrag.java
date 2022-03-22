@@ -25,7 +25,7 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
-import com.example.mailapp.SessionManagement.SessionManagement;
+
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.viewModel.MailViewModel;
 

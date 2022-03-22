@@ -1,5 +1,6 @@
 package com.example.mailapp.ui.Fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,99 +11,110 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
-import com.example.mailapp.SessionManagement.SessionManagement;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.mailapp.ui.BaseActivity;
+
 public class SettingsFragment extends Fragment {
 
-    PostWorkerEntity postWorkerEntity;
-    PostWorkerDao postWorkerDao;
-    MyDatabase myDatabase;
-    View v;
-    Spinner inputSpinner;
-    SessionManagement sessionManagement;
+    private PostWorkerEntity postWorkerEntity;
+    private PostWorkerDao postWorkerDao;
+    private MyDatabase myDatabase;
+    private View v;
+    private Spinner inputSpinner;
+    private SharedPreferences settings;
+    private SharedPreferences sharedPreferences;
+    private String sharedPrefMail, sharedPrefBackground;
+    private RadioButton buttonWhite;
+    private RadioButton buttonBlack;
+    private SharedPreferences.Editor editor;
+    private RadioGroup radioGroup;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public SettingsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // declaration
-      //  sessionManagement = new SessionManagement(this.getContext());
-        myDatabase = MyDatabase.getInstance(this.getContext());
         v = inflater.inflate(R.layout.fragment_settings, container, false);
+        sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
+        sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
+        settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
 
-        //SPINNER
-        inputSpinner = v.findViewById(R.id.SettingsSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.locationsAvailables_array, android.R.layout.simple_spinner_dropdown_item);
-        inputSpinner.setAdapter(adapter);
-        inputSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        System.out.println("YOUR PREFERED COLOR IS : "+sharedPrefBackground);
+
+        initialize(v);
+
+        buttonWhite.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.println(Log.INFO, "Settings", "SettingsSpinner used -> " + inputSpinner.getSelectedItem() + " selected");
-                System.out.println(inputSpinner.getSelectedItem());
-
-                myDatabase.postWorkerDao().updatePostWorkerBackGround(sessionManagement.getSession(),inputSpinner.getSelectedItem().toString());
-             //   PostWorkerEntity p = myDatabase.postWorkerDao().getById(sessionManagement.getSession());
-                postWorkerEntity.toString();
+            public void onClick(View v) {
+               String color = "white";
+               changebackground(color);
             }
-
+        });
+        buttonBlack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                String color = "black";
+                changebackground(color);
+                System.out.println("Black");
             }
         });
 
 
         return v;
     }
+
+    private void changebackground(String color) {
+        if (buttonBlack.isChecked()) {
+            editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+            editor.putString(BaseActivity.PREFS_BACKGROUND, color);
+            editor.apply();
+            System.out.println("editor : black");
+        } else if (buttonWhite.isChecked()) {
+            editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+            editor.putString(BaseActivity.PREFS_BACKGROUND, color);
+            editor.apply();
+            System.out.println("editor : white");
+        }
+
+    }
+
+    private void initialize(View v) {
+        buttonBlack = v.findViewById(R.id.SettingsBlackRadio);
+        buttonWhite = v.findViewById(R.id.SettingsWhiteRadio);
+        radioGroup = v.findViewById(R.id.SettingsRadioGroup);
+        if (sharedPrefBackground == null) {
+            sharedPrefBackground = "white";
+        } else {
+
+            if (sharedPrefBackground.equals("white")) {
+                buttonWhite.setChecked(true);
+
+            } else {
+                buttonBlack.setChecked(false);
+            }
+        }
+
+
+    }
+
+
+
 }
+

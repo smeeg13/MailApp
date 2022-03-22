@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.mailapp.Enums.Status;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
-import com.example.mailapp.SessionManagement.SessionManagement;
+
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.dao.MailDao;
 import com.example.mailapp.database.dao.PostWorkerDao;
@@ -90,6 +90,7 @@ public class AddNewFragment extends MailFrag {
         amail = v.findViewById(R.id.AddAMailRadioBtn);
         bmail = v.findViewById(R.id.AddBMailRadioBtn);
         recmail = v.findViewById(R.id.AddRecomMailRadioBtn);
+
     }
 
     public void addNewMail(View v) {

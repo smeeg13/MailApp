@@ -22,7 +22,7 @@ import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
-import com.example.mailapp.SessionManagement.SessionManagement;
+
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.ui.LoginActivity;
@@ -44,7 +44,6 @@ public class MyAccountFragment extends Fragment {
     private PostWorkerEntity postWorkerEntity;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
-    private SessionManagement sessionManagement;
     private View v;
     private String firstname, lastname;
     private PostworkerRepository postworkerRepository;
@@ -173,6 +172,7 @@ public class MyAccountFragment extends Fragment {
     }
 
     public void initialize(View v) {
+
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);

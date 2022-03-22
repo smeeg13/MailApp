@@ -116,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (response) {
             final SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
             editor.putString(BaseActivity.PREFS_USER, inputEmail.getText().toString());
+            editor.putString(BaseActivity.PREFS_BACKGROUND, "white");
             editor.apply();
             Toast.makeText(this,Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);

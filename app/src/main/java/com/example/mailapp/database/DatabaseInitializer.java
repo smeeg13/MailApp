@@ -29,15 +29,15 @@ public class DatabaseInitializer {
     }
 
     private static void populateWithTestData(MyDatabase db) {
-        db.postWorkerDao().deleteAll();
+        //db.postWorkerDao().deleteAll();
 
-        addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1823","Sion");
-        addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","1950","Sierre");
-        addPostWorker(db, "admin","admin","admin","admin","1234","admin","admin","admin");
-        db.mailDao().deleteAll();
+       // addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1823","Sion");
+        //addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","1950","Sierre");
+       // addPostWorker(db, "admin","admin","admin","admin","1234","admin","admin","admin");
+        //db.mailDao().deleteAll();
 
-        addMail(db, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
-        addMail(db, "Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
+       // addMail(db, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
+       // addMail(db, "Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
 
     }
 

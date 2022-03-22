@@ -19,7 +19,7 @@ import androidx.lifecycle.LiveData;
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
-import com.example.mailapp.SessionManagement.SessionManagement;
+
 import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
@@ -96,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                         // We need an Editor object to make preference changes.
                         // All objects are from android.context.Context
                         SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+
                         editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
                         editor.apply();
 
