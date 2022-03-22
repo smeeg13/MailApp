@@ -52,7 +52,7 @@
     <string name="letter">Letter</string>
     <string name="recommended">Recommended</string>
     <string name="address">Address</string>
-    <string name="packages">Packages</string>
+    <string name="packages">Package</string>
     <string name="see_all_mails">See All Mails</string>
     <string name="by_shipping_type">By Shipping Type</string>
     <string name="zip">ZIP</string>

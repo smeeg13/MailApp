@@ -8,6 +8,9 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity (tableName = "Mail",
@@ -22,22 +25,28 @@ import java.util.List;
                 )}
 )
 
+
+
 public class MailEntity {
 
+    private static final DateFormat df2 = new SimpleDateFormat("dd MMMM yyyy");
+    private static final String todayDate = df2.format(Calendar.getInstance().getTime());
 
     @Ignore
     public MailEntity() {
     }
 
-    public MailEntity(String mailFrom, String mailTo,String mailType, String shippingType, String address, String zip, String city) {
+    public MailEntity(int idPostWorker,String mailFrom, String mailTo,String mailType, String shippingType, String address, String zip, String city) {
         this.mailFrom = mailFrom;
         this.mailTo = mailTo;
         this.address = address;
         this.zip = zip;
         this.city = city;
         this.shippingType = shippingType;
+        this.receiveDate = todayDate;
         this.mailType = mailType;
         this.idPostWorker = idPostWorker;
+        this.status = "In Progress";
     }
 
     @PrimaryKey(autoGenerate = true)

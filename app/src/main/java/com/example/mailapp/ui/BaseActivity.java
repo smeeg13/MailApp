@@ -55,20 +55,13 @@ public class BaseActivity extends AppCompatActivity {
         setActions();
 
         //By default show home
-        remplaceFragment(new HomeFragment());
+        remplaceFragment(new HomeFragment(), null);
         binding.HomeTopNavBar.setSelected(false);
         binding.HomeBottomNavBar.setSelectedItemId(HomeBtn);
 
         setContentView(binding.getRoot());
     }
 
-    public void remplaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(HomeFrameLayout, fragment);
-        fragmentTransaction.commit();
-    }
 
     /**
      * Creation of the actions done by the two navigation bar
@@ -78,68 +71,65 @@ public class BaseActivity extends AppCompatActivity {
         binding.HomeTopNavBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case SettingsBtn:
-                    remplaceFragment(new SettingsFragment());
+                    remplaceFragment(new SettingsFragment(), null);
                     break;
                 case LogoutBtn:
                     logout();
                     break;
                 case AboutBtn:
-                    remplaceFragment(new AboutFragment());
+                    remplaceFragment(new AboutFragment(), null);
                     break;
             }
             return true;
         });
+
 
         //Bottom Nav Bar
         binding.HomeBottomNavBar.setOnItemSelectedListener(item2 -> {
             switch (item2.getItemId()) {
                 case AddNewBtn:
-                    MailDetailFragment mailFragment = new MailDetailFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                            .beginTransaction();
-                    Bundle datas = new Bundle();
-                    datas.putInt("mailID", -1);
-                    mailFragment.setArguments(datas);
-                    fragmentTransaction.replace(HomeFrameLayout, mailFragment);
-                   // remplaceFragment(new AddNewFragment());
+                     Bundle datas = new Bundle();
+                    datas.putInt("mailID", -1); //put -1 cause we want to create a new one
+                    datas.putBoolean("Enable",true);
+                    remplaceFragment(new MailDetailFragment(), datas);
                     break;
                 case HomeBtn:
-                    remplaceFragment(new HomeFragment());
+                    remplaceFragment(new HomeFragment(),null);
                     break;
                 case MapBtn:
-                    remplaceFragment(new MapFragment());
+                    remplaceFragment(new MapFragment(),null);
                     break;
                 case AccountBtn:
-                    remplaceFragment(new MyAccountFragment());
+                    remplaceFragment(new MyAccountFragment(),null);
                     break;
             }
             return true;
         });
     }
 
-    public void logout(){
-        AlertDialog.Builder ab = new AlertDialog.Builder(this,R.style.AlertDialogCustom);
-        ab.setTitle("Confirmation of Disconnection");
-        ab.setMessage("You will be logged out. Are you sure ?");
-        ab.setPositiveButton("Yes, Log Out", (dialog, which) -> {
-            SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-            editor.remove(BaseActivity.PREFS_USER);
-            editor.remove(BaseActivity.PREFS_BACKGROUND);
-            editor.apply();
+    public void remplaceFragment(Fragment fragment, Bundle bundle) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(HomeFrameLayout, fragment);
+        fragmentTransaction.commit();
+    }
 
-            Intent intent= new  Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-        });
-        ab.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        ab.show();
+
+    /**
+     * MEthod to ask confirmation for Log Out
+     * Go to login page after
+     */
+    public void logout(){
+        MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out", new LoginActivity(), getApplication());
+        ab.backToLoginPage();
     }
     /**
      * Method to show a confirmation box for leaving the app
+     * Kill program after
      */
     @Override
     public void onBackPressed() {
-        MyAlertDialog ab = new MyAlertDialog(this, R.style.AlertDialogCustom);
+        MyAlertDialog ab = new MyAlertDialog(this, "Log Out and Close","You will be disconnected and the App will be closed, are you sure ?","Yes Log Out & Close", null, getApplication());
+        ab.killProgram();
     }
 }

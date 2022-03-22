@@ -53,13 +53,26 @@ public abstract class MyDatabase extends RoomDatabase {
                         super.onCreate(db);
                         Executors.newSingleThreadExecutor().execute(() -> {
                             MyDatabase database = MyDatabase.getInstance(appcontext);
-                            DatabaseInitializer.populateDatabase(database);
+                            initializeDemoData(database);
                             // notify that the database was created and it's ready to be used
                             database.setDatabaseCreated();
                         });
                     }
                 }).build();
     }
+
+    public static void initializeDemoData(final MyDatabase database) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            database.runInTransaction(() -> {
+                Log.i(TAG, "Wipe database.");
+                database.postWorkerDao().deleteAll();
+                database.mailDao().deleteAll();
+
+                DatabaseInitializer.populateDatabase(database);
+            });
+        });
+    }
+
 
     /**
      * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}

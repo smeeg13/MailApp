@@ -1,32 +1,20 @@
 package com.example.mailapp.ui;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.lifecycle.LiveData;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
-
-import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.dao.PostWorkerDao;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
-
-import java.util.List;
 
 /**
  * Page For the Login
@@ -62,15 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mail.setError(null);
         pwd.setError(null);
-
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
-
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for empty password, if the user entered one.
         if (stpwd.isEmpty()) {
             showError(pwd, Messages.EMPTY_FIELDS.toString());
             pwd.setText("");
@@ -78,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a empty email address.
         if (TextUtils.isEmpty(stmail)) {
             showError(mail, Messages.EMPTY_FIELDS.toString());
             focusView = mail;
@@ -87,8 +73,9 @@ public class LoginActivity extends AppCompatActivity {
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+            System.out.println("--------");
+            System.out.println("## LOGIN NOT OK");
+            System.out.println("--------");
         } else {
             postworkerRepository.getPostworkerByEmail(stmail, getApplication()).observe(LoginActivity.this, postWorkerEntity -> {
                 if (postWorkerEntity != null) {
@@ -96,15 +83,17 @@ public class LoginActivity extends AppCompatActivity {
                         // We need an Editor object to make preference changes.
                         // All objects are from android.context.Context
                         SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-
                         editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
                         editor.apply();
 
                         Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        System.out.println("--------");
                         System.out.println("## LOGIN OK");
                         System.out.println(postWorkerEntity.toString());
+                        System.out.println("--------");
+
                         mail.setText("");
                         pwd.setText("");
                     } else {
@@ -130,25 +119,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        MyAlertDialog ab = new MyAlertDialog(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-      //  this.setTheme(R.style.AlertDialogCustom);
+        MyAlertDialog dialog = new MyAlertDialog(this, "Confirmation, Closing App",
+                "The program will end. Are you sure ?","Yes, Close",null,getApplication());
+        dialog.killProgram();
+        dialog.setThemeID(R.style.AlertDialogCustom);
     }
-//    @Override
-//    public void onBackPressed() {
-//        //TODO Check prq couleru pas comme les autres ???
-//        AlertDialog.Builder alert = new AlertDialog.Builder(getBaseContext(), R.style.AlertDialogCustom);
-////        alert.setView(R.style.AlertDialogCustom);
-//        alert.setTitle("Confirmation of Disconnection");
-//        alert.setMessage("You will be logged out. Are you sure ?");
-//        alert.setPositiveButton("Yes, Log Out", (dialog, which) -> {
-//            //if you want to kill app . from other then your main avtivity.(Launcher)
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(1);
-//              dialog.dismiss();
-////if you want to finish just current activity
-//            // LoginActivity.this.finish();
-//        });
-//        alert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-//        alert.show();
-//    }
 }

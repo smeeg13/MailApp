@@ -43,7 +43,6 @@ public class PostWorkerEntity {
     @ColumnInfo(name = "background")
     public String background;
 
-
     @Ignore
     public PostWorkerEntity() {
 

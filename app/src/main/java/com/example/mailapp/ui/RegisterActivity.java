@@ -1,14 +1,18 @@
 package com.example.mailapp.ui;
 
+import static com.example.mailapp.database.MyDatabase.initializeDemoData;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mailapp.Enums.Messages;
@@ -17,6 +21,7 @@ import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.async.postworker.CreatePostWorker;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
 
 import java.util.ArrayList;
@@ -33,6 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
+    private Button btnResetDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,19 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.RegisterLoginBtn);
         // ONCLICK LOGIN BUTTON
         btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+
+        btnResetDB = findViewById(R.id.ResetDbBtn);
+        btnResetDB.setOnClickListener(view -> {
+            reinitializeDatabase();
+        });
+    }
+
+
+    private void reinitializeDatabase() {
+        MyAlertDialog dialog = new MyAlertDialog(this,
+                "Reset DB Demo Data",
+                "Do you really want to reset the Database ?","Yes, Reset", null, getApplication());
+        dialog.resetBD();
     }
 
     /**
@@ -82,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         String stzip = inputZIP.getText().toString();
         String stloca = inputLocation.getText().toString();
         String stpwd = inputPassword.getText().toString();
+
 
         //Check if any is empty or if pwd & email are invalid
         //& if the 2 pwd entered are same
@@ -125,6 +146,10 @@ public class RegisterActivity extends AppCompatActivity {
             inputEmail.setError(Messages.EMAIL_ALREADY_EXIST.toString());
             inputEmail.requestFocus();
         }
+    }
+
+    public void resetDB(View view){
+
     }
 
     /**
@@ -218,6 +243,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         return isWeak;
     }
+
+
 
 
     /**

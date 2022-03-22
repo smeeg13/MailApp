@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="ui.Fragments.MailDetailFragment">
+    tools:context="ui.Fragments.MailDetailFragment"
+    android:theme="@style/Theme.MailAppNoBar"
+    >
 
     <Switch
         android:id="@+id/DetailAssignedToSwitch"
@@ -287,7 +289,6 @@
         android:layout_width="82dp"
         android:layout_height="20dp"
         android:layout_marginTop="28dp"
-        android:hint="Meg"
         app:layout_constraintEnd_toStartOf="@+id/DetailIDTextView"
         app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toEndOf="@+id/DetailAssignedToSwitch"

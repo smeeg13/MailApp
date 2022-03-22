@@ -23,21 +23,19 @@ public class DatabaseInitializer {
         db.postWorkerDao().insert(client);
     }
 
-    private static void addMail(final MyDatabase db, final String mailfrom, final String mailto, final String mailType,final String shipType, final String address, final String zip, final String city) {
-        MailEntity mail = new MailEntity(mailfrom, mailto, mailType, shipType,address,zip,city);
+    private static void addMail(final MyDatabase db, final int idPostWorker,final String mailfrom, final String mailto, final String mailType,final String shipType, final String address, final String zip, final String city) {
+        MailEntity mail = new MailEntity(idPostWorker,mailfrom, mailto, mailType, shipType,address,zip,city);
         db.mailDao().insert(mail);
     }
 
     private static void populateWithTestData(MyDatabase db) {
-        //db.postWorkerDao().deleteAll();
 
-       // addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1823","Sion");
-        //addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","1950","Sierre");
-       // addPostWorker(db, "admin","admin","admin","admin","1234","admin","admin","admin");
-        //db.mailDao().deleteAll();
+        addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1823","Sion");
+        addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","1950","Sierre");
+        addPostWorker(db, "admin","admin","admin","admin","1234","admin","admin","admin");
 
-       // addMail(db, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
-       // addMail(db, "Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
+        addMail(db,3, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
+        addMail(db, 3,"Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
 
     }
 

@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myDatabase = MyDatabase.getInstance(this.getContext());
+       // myDatabase = MyDatabase.getInstance(this.getContext());
 
     }
 
