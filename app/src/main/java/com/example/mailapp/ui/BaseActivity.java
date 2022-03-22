@@ -5,26 +5,20 @@ import static com.example.mailapp.R.id.AddNewBtn;
 import static com.example.mailapp.R.id.LogoutBtn;
 import static com.example.mailapp.R.id.SettingsBtn;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AboutFragment;
-import com.example.mailapp.ui.Fragments.AddNewFragment;
 import com.example.mailapp.ui.Fragments.HomeFragment;
 import com.example.mailapp.ui.Fragments.MailDetailFragment;
 import com.example.mailapp.ui.Fragments.MapFragment;
 import com.example.mailapp.ui.Fragments.MyAccountFragment;
 import com.example.mailapp.ui.Fragments.SettingsFragment;
-import com.example.mailapp.R;
 import com.example.mailapp.util.MyAlertDialog;
 
 public class BaseActivity extends AppCompatActivity {
@@ -42,6 +36,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         initialize();
+        replaceFragment(new HomeFragment(), null);
     }
 
     private void initialize() {
@@ -55,7 +50,6 @@ public class BaseActivity extends AppCompatActivity {
         setActions();
 
         //By default show home
-        remplaceFragment(new HomeFragment(), null);
         binding.HomeTopNavBar.setSelected(false);
         binding.HomeBottomNavBar.setSelectedItemId(HomeBtn);
 
@@ -71,13 +65,13 @@ public class BaseActivity extends AppCompatActivity {
         binding.HomeTopNavBar.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case SettingsBtn:
-                    remplaceFragment(new SettingsFragment(), null);
+                    replaceFragment(new SettingsFragment(), null);
                     break;
                 case LogoutBtn:
                     logout();
                     break;
                 case AboutBtn:
-                    remplaceFragment(new AboutFragment(), null);
+                    replaceFragment(new AboutFragment(), null);
                     break;
             }
             return true;
@@ -91,23 +85,23 @@ public class BaseActivity extends AppCompatActivity {
                      Bundle datas = new Bundle();
                     datas.putInt("mailID", -1); //put -1 cause we want to create a new one
                     datas.putBoolean("Enable",true);
-                    remplaceFragment(new MailDetailFragment(), datas);
+                    replaceFragment(new MailDetailFragment(), datas);
                     break;
                 case HomeBtn:
-                    remplaceFragment(new HomeFragment(),null);
+                    replaceFragment(new HomeFragment(),null);
                     break;
                 case MapBtn:
-                    remplaceFragment(new MapFragment(),null);
+                    replaceFragment(new MapFragment(),null);
                     break;
                 case AccountBtn:
-                    remplaceFragment(new MyAccountFragment(),null);
+                    replaceFragment(new MyAccountFragment(),null);
                     break;
             }
             return true;
         });
     }
 
-    public void remplaceFragment(Fragment fragment, Bundle bundle) {
+    public void replaceFragment(Fragment fragment, Bundle bundle) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragment.setArguments(bundle);
         fragmentTransaction.replace(HomeFrameLayout, fragment);

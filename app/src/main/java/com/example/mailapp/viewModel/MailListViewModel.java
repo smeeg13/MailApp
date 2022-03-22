@@ -1,7 +1,6 @@
 package com.example.mailapp.viewModel;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -27,9 +25,9 @@ public class MailListViewModel  extends AndroidViewModel {
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<List<MailEntity>> observableMails;
-    private final MediatorLiveData<List<MailEntity>> observablePostworkers;
+    private final MediatorLiveData<List<MailEntity>> observableOwnMails;
 
-    public MailListViewModel(@NonNull Application application,final int IDPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
+    public MailListViewModel(@NonNull Application application,final String emailPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
         super(application);
 
         repository = mailRepository;
@@ -37,18 +35,18 @@ public class MailListViewModel  extends AndroidViewModel {
         this.application = application;
 
         observableMails = new MediatorLiveData<>();
-        observablePostworkers = new MediatorLiveData<>();
+        observableOwnMails = new MediatorLiveData<>();
 
         // set by default null, until we get data from the database.
         observableMails.setValue(null);
-        observablePostworkers.setValue(null);
+        observableOwnMails.setValue(null);
 
         LiveData<List<MailEntity>> mails = repository.getAllMails(application);
-        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IDPostWorker,application);
+        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(emailPostWorker,application);
 
         // observe the changes of the entities from the database and forward them
         observableMails.addSource(mails, observableMails::setValue);
-      //  observablePostworkers.addSource(ownMails, observablePostworkers::setValue);
+        observableOwnMails.addSource(ownMails, observableOwnMails::setValue);
     }
 
     /**
@@ -59,14 +57,14 @@ public class MailListViewModel  extends AndroidViewModel {
         @NonNull
         private final Application application;
 
-        private final int IdPostworker;
+        private final String EmailPostworker;
         private final MailRepository mailRepository;
         private final PostworkerRepository postworkerRepository;
 
 
-        public Factory(@NonNull Application application,int idPostworker) {
+        public Factory(@NonNull Application application,String email) {
             this.application = application;
-            this.IdPostworker = idPostworker;
+            this.EmailPostworker = email;
             mailRepository =  ((BaseApplication) application).getMailRepository();
             postworkerRepository = ((BaseApplication) application).getPostworkerRepository();
         }
@@ -74,22 +72,22 @@ public class MailListViewModel  extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new MailListViewModel(application,IdPostworker, mailRepository,postworkerRepository);
+            return (T) new MailListViewModel(application, EmailPostworker, mailRepository,postworkerRepository);
         }
     }
 
     /**
      * Expose the LiveData MailEntities query so the UI can observe it.
      */
-    public LiveData<List<MailEntity>> getClients() {
+    public LiveData<List<MailEntity>> getAllMails() {
         return observableMails;
     }
     public LiveData<List<MailEntity>> getOwnMails() {
-        return observablePostworkers;
+        return observableOwnMails;
     }
 
-    public void deleteAccount(MailEntity account, OnAsyncEventListener callback) {
-        repository.delete(account, callback, application);
+    public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
+        repository.delete(mail, callback, application);
     }
 
 }

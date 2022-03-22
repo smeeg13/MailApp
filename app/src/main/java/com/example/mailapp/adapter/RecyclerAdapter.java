@@ -1,6 +1,7 @@
 package com.example.mailapp.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -14,20 +15,24 @@ import com.example.mailapp.util.RecyclerViewItemClickListener;
 import java.util.List;
 import java.util.Objects;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private List<MailEntity> data;
+    private List<T> data;
     private RecyclerViewItemClickListener listener;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        TextView textView;
-        ViewHolder(TextView textView) {
-            super(textView);
-            this.textView = textView;
+        // each data item
+        TextView city, mailfrom, mailto, duedate;
+        ViewHolder(View v) {
+            super(v);
+            System.out.println("-------------------");
+            System.out.println("-------------------");
+            System.out.println("Constructor ViewHolder");
+            System.out.println("-------------------");
+            this.city = v.findViewById(R.id.city);
+            this.mailfrom = v.findViewById(R.id.mailFrom);
+            this.mailto = v.findViewById(R.id.mailTo);
+            this.duedate = v.findViewById(R.id.shipDate);
         }
     }
 
@@ -37,36 +42,42 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_view, parent, false);
-        final ViewHolder viewHolder = new ViewHolder(v);
-        //What's done when click on the text
-        v.setOnClickListener(view -> listener.onItemClick(view, viewHolder.getAdapterPosition()));
-        v.setOnLongClickListener(view -> {
-            listener.onItemLongClick(view, viewHolder.getAdapterPosition());
-            return true;
-        });
-        return viewHolder;
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_layout, null, false);
+//        TextView city = v.findViewById(R.id.city);
+//        final ViewHolder viewHolder = new ViewHolder(v);
+//        //What's done when click on the text
+//        v.setOnClickListener(view -> listener.onItemClick(view, viewHolder.getAdapterPosition()));
+//        v.setOnLongClickListener(view -> {
+//            listener.onItemLongClick(view, viewHolder.getAdapterPosition());
+//            return true;
+//        });
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        MailEntity item = data.get(position);
-        holder.textView.setText(item.toString());
+//        MailEntity item =(MailEntity) data.get(position);
+//        holder.city.setText(item.city);
+//        holder.mailfrom.setText(item.mailFrom);
+//        holder.mailto.setText(item.mailTo);
+//        holder.duedate.setText(item.shippedDate);
     }
 
+    /**
+     * How many mail are displayed in home page
+     * @return
+     */
     @Override
     public int getItemCount() {
-        if (data != null) {
-            return data.size();
-        } else {
-            return 0;
-        }
+
+            return 2;
+
     }
 
-    public void setData(final List<MailEntity> data) {
-        if (this.data == null) {
-            this.data = data;
+    public void setData(final List<T> data1) {
+        if (data == null) {
+            data = data1;
             notifyItemRangeInserted(0, data.size());
         } else {
             DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
@@ -82,10 +93,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 @Override
                 public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-
-                    if (RecyclerAdapter.this.data instanceof MailEntity) {
-                        return (RecyclerAdapter.this.data.get(oldItemPosition)).getIdMail() ==
-                                (data.get(newItemPosition)).getIdMail();
+                    if (data instanceof MailEntity) {
+                        return ((MailEntity)data.get(oldItemPosition)).getIdMail() ==
+                                ((MailEntity)data.get(newItemPosition)).getIdMail();
                     }
                     return false;
                 }
@@ -93,14 +103,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 @Override
                 public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                     if (RecyclerAdapter.this.data instanceof MailEntity) {
-                       MailEntity newMail = data.get(newItemPosition);
-                        MailEntity oldMail = RecyclerAdapter.this.data.get(newItemPosition);
+                       MailEntity newMail = (MailEntity) data.get(newItemPosition);
+                        MailEntity oldMail = (MailEntity) data.get(newItemPosition);
                         return Objects.equals(newMail.getIdMail(), oldMail.getIdMail());
                     }
                     return false;
                 }
             });
-            this.data = data;
+            this.data = data1;
             result.dispatchUpdatesTo(this);
         }
     }

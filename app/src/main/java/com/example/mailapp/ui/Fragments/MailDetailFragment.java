@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class MailDetailFragment extends MailFrag {
+public class MailDetailFragment extends Fragment {
     private static final String TAG = "MailFragment";
     private static final String CENTRAL_EMAIL = "admin";
     private static final int CENTRAL_ID = 3;
@@ -184,35 +184,6 @@ public class MailDetailFragment extends MailFrag {
         deleteButton = v.findViewById(R.id.DetailDeleteButton);
     }
 
-    private void deleteMail() {
-        final MailEntity mail = currentMail;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-        builder.setCancelable(true);
-        builder.setTitle("Delete Mail ");
-        builder.setMessage("Are you sure you want to delete the mail : " + idnumber.getText().toString() + " ? ");
-        builder.setPositiveButton(android.R.string.yes, (dialog, which) ->
-                mailViewModel.deleteMail(mail, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "## Delete Mail: success");
-                        Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
-                        //Go back to home fragment
-                        replaceFragment(new HomeFragment());
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "## Delete Mail: failure", e);
-                    }
-                }));
-        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            //Do Noting
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
     private void changes() {
         if (isEditMode) //Update of a given mail
             editMode();
@@ -229,7 +200,7 @@ public class MailDetailFragment extends MailFrag {
                     public void onSuccess() {
                         Log.d(TAG, "## Create Mail : success");
                         Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
-
+                        replaceFragment(new HomeFragment()); //Go back to home after
                     }
 
                     @Override
@@ -274,6 +245,35 @@ public class MailDetailFragment extends MailFrag {
                 Log.d(TAG, "## Update Mail: failure", e);
             }
         });
+    }
+
+    private void deleteMail() {
+        final MailEntity mail = currentMail;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setCancelable(true);
+        builder.setTitle("Delete Mail ");
+        builder.setMessage("Are you sure you want to delete the mail : " + idnumber.getText().toString() + " ? ");
+        builder.setPositiveButton(android.R.string.yes, (dialog, which) ->
+                mailViewModel.deleteMail(mail, new OnAsyncEventListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "## Delete Mail: success");
+                        Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
+                        //Go back to home fragment
+                        replaceFragment(new HomeFragment());
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "## Delete Mail: failure", e);
+                    }
+                }));
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+            //Do Noting
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void enableEdit(boolean isEnable) {
