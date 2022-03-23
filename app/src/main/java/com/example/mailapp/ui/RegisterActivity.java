@@ -108,8 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
         //& if the 2 pwd entered are same
         if (!InputsAreGood()){
             Toast.makeText(getApplicationContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
-            inputPassword.setText("");
-            inputConfirmPwd.setText("");
+//            inputPassword.setText("");
+//            inputConfirmPwd.setText("");
         }
         else {
             //Create the post worker with info entered
@@ -237,9 +237,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
         if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
             System.out.println("\n## The Password is Strong.");
+
             isWeak = false;
-        } else
+        } else {
             System.out.println("\n## The Password is Weak.");
+            showError(inputPassword, "Password too weak");
+        }
+
 
         return isWeak;
     }

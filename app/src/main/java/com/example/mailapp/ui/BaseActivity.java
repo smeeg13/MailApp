@@ -84,7 +84,7 @@ public class BaseActivity extends AppCompatActivity {
             switch (item2.getItemId()) {
                 case AddNewBtn:
                      Bundle datas = new Bundle();
-                    datas.putInt("mailID", -1); //put -1 cause we want to create a new one
+                    datas.putInt("MailID", -1); //put -1 cause we want to create a new one
                     datas.putBoolean("Enable",true);
                     replaceFragment(new MailDetailFragment(), datas);
                     break;

@@ -3,7 +3,6 @@ package com.example.mailapp.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.DiffUtil;
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,9 +22,9 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
     private RecyclerViewItemClickListener listener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item
+        // each view item in each row
         TextView city, mailfrom, mailto, duedate;
-        Button btn;
+        FloatingActionButton moreBtn;
 
         ViewHolder(View v) {
             super(v);
@@ -35,7 +35,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             mailfrom = v.findViewById(R.id.RecyclerFrom);
             mailto = v.findViewById(R.id.RecyclerTo);
             duedate = v.findViewById(R.id.RecyclerDate);
-            btn = v.findViewById(R.id.RecyclerBtn);
+            moreBtn = v.findViewById(R.id.RecyclerMoreButton);
 
         }
     }

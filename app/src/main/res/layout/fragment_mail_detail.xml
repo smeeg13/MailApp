@@ -100,14 +100,13 @@
         android:id="@+id/DetailAddressEditText"
         android:layout_width="304dp"
         android:layout_height="48dp"
-        android:layout_marginTop="4dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/address"
         android:inputType="textPostalAddress"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="@+id/DetailAddressTextView"
+        app:layout_constraintEnd_toEndOf="@+id/DetailWeightEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/DetailAddressTextView"
         app:layout_constraintTop_toBottomOf="@+id/DetailAddressTextView"
@@ -135,14 +134,13 @@
         android:layout_width="206dp"
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="52dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/city"
         android:inputType="textPostalAddress"
         android:minHeight="48dp"
         android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/DetailShipDateEditText"
         app:layout_constraintTop_toBottomOf="@+id/DetailAddressEditText"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -154,26 +152,22 @@
         android:text="@string/due_date_for_shipping"
         android:textColor="#000000"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/DetailShipTypeTextView"
-        app:layout_constraintEnd_toStartOf="@+id/DetailShipDateEditText"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/DetailShipTypeTextView"
         app:layout_constraintTop_toBottomOf="@+id/ShipTypeRadioGroup" />
 
     <EditText
         android:id="@+id/DetailWeightEditText"
-        android:layout_width="107dp"
+        android:layout_width="85dp"
         android:layout_height="48dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="36dp"
-        android:layout_marginEnd="16dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/weight"
         android:inputType="numberDecimal"
         android:textColorHint="#757575"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/DetailMailToEditText"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/MailTypeRadioGroup"
         app:layout_constraintTop_toBottomOf="@+id/DetailMailToEditText" />
@@ -197,8 +191,8 @@
 
         <RadioButton
             android:id="@+id/DetailPackageRadioBtn"
-            android:layout_width="106dp"
-            android:layout_height="wrap_content"
+            android:layout_width="123dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/packages" />
     </RadioGroup>
@@ -229,6 +223,7 @@
         app:layout_constraintStart_toStartOf="@+id/MailTypeRadioGroup"
         app:layout_constraintTop_toBottomOf="@+id/MailTypeRadioGroup" />
 
+
     <TextView
         android:id="@+id/DetailAddressTextView"
         android:layout_width="211dp"
@@ -240,17 +235,16 @@
         app:layout_constraintEnd_toEndOf="@+id/DetailShipDateEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/DetailShipDateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/DetailShipDateEditText" />
-
+        app:layout_constraintTop_toBottomOf="@+id/DetailShipDateTextView" />
 
     <TextView
         android:id="@+id/DetailShipDateEditText"
-        android:layout_width="209dp"
+        android:layout_width="170dp"
         android:layout_height="28dp"
         android:layout_marginTop="8dp"
         android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@+id/ShipTypeRadioGroup"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toEndOf="@+id/DetailShipDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/ShipTypeRadioGroup" />
 
@@ -314,14 +308,14 @@
 
         <RadioButton
             android:id="@+id/DetailBMailRadioBtn"
-            android:layout_width="106dp"
-            android:layout_height="wrap_content"
+            android:layout_width="93dp"
+            android:layout_height="match_parent"
             android:text="@string/b_mail" />
 
         <RadioButton
             android:id="@+id/DetailRecomMailRadioBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
             android:text="@string/recommended" />
     </RadioGroup>
 

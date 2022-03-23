@@ -64,6 +64,9 @@ public class MailDetailFragment extends Fragment {
     private PostWorkerEntity centralWorker;
 //---------------------------------------------------------
     private String workerConnectedEmailStr;
+    private String workerConnectedIdStr;
+    private PostWorkerEntity centralAccount ;
+
 
     //UI variables
     private final ArrayList<EditText> editTexts = new ArrayList<>();
@@ -93,7 +96,8 @@ public class MailDetailFragment extends Fragment {
     //Take back the postworker connected
         SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
         workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        System.out.println("-- User taken back from shared pref : "+ workerConnectedEmailStr);
+        workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
+        System.out.println("-- User taken back from shared pref : "+ workerConnectedEmailStr+" (Id : "+workerConnectedIdStr+")");
         initialize(v);
 
     //Instantiate actions for buttons
@@ -105,10 +109,8 @@ public class MailDetailFragment extends Fragment {
             //Log.v("Switch assigned to State=", ""+isChecked);
             if (isChecked) {//IF assign to me
                 postworkerAssigned.setText(workerConnectedEmailStr);
-              //  System.out.println("+++  Put assigned to : "+workerConnectedEmailStr);
-            } else {
+            } else {//TODO mettre pas en "dur"
                 postworkerAssigned.setText(CENTRAL_EMAIL);
-              //  System.out.println("+++  Put assigned to : "+CENTRAL_EMAIL);
             }
         });
 
@@ -117,7 +119,7 @@ public class MailDetailFragment extends Fragment {
         boolean putEnable = false;
         if (data != null) {
             putEnable = data.getBoolean("Enable");
-            idMailChoose = data.getInt("mailID");
+            idMailChoose = data.getInt("MailID");
         }
         enableEdit(putEnable);
 
@@ -308,12 +310,21 @@ public class MailDetailFragment extends Fragment {
     private MailEntity takeBackInfoIntoMail() {
         MailEntity newMail = new MailEntity();
         if (assignedToMe.isChecked()) {
-            //TODO Take back id of postworker Connected  : the right not 1
-            newMail.setIdPostWorker(1);
+            newMail.setIdPostWorker(Integer.parseInt(workerConnectedIdStr));
+            System.out.println("@@## ADD ID OF connected");
         }
         else{
             //TODO Assign to central  not manually would be better
-            newMail.setIdPostWorker(3);
+            PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
+            PostWorkerViewModel viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
+            viewModel.getClient().observe(getActivity(), entity -> {
+                if (entity != null) {
+                    centralAccount = entity;
+                    newMail.setIdPostWorker(centralAccount.getIdPostWorker());
+                    System.out.println("@@## ADD ID OF CENTRAL");
+                }
+            });
+           // newMail.setIdPostWorker(3);
         }
 
         newMail.setMailFrom(mailFrom.getText().toString());
@@ -335,16 +346,6 @@ public class MailDetailFragment extends Fragment {
 
     private void initializeFieldWithMailData(MailEntity mail) {
         idnumber.setText(mail.idMail);
-        //TODO take back the name of the worker assign
-//        repository.getPostworkerById(mail.idPostWorker, getActivity().getApplication()).observe(getViewLifecycleOwner(), postWorkerEntity1 -> {
-//            if (postWorkerEntity1 !=null){
-//                postWorkerResponsible = postWorkerEntity1;
-//            }
-//        });
-//        if (postWorkerResponsible.email.equals(workerConnected.email)){
-//            assignedToMe.setChecked(true);
-//        }
-//        postworkerAssigned.setText(postWorkerResponsible.email);
         mailFrom.setText(mail.mailFrom);
         mailTo.setText(mail.mailTo);
         switch (mail.mailType) {
@@ -491,6 +492,10 @@ public class MailDetailFragment extends Fragment {
        dueDate.setError(null);
     }
 
+    public static String getTAG() {
+        return TAG;
+    }
+
     private class MyOncheckChangeListener implements RadioGroup.OnCheckedChangeListener {
         RadioGroup groupConcerned;
         public MyOncheckChangeListener(RadioGroup  groupConcerned) {
@@ -521,5 +526,6 @@ public class MailDetailFragment extends Fragment {
             }
         }
     }
+
 }
 

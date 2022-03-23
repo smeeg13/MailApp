@@ -9,12 +9,18 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.ui.LoginActivity;
+import com.example.mailapp.viewModel.MailListViewModel;
+import com.example.mailapp.viewModel.MailViewModel;
 
 public class MyAlertDialog {
 
@@ -79,6 +85,27 @@ public class MyAlertDialog {
 //        myAlert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 //        myAlert.show();
 //    }
+
+    public void DeleteMail(MailEntity mail, MailListViewModel viewModel, View view){
+        myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {
+            viewModel.deleteMail(mail, new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    System.out.println( "deleteAccount: success");
+                }
+                @Override
+                public void onFailure(Exception e) {
+                    System.out.println("deleteAccount: failure ERROR : ");
+                    System.out.println(e);
+                }
+            });
+            Toast.makeText(context.getApplicationContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_LONG).show();
+        });
+
+        myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
+        myAlert.setView(view);
+        myAlert.show();
+    }
 
     public void resetBD(){
         myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {

@@ -123,7 +123,8 @@ public class MailEntity {
         return city;
     }
 
-    public void setCity(String toString) {
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getShippingType() {
