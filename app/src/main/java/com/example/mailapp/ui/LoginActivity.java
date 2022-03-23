@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                         // All objects are from android.context.Context
                         SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
                         editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
+                        editor.putString(BaseActivity.PREFS_ID_USER, String.valueOf(postWorkerEntity.getIdPostWorker()));
                         editor.apply();
 
                         Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
@@ -120,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         MyAlertDialog dialog = new MyAlertDialog(this, "Confirmation, Closing App",
-                "The program will end. Are you sure ?","Yes, Close",null,getApplication());
+                "The program will end. Are you sure ?","Yes, Close");
         dialog.killProgram();
         dialog.setThemeID(R.style.AlertDialogCustom);
     }

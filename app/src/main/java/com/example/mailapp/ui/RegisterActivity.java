@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void reinitializeDatabase() {
         MyAlertDialog dialog = new MyAlertDialog(this,
                 "Reset DB Demo Data",
-                "Do you really want to reset the Database ?","Yes, Reset", null, getApplication());
+                "Do you really want to reset the Database ?","Yes, Reset");
         dialog.resetBD();
     }
 

@@ -27,7 +27,7 @@ public class MailListViewModel  extends AndroidViewModel {
     private final MediatorLiveData<List<MailEntity>> observableMails;
     private final MediatorLiveData<List<MailEntity>> observableOwnMails;
 
-    public MailListViewModel(@NonNull Application application,final String emailPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
+    public MailListViewModel(@NonNull Application application,final int IdPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
         super(application);
 
         repository = mailRepository;
@@ -42,7 +42,7 @@ public class MailListViewModel  extends AndroidViewModel {
         observableOwnMails.setValue(null);
 
         LiveData<List<MailEntity>> mails = repository.getAllMails(application);
-        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(emailPostWorker,application);
+        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker,application);
 
         // observe the changes of the entities from the database and forward them
         observableMails.addSource(mails, observableMails::setValue);
@@ -57,14 +57,14 @@ public class MailListViewModel  extends AndroidViewModel {
         @NonNull
         private final Application application;
 
-        private final String EmailPostworker;
+        private final int idPostworker;
         private final MailRepository mailRepository;
         private final PostworkerRepository postworkerRepository;
 
 
-        public Factory(@NonNull Application application,String email) {
+        public Factory(@NonNull Application application,int id) {
             this.application = application;
-            this.EmailPostworker = email;
+            this.idPostworker = id;
             mailRepository =  ((BaseApplication) application).getMailRepository();
             postworkerRepository = ((BaseApplication) application).getPostworkerRepository();
         }
@@ -72,7 +72,7 @@ public class MailListViewModel  extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new MailListViewModel(application, EmailPostworker, mailRepository,postworkerRepository);
+            return (T) new MailListViewModel(application, idPostworker, mailRepository,postworkerRepository);
         }
     }
 
@@ -82,6 +82,7 @@ public class MailListViewModel  extends AndroidViewModel {
     public LiveData<List<MailEntity>> getAllMails() {
         return observableMails;
     }
+
     public LiveData<List<MailEntity>> getOwnMails() {
         return observableOwnMails;
     }

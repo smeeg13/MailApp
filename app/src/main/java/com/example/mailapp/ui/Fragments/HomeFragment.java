@@ -3,11 +3,11 @@ package com.example.mailapp.ui.Fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -15,14 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.adapter.RecyclerAdapter;
-import com.example.mailapp.database.dao.PostWorkerDao;
-import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.ui.BaseActivity;
+import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
 
@@ -46,7 +46,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // myDatabase = MyDatabase.getInstance(this.getContext());
 
     }
 
@@ -60,8 +59,14 @@ public class HomeFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
+
         SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
         workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
+        String workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER,null);
+        int workerConnectedIdInt = Integer.parseInt(workerConnectedIdStr);
+        System.out.println("On create View WorkerConnected : "+workerConnectedEmailStr);
+        System.out.println("On create View WorkerConnected ID : "+workerConnectedIdStr);
+
         mails = new ArrayList<>();
         adapter = new RecyclerAdapter<>(new RecyclerViewItemClickListener() {
             @Override
@@ -79,22 +84,57 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, "longClicked position:" + position);
                 Log.d(TAG, "longClicked on: " + mails.get(position).getIdMail());
                 //To do multiple selection
+
+                //Delete
+                createDeleteDialog(position);
+
             }
         });
-
-        MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedEmailStr);
-        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
-        viewModel.getOwnMails().observe(getActivity(), mailEntities -> {
-            if (mailEntities != null) {
-                mails = mailEntities;
-                adapter.setData(mails);
-            }
-        });
-
         recyclerView.setAdapter(adapter);
 
+        MailListViewModel.Factory factory = new MailListViewModel.Factory(
+                getActivity().getApplication(), workerConnectedIdInt);
+        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
+        viewModel.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
+            if (mailEntities != null) {
+                mails = mailEntities;
+                adapter.setMdata(mails);
+            }
+        });
+
         return v;
+    }
+
+    private void createDeleteDialog(final int position) {
+        final MailEntity mail = mails.get(position);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        final View view = inflater.inflate(R.layout.row_delete_item, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle("Delete Mail");
+        alertDialog.setCancelable(false);
+
+        final TextView deleteMessage = view.findViewById(R.id.tv_delete_item);
+        deleteMessage.setText("Are you sure you want to delete the mail "+ mail.idMail+" ?");
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes, Delete", (dialog, which) -> {
+            viewModel.deleteMail(mail, new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "deleteAccount: success");
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.d(TAG, "deleteAccount: failure", e);
+                }
+            });
+            Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_LONG).show();
+
+        });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> alertDialog.dismiss());
+        alertDialog.setView(view);
+        alertDialog.show();
     }
 
 

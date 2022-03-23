@@ -54,8 +54,8 @@ public class MailRepository {
         return ((BaseApplication) application).getDatabase().mailDao().getById(id);
     }
 
-    public LiveData<List<MailEntity>> getAllByPostworker(final String emailWorker, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByPostworker(emailWorker);
+    public LiveData<List<MailEntity>> getAllByPostworker(final int idWorker, Application application) {
+        return ((BaseApplication) application).getDatabase().mailDao().getAllByPostworker(idWorker);
     }
 
     public void insert(final MailEntity mail, OnAsyncEventListener callback, Application a) {

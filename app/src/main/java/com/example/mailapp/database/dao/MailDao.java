@@ -22,8 +22,8 @@ public interface MailDao {
     @Query("SELECT * FROM Mail WHERE idMail = :id")
     LiveData<MailEntity> getById(int id);
 
-    @Query("SELECT * FROM Mail WHERE idPostWorker = :emailWorker")
-    LiveData<List<MailEntity>> getAllByPostworker(String emailWorker);
+    @Query("SELECT * FROM Mail WHERE idPostWorker = :idPostWorker")
+    LiveData<List<MailEntity>> getAllByPostworker(int idPostWorker);
 
 
     @Query("SELECT * FROM Mail WHERE status = :status")

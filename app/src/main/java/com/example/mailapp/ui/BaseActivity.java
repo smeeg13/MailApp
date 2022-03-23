@@ -25,6 +25,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "SharedPrefs";
     public static final String PREFS_USER = "LoggedIn";
+    public static final String PREFS_ID_USER = "idUser";
     public static final String PREFS_MAIL = "";
     public static final String PREFS_BACKGROUND = "Background";
 
@@ -114,7 +115,7 @@ public class BaseActivity extends AppCompatActivity {
      * Go to login page after
      */
     public void logout(){
-        MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out", new LoginActivity(), getApplication());
+        MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out");
         ab.backToLoginPage();
     }
     /**
@@ -123,7 +124,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        MyAlertDialog ab = new MyAlertDialog(this, "Log Out and Close","You will be disconnected and the App will be closed, are you sure ?","Yes Log Out & Close", null, getApplication());
+        MyAlertDialog ab = new MyAlertDialog(this, "Log Out and Close","You will be disconnected and the App will be closed, are you sure ?","Yes Log Out & Close");
         ab.killProgram();
     }
 }

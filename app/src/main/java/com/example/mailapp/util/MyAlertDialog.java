@@ -21,21 +21,16 @@ public class MyAlertDialog {
     private  int ThemeID;
     String dialogTitle, dialogMsg, dialogYesBtn, dialogNoBtn = "Cancel";
     Context context;
-
     AlertDialog.Builder myAlert;
-    Activity activity;
-    Application appli;
 
-    public MyAlertDialog(Context context, String title, String msg, String yesMsg, Activity activityToGoTo, Application app) {
+
+    public MyAlertDialog(Context context, String title, String msg, String yesMsg) {
         setThemeID(R.style.AlertDialogCustom);
         myAlert = new AlertDialog.Builder(context,getThemeID());
         setDialogTitle(title);
         setDialogMsg(msg);
         setDialogYesBtn(yesMsg);
         this.context = context;
-        if(activityToGoTo!=activity)
-            this.activity = activityToGoTo;
-        this.appli = app;
     }
 
     public void killProgram(){
@@ -93,6 +88,10 @@ public class MyAlertDialog {
             System.out.println("------------------------");
             initializeDemoData(MyDatabase.getInstance(context));
             Toast.makeText(context, "Demo Data Initialized", Toast.LENGTH_LONG).show();
+            Intent intent= new  Intent(context, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(intent);
         });
         myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
         myAlert.show();
