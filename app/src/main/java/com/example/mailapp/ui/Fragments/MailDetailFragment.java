@@ -136,7 +136,7 @@ public class MailDetailFragment extends Fragment {
             isEditMode = false;
         } else { //We want to edit the one choosed !
             System.out.println("## Open Detail of Mail choose from list : " + idMailChoose);
-            editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
+            editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
             deleteButton.show();
             idnumTextStr.setVisibility(View.VISIBLE);
             idnumber.setVisibility(View.VISIBLE);
