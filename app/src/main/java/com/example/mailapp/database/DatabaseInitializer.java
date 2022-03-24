@@ -20,6 +20,7 @@ public class DatabaseInitializer {
 
     private static void addPostWorker(final MyDatabase db,final String firstname,final String lastname,final String phone,final String email,final String password,final String address,final String zip,final String city) {
         PostWorkerEntity client = new PostWorkerEntity(firstname,lastname,phone,email,password,address,zip,city);
+        client.setBackground("white");
         db.postWorkerDao().insert(client);
     }
 

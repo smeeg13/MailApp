@@ -33,7 +33,8 @@
         app:layout_constraintBottom_toTopOf="@+id/HomeBottomNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeTopNavBar"/>
+        app:layout_constraintTop_toBottomOf="@+id/HomeTopNavBar"
+        android:theme="@style/AppTheme.NoActionBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/HomeBottomNavBar"

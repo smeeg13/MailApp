@@ -74,10 +74,9 @@ public class MailDetailFragment extends Fragment {
     private RadioGroup shipTypeRGroup, mailTypeRGroup;
     private RadioButton letter, packages, amail, bmail, recmail;
     private String mailTypeChoosed, shipTypeChoosed, shipDateStr;
-    private TextView postworkerAssigned,idnumber, dueDate;
+    private TextView postworkerAssigned,idnumber,idnumTextStr, dueDate;
     private Switch assignedToMe;
-    private FloatingActionButton editAddButton;
-    private FloatingActionButton deleteButton;
+    private FloatingActionButton editAddButton, deleteButton, backHomeBtn;
 
     public MailDetailFragment() {
     }
@@ -103,6 +102,7 @@ public class MailDetailFragment extends Fragment {
     //Instantiate actions for buttons
         editAddButton.setOnClickListener(v -> changes());
         deleteButton.setOnClickListener(view -> deleteMail());
+        backHomeBtn.setOnClickListener(view -> BackHome());
         shipTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(shipTypeRGroup));
         mailTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(mailTypeRGroup));
         assignedToMe.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -122,12 +122,15 @@ public class MailDetailFragment extends Fragment {
             idMailChoose = data.getInt("MailID");
         }
         enableEdit(putEnable);
+        editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
 
-    //Decide if we add or edit depending on if we received a valid mail id or not
+
+        //Decide if we add or edit depending on if we received a valid mail id or not
         if (idMailChoose == -1) { //We want to create one
             System.out.println("## Open Page for creating Mail ");
             editAddButton.setImageResource(R.drawable.ic_baseline_add_24);
             deleteButton.hide();
+            idnumTextStr.setVisibility(View.INVISIBLE);
             idnumber.setVisibility(View.INVISIBLE);
             Toast.makeText(getActivity().getBaseContext(), "Now you can Create a new mail !", Toast.LENGTH_SHORT).show();
             isEditMode = false;
@@ -135,6 +138,7 @@ public class MailDetailFragment extends Fragment {
             System.out.println("## Open Detail of Mail choose from list : " + idMailChoose);
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             deleteButton.show();
+            idnumTextStr.setVisibility(View.VISIBLE);
             idnumber.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity().getBaseContext(), "Now you can Edit the mail choosed !", Toast.LENGTH_SHORT).show();
             isEditMode = true;
@@ -153,6 +157,13 @@ public class MailDetailFragment extends Fragment {
             });
         }
         return v;
+    }
+
+    private void BackHome() {
+        System.out.println("Arrow Back Home Clicked");
+        getFragmentManager().beginTransaction()
+                .replace(R.id.HomeFrameLayout, new HomeFragment())
+                .commit();
     }
 
     public void initialize(View v) {
@@ -177,6 +188,7 @@ public class MailDetailFragment extends Fragment {
         bmail = v.findViewById(R.id.DetailBMailRadioBtn);
         recmail = v.findViewById(R.id.DetailRecomMailRadioBtn);
         idnumber = v.findViewById(R.id.DetailIDTextView);
+        idnumTextStr = v.findViewById(R.id.MailIdStrTextView);
         assignedToMe = v.findViewById(R.id.DetailAssignedToSwitch);
         assignedToMe.setChecked(true);
         postworkerAssigned = v.findViewById(R.id.DetailAssignToTextView);
@@ -184,10 +196,15 @@ public class MailDetailFragment extends Fragment {
         dueDate = v.findViewById(R.id.DetailShipDateEditText);
         editAddButton = v.findViewById(R.id.DetailEditButton);
         deleteButton = v.findViewById(R.id.DetailDeleteButton);
+        backHomeBtn = v.findViewById(R.id.BackHomeButton);
+        editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
+
+
     }
 
     private void changes() {
         if (isEditMode) //Update of a given mail
+
             editMode();
         else { //Creation of a new mail
             if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup,  packages,
@@ -229,9 +246,9 @@ public class MailDetailFragment extends Fragment {
                 enableEdit = true;
             }
         } else {
+            editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             enableEdit(true);
             enableEdit = false;
-            editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
         }
     }
 
@@ -286,10 +303,14 @@ public class MailDetailFragment extends Fragment {
             zip.setEnabled(true);
             city.setEnabled(true);
             weight.setEnabled(true);
-            mailTypeRGroup.setEnabled(true);
-            shipTypeRGroup.setEnabled(true);
+            letter.setEnabled(true);
+            packages.setEnabled(true);
+            amail.setEnabled(true);
+            bmail.setEnabled(true);
+            recmail.setEnabled(true);
             assignedToMe.setEnabled(true);
             postworkerAssigned.setEnabled(true);
+            editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             System.out.println("## Is enabled");
         } else {
             mailFrom.setEnabled(false);
@@ -298,10 +319,15 @@ public class MailDetailFragment extends Fragment {
             zip.setEnabled(false);
             city.setEnabled(false);
             weight.setEnabled(false);
-            mailTypeRGroup.setEnabled(false);
-            shipTypeRGroup.setEnabled(false);
+            letter.setEnabled(false);
+            packages.setEnabled(false);
+            amail.setEnabled(false);
+            bmail.setEnabled(false);
+            recmail.setEnabled(false);
+            assignedToMe.setEnabled(true);
             postworkerAssigned.setEnabled(false);
             assignedToMe.setEnabled(false);
+            editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
             System.out.println("## Is  NOT enabled");
         }
     }
@@ -345,7 +371,7 @@ public class MailDetailFragment extends Fragment {
     }
 
     private void initializeFieldWithMailData(MailEntity mail) {
-        idnumber.setText(mail.idMail);
+        idnumber.setText(Integer.toString(mail.idMail));
         mailFrom.setText(mail.mailFrom);
         mailTo.setText(mail.mailTo);
         switch (mail.mailType) {

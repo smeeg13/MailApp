@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="ui.Fragments.HomeFragment">
+    tools:context="ui.Fragments.HomeFragment"
+    android:theme="@style/Theme.MailAppNoBar"
+    >
 
 
     <!-- TODO: Update blank fragment layout -->
@@ -53,8 +55,8 @@
         android:layout_height="62dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/btn_bg"
-        android:backgroundTint="@color/white"
+        android:background="@drawable/btn_bg_blue"
+        android:backgroundTint="@color/blue"
         android:text="See All"
         android:textColor="@color/black"
         android:textSize="12sp"

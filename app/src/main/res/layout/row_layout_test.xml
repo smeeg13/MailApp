@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Constrain"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.NoActionBar">
 
     <androidx.cardview.widget.CardView
         android:layout_width="409dp"
@@ -75,7 +76,9 @@
                 android:id="@+id/RecyclerMoreButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/blue"
                 android:clickable="true"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/RecyclerDate"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -84,6 +87,28 @@
                 app:layout_constraintVertical_bias="0.55"
                 app:srcCompat="@drawable/ic_baseline_more_horiz_24"
                 tools:ignore="SpeakableTextPresentCheck" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/RecyclerDoneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/RecyclerMoreButton"
+                app:layout_constraintEnd_toStartOf="@+id/RecyclerMoreButton"
+                app:srcCompat="@drawable/ic_baseline_done_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/RecyclerEditButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/RecyclerDoneButton"
+                app:layout_constraintEnd_toStartOf="@+id/RecyclerDoneButton"
+                app:srcCompat="@drawable/ic_baseline_edit_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -79,16 +79,6 @@ public class MyAlertDialog {
         myAlert.show();
     }
 
-//    public void DeleteSomething(){
-//        myAlert.setPositiveButton("Yes, Delete", (dialog, which) -> {
-//            dialog.dismiss();
-//            System.out.println("@@ something deleted by the User");
-//            //TODO Delete
-//        });
-//        myAlert.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-//        myAlert.show();
-//    }
-
     public void DeleteMail(MailEntity mail, MailListViewModel viewModel, View view){
         myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {
             viewModel.deleteMail(mail, new OnAsyncEventListener() {

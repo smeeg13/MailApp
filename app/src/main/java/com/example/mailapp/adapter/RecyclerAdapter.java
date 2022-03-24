@@ -1,8 +1,11 @@
 package com.example.mailapp.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.DiffUtil;
@@ -18,13 +21,16 @@ import java.util.Objects;
 
 public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
+    static Animation open, close, toright,fromright;
+
     private List<T> mdata;
     private RecyclerViewItemClickListener listener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         // each view item in each row
         TextView city, mailfrom, mailto, duedate;
-        FloatingActionButton moreBtn;
+        FloatingActionButton moreBtn, doneBtn, editBtn;
+        boolean isOpen = false;
 
         ViewHolder(View v) {
             super(v);
@@ -35,13 +41,18 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             mailfrom = v.findViewById(R.id.RecyclerFrom);
             mailto = v.findViewById(R.id.RecyclerTo);
             duedate = v.findViewById(R.id.RecyclerDate);
-            moreBtn = v.findViewById(R.id.RecyclerMoreButton);
 
+            moreBtn = v.findViewById(R.id.RecyclerMoreButton);
+            doneBtn = v.findViewById(R.id.RecyclerDoneButton);
+            editBtn = v.findViewById(R.id.RecyclerEditButton);
         }
     }
 
-    public RecyclerAdapter(RecyclerViewItemClickListener listener) {
+    public RecyclerAdapter( RecyclerViewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public RecyclerAdapter( ) {
     }
 
     @Override
@@ -49,12 +60,42 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_layout_test, parent, false);
         final ViewHolder viewHolder = new ViewHolder(v);
-//        //What's done when click on the text
-//        v.setOnClickListener(view -> listener.onItemClick(view, viewHolder.getAdapterPosition()));
-//        v.setOnLongClickListener(view -> {
-//            listener.onItemLongClick(view, viewHolder.getAdapterPosition());
-//            return true;
-//        });
+
+        open = AnimationUtils.loadAnimation(parent.getContext(), R.anim.rotate_open_anim);
+        close = AnimationUtils.loadAnimation(parent.getContext(), R.anim.rotate_close_anim);
+        fromright = AnimationUtils.loadAnimation(parent.getContext(), R.anim.from_right_anim);
+        toright = AnimationUtils.loadAnimation(parent.getContext(), R.anim.to_right_anim);
+
+        viewHolder.moreBtn.setOnClickListener(view -> {
+            if (!viewHolder.isOpen){
+                viewHolder.doneBtn.setVisibility(View.VISIBLE);
+                viewHolder.editBtn.setVisibility(View.VISIBLE);
+                viewHolder.doneBtn.startAnimation(fromright);
+                viewHolder.editBtn.startAnimation(fromright);
+                viewHolder.moreBtn.startAnimation(open);
+                viewHolder.doneBtn.setClickable(true);
+                viewHolder.editBtn.setClickable(true);
+            }
+            else {
+                viewHolder.doneBtn.setVisibility(View.INVISIBLE);
+                viewHolder.editBtn.setVisibility(View.INVISIBLE);
+                viewHolder.doneBtn.startAnimation(toright);
+                viewHolder.editBtn.startAnimation(toright);
+                viewHolder.moreBtn.startAnimation(close);
+                viewHolder.doneBtn.setClickable(false);
+                viewHolder.editBtn.setClickable(false);
+            }
+            viewHolder.isOpen= !viewHolder.isOpen;
+        });
+
+        viewHolder.moreBtn.setOnLongClickListener(view -> {
+            listener.onItemLongClick(view, viewHolder.getAdapterPosition());
+            return true;
+        });
+
+        viewHolder.editBtn.setOnClickListener(view -> listener.onItemClick("edit",view, viewHolder.getAdapterPosition()));
+        viewHolder.doneBtn.setOnClickListener(view -> listener.onItemClick("done",view, viewHolder.getAdapterPosition()));
+
         return viewHolder;
     }
 
@@ -80,7 +121,6 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         } else {
             return 0;
         }
-       // return 2;
     }
 
     public void setMdata(final List<T> data1) {
