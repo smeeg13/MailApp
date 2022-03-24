@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">MailApp</string>
+
+    <!-- Input-->
+
+    <!-- Button-->
+
+
+    <string name="FirstnameTxt">Firstname</string>
+    <string name="LastnameTxt">Lastname</string>
+    <string name="PasswordTxt">Your password</string>
+    <string name="LoginBtn">Login</string>
+    <string name="SignUpBtn">Sign Up</string>
+    <string name="WelcomeTxt">Welcome</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="EmailTxt">Your email</string>
+    <string name="PhoneTxt">Your phone</string>
+    <string name="AddressTxt">Your address</string>
+    <string name="ConfirmPasswordTxt">Confirm your password</string>
+    <string name="CreateAccountBtn">Create Account</string>
+    <string name="title_activity_home_screen_two">HomeScreen_Two</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="logout">Logout</string>
+    <string name="my_profile">My Profile</string>
+    <string name="home">Home</string>
+    <string name="add_new">Add New</string>
+    <string name="map">Map</string>
+    <string name="my_account">My Account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_my_account">Create my Account</string>
+    <string name="already_have_an_account">Already Have an Account ?</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="assigned_to_me">Assigned To Me ?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="add_mail">Add Mail</string>
+    <string name="mail_from">Mail From</string>
+    <string name="mail_to">Mail To</string>
+    <string name="mail_type">Mail Type</string>
+    <string name="shipping_type">Shipping Type</string>
+    <string name="due_date_for_shipping">Due Date For Shipping : </string>
+    <string name="id_111232">"   ID 111232"</string>
+    <string name="name">Name</string>
+    <string name="a_mail">A-Mail</string>
+    <string name="b_mail">B-Mail</string>
+    <string name="weight">Weight</string>
+    <string name="letter">Letter</string>
+    <string name="recommended">Recommended</string>
+    <string name="address">Address</string>
+    <string name="packages">Package</string>
+    <string name="see_all_mails">See All Mails</string>
+    <string name="by_shipping_type">By Shipping Type</string>
+    <string name="zip">ZIP</string>
+    <string name="city">City</string>
+    <string name="del">DEL</string>
+    <string name="edit">EDIT</string>
+    <string-array name="locationsAvailables_array">
+        <item>White</item>
+        <item>Black</item>
+    </string-array>
+</resources>

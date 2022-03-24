@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
@@ -85,7 +86,14 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
                         editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
                         editor.putString(BaseActivity.PREFS_ID_USER, String.valueOf(postWorkerEntity.getIdPostWorker()));
+                        editor.putString(BaseActivity.PREFS_BACKGROUND, String.valueOf(postWorkerEntity.getBackground()));
                         editor.apply();
+
+                        if (postWorkerEntity.getBackground().equals("black")){
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        }else{
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        }
 
                         Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -5,13 +5,17 @@ import static com.example.mailapp.R.id.AddNewBtn;
 import static com.example.mailapp.R.id.LogoutBtn;
 import static com.example.mailapp.R.id.SettingsBtn;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.mailapp.BaseApplication;
+import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AboutFragment;
 import com.example.mailapp.ui.Fragments.HomeFragment;
@@ -20,6 +24,7 @@ import com.example.mailapp.ui.Fragments.MapFragment;
 import com.example.mailapp.ui.Fragments.MyAccountFragment;
 import com.example.mailapp.ui.Fragments.SettingsFragment;
 import com.example.mailapp.util.MyAlertDialog;
+import com.example.mailapp.util.OnAsyncEventListener;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -28,6 +33,10 @@ public class BaseActivity extends AppCompatActivity {
     public static final String PREFS_ID_USER = "idUser";
     public static final String PREFS_MAIL = "";
     public static final String PREFS_BACKGROUND = "Background";
+    private SharedPreferences settings;
+    private SharedPreferences sharedPreferences;
+    private String sharedPrefMail, sharedPrefBackground = null;
+    private PostworkerRepository postworkerRepository;
 
     protected Toolbar toolbar;
     protected ActivityBaseBinding binding;
@@ -35,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        postworkerRepository = ((BaseApplication) getApplication()).getPostworkerRepository();
         initialize();
         replaceFragment(new HomeFragment(), null);
     }
@@ -116,6 +125,26 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void logout(){
         MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out");
+        settings = getSharedPreferences(BaseActivity.PREFS_NAME, 0);
+        sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
+        sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
+        postworkerRepository.getPostworkerByEmail(sharedPrefMail, getApplication()).observe(BaseActivity.this, postWorkerEntity -> {
+            postWorkerEntity.setBackground(sharedPrefBackground);
+            postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            },getApplication());
+
+        });
+
+
         ab.backToLoginPage();
     }
     /**

@@ -115,6 +115,8 @@ public class RegisterActivity extends AppCompatActivity {
             //Create the post worker with info entered
             PostWorkerEntity newWorker = new PostWorkerEntity(stfirstname,stlastname,staddress, stmail,stpwd,stphone,stloca,stzip);
             //Save post worker in database
+            newWorker.setBackground("white");
+            System.out.println("register activity background :" +newWorker.getBackground());
             new CreatePostWorker(getApplication(), new OnAsyncEventListener() {
                 @Override
                 public void onSuccess() {

@@ -1,5 +1,6 @@
 package com.example.mailapp.database.entities;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -10,7 +11,7 @@ import java.util.List;
 @Entity(tableName = "PostWorker")
 public class PostWorkerEntity {
 
-    public PostWorkerEntity(String firstname, String lastname, String phone, String email, String password, String address, String zip, String city) {
+    public PostWorkerEntity( String firstname, String lastname, String phone, String email, String password, String address, String zip, String city) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;

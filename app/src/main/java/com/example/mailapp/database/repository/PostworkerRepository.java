@@ -1,13 +1,10 @@
 package com.example.mailapp.database.repository;
 
 import android.app.Application;
-import android.content.Context;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
 import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.async.postworker.CreatePostWorker;
 import com.example.mailapp.database.async.postworker.DeletePostWorker;
 import com.example.mailapp.database.async.postworker.UpdatePostWorker;
@@ -42,6 +39,7 @@ public class PostworkerRepository {
         return ((BaseApplication) application).getDatabase().postWorkerDao().getById(id);
     }
 
+
     public LiveData<PostWorkerEntity> getPostworkerByEmail(final String email, Application application) {
         return ((BaseApplication) application).getDatabase().postWorkerDao().getByEmail(email);
 
@@ -51,16 +49,15 @@ public class PostworkerRepository {
         return ((BaseApplication) application).getDatabase().postWorkerDao().getByName(firstname,lastname);
     }
 
-    public void updateBackgroundSetting(final int idPostWorker, final String background, Application application) {
-        ((BaseApplication) application).getDatabase().postWorkerDao().updatePostWorkerBackGround(idPostWorker,background);
+    public void updatePostWorkerBackground(final String background, final String email){
+        updatePostWorkerBackground(background,email);
     }
-
 
     public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
         new CreatePostWorker(application, callback).execute(postWorker);
     }
 
-    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
+    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback,Application application) {
         new UpdatePostWorker(application, callback).execute(postWorker);
     }
 
