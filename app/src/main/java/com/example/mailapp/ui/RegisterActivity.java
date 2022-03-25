@@ -34,12 +34,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "REGISTER";
 
-
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
     private Button btnResetDB;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
