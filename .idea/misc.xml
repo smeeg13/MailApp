@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/btn_bg.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_add_white.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.158" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_baseline_more_horiz_24.xml" value="0.113" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_location_white.xml" value="0.143" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/drawable/ic_settings_white.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/activity_base.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/activity_home.xml" value="0.4" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/activity_login.xml" value="0.25052083333333336" />
@@ -11,18 +18,21 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_about.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_add_new.xml" value="0.264" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_home.xml" value="0.15555555555555556" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_mail_detail.xml" value="0.18489583333333334" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_mail_detail.xml" value="0.264" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_map.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_my_account.xml" value="0.4" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/fragment_settings.xml" value="0.25" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/mail_frag.xml" value="0.18489583333333334" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/recycler_view.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/row_delete_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/row_layout.xml" value="0.264" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/layout/row_layout_test.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MailApp/app/src/main/res/menu/first_menu.xml" value="0.1" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable-v24/btn_bg_blue.xml" value="0.2195" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable-v24/red_bg.xml" value="0.2795" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable-v24/white_bg.xml" value="0.2795" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/btn_bg.xml" value="0.193" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/btn_bg_blue.xml" value="0.2195" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_exit_to_app_24.xml" value="0.2015" />
@@ -48,7 +58,7 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout-w936dp/activity_login.xml" value="0.241796875" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout-w936dp/fragment_Mail_Base.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout-w936dp/row_layout2.xml" value="0.14666666666666667" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_base.xml" value="0.22" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_base.xml" value="0.1" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_home.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_home_activity.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_home_screen.xml" value="0.22" />
@@ -62,7 +72,7 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_add_new.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_home.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_logout.xml" value="0.259375" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_mail_detail.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_mail_detail.xml" value="0.3223958333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_map.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_my_account.xml" value="0.3223958333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_settings.xml" value="0.259375" />
@@ -71,7 +81,7 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_delete_item.xml" value="0.1" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_layout.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_layout2.xml" value="0.22" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_layout_test.xml" value="0.2111801242236025" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_layout_test.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/settings_activity.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/bottom_menu.xml" value="0.25462962962962965" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />

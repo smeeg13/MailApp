@@ -39,7 +39,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:text="10.12.2022"
-        android:textColor="@color/blue"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 

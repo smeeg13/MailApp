@@ -89,6 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(BaseActivity.PREFS_BACKGROUND, String.valueOf(postWorkerEntity.getBackground()));
                         editor.apply();
 
+
+
                         if (postWorkerEntity.getBackground().equals("black")){
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                         }else{
