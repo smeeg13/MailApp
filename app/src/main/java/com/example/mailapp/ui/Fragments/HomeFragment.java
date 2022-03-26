@@ -1,17 +1,11 @@
 package com.example.mailapp.ui.Fragments;
 
-import static android.graphics.Color.WHITE;
-
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,21 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.adapter.RecyclerAdapter;
-import com.example.mailapp.adapter.RecyclerViewInterface;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.MyAlertDialog;
-import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
-import com.example.mailapp.viewModel.MailViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;

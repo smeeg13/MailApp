@@ -160,10 +160,14 @@ public class MailDetailFragment extends Fragment {
     }
 
     private void BackHome() {
+        getActivity().getViewModelStore().clear();
+        currentMail= null;
+        mailViewModel=null;
         System.out.println("Arrow Back Home Clicked");
         getFragmentManager().beginTransaction()
                 .replace(R.id.HomeFrameLayout, new HomeFragment())
                 .commit();
+
     }
 
     public void initialize(View v) {
@@ -241,7 +245,18 @@ public class MailDetailFragment extends Fragment {
                 enableEdit(false);
                 //Save all the modification to the database
                 currentMail = takeBackInfoIntoMail();
-                updateThisMail(currentMail);
+                currentMail.setIdMail(Integer.parseInt(idnumber.getText().toString()));
+                mailViewModel.updateMail(currentMail, new OnAsyncEventListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "## Update Mail: success");
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d(TAG, "## Update Mail: failure", e);
+                    }
+                });
                 editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
                 enableEdit = true;
             }
@@ -250,20 +265,6 @@ public class MailDetailFragment extends Fragment {
             enableEdit(true);
             enableEdit = false;
         }
-    }
-
-    private void updateThisMail(MailEntity mail) {
-        mailViewModel.updateMail(mail, new OnAsyncEventListener() {
-            @Override
-            public void onSuccess() {
-                Log.d(TAG, "## Update Mail: success");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.d(TAG, "## Update Mail: failure", e);
-            }
-        });
     }
 
     private void deleteMail() {
@@ -350,7 +351,6 @@ public class MailDetailFragment extends Fragment {
                     System.out.println("@@## ADD ID OF CENTRAL");
                 }
             });
-           // newMail.setIdPostWorker(3);
         }
 
         newMail.setMailFrom(mailFrom.getText().toString());
@@ -494,6 +494,8 @@ public class MailDetailFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
         System.out.println("+++  HomeFragment layout replaced with "+newfragment.getTag()+"  +++");
+        currentMail= null;
+        mailViewModel=null;
         fragmentTransaction.commit();
     }
 

@@ -1,6 +1,5 @@
 package com.example.mailapp.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         // each view item in each row
-        TextView city, mailfrom, mailto, duedate;
+        TextView city, address, mailto, duedate;
         FloatingActionButton moreBtn, doneBtn, editBtn;
         boolean isOpen = false;
 
@@ -38,7 +37,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             System.out.println("Constructor ViewHolder");
             System.out.println("-------------------");
             city = v.findViewById(R.id.RecyclerCity);
-            mailfrom = v.findViewById(R.id.RecyclerFrom);
+            address = v.findViewById(R.id.RecyclerAddress);
             mailto = v.findViewById(R.id.RecyclerTo);
             duedate = v.findViewById(R.id.RecyclerDate);
 
@@ -58,7 +57,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_layout_test, parent, false);
+                .inflate(R.layout.row_layout, parent, false);
         final ViewHolder viewHolder = new ViewHolder(v);
 
         open = AnimationUtils.loadAnimation(parent.getContext(), R.anim.rotate_open_anim);
@@ -104,9 +103,9 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         T item = mdata.get(position);
         if (item.getClass().equals(MailEntity.class)) {
             holder.city.setText(((MailEntity) item).getCity());
-            holder.mailfrom.setText(((MailEntity) item).mailFrom);
-            holder.mailto.setText(((MailEntity) item).mailTo);
-            holder.duedate.setText(((MailEntity) item).shippedDate);
+            holder.address.setText(((MailEntity) item).getAddress());
+            holder.mailto.setText(((MailEntity) item).getMailTo());
+            holder.duedate.setText(((MailEntity) item).getShippedDate());
          }
     }
 

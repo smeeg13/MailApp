@@ -79,6 +79,10 @@ public class MailEntity {
     @ColumnInfo(name = "shippedDate")
     public String shippedDate;
 
+    public void setIdMail(int idMail) {
+        this.idMail = idMail;
+    }
+
     public int getIdPostWorker() {
         return idPostWorker;
     }
