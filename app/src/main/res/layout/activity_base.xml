@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.BaseActivity"
+    android:theme="@style/AppTheme.NoActionBar">
+
+    <include
+        layout ="@layout/appbar"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/HomeTopNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        app:itemIconTint="@color/white"
+        app:itemRippleColor="@color/white"
+        app:itemTextColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/first_menu" >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <FrameLayout
+        android:id="@+id/HomeFrameLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/HomeBottomNavBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HomeTopNavBar"
+        android:theme="@style/AppTheme.NoActionBar"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/HomeBottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightGrey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

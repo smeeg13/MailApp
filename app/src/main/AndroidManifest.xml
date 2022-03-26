@@ -4,13 +4,13 @@
     package="com.example.mailapp">
 
     <application
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MailApp">
-
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -26,12 +26,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAU9AXHZR9oH8lUXW7nhgq89yAzoFTS6gw" />
 
-        <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.MailAppNoBar"
-            tools:ignore="ExtraText"
-            android:exported="true">
 
+        <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,25 +39,19 @@
         </activity>
 
         <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/Theme.MailAppNoBar"
+            android:name=".ui.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="ExtraText">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
+                android:value=".ui.LoginActivity" />
         </activity>
 
         <activity
-            android:name=".HomeActivity"
-            android:parentActivityName=".LoginActivity"
-            android:exported="false">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity" />
+            android:name=".ui.BaseActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
     </application>

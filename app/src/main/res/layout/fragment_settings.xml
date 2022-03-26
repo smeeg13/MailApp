@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Fragments.SettingsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,32 +12,48 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/SettingsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:text="Background"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.089"
+            app:layout_constraintHorizontal_bias="0.099"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.079" />
+            app:layout_constraintVertical_bias="0.075" />
 
-        <Spinner
-            android:id="@+id/SettingsSpinner"
-            android:layout_width="126dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="4dp"
+        <RadioGroup
+            android:id="@+id/SettingsRadioGroup"
+            android:layout_width="178dp"
+            android:layout_height="86dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.094"
+            app:layout_constraintHorizontal_bias="0.175"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.15">
+
+            <RadioButton
+                android:id="@+id/SettingsWhiteRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="White" />
+
+            <RadioButton
+                android:id="@+id/SettingsBlackRadio"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:text="Black" />
+
+        </RadioGroup>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
