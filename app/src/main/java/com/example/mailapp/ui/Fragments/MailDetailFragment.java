@@ -494,22 +494,10 @@ public class MailDetailFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
         System.out.println("+++  HomeFragment layout replaced with "+newfragment.getTag()+"  +++");
-        currentMail= null;
-        mailViewModel=null;
+
         fragmentTransaction.commit();
     }
 
-    public void retrieveCentralUser(){
-        System.out.println("Retrieving Central User");
-        repository.getPostworkerByEmail("admin",getActivity().getApplication()).observe(getViewLifecycleOwner(), entity ->{
-            if (entity != null){
-                centralWorker = entity;
-//                CENTRAL_EMAIL = centralWorker.getEmail();
-//                CENTRAL_ID = centralWorker.getIdPostWorker();
-                System.out.println("+++  Central Account retreive : "+centralWorker.toString()+"  +++");
-            }
-        });
-    }
 
     public void resetError(){
        for(EditText eText : editTexts){
@@ -535,7 +523,6 @@ public class MailDetailFragment extends Fragment {
             int id=radioGroup.getCheckedRadioButtonId();
             RadioButton rb=(RadioButton) v.findViewById(id);
             if (radioGroup==mailTypeRGroup){
-                System.out.println("-- on check changed on mail type group");
                 mailTypeChoosed=rb.getText().toString();
                 if (mailTypeChoosed.equals("Letter")) {
                     weight.setText("0");
@@ -546,7 +533,6 @@ public class MailDetailFragment extends Fragment {
                 System.out.println("mail type choosed : "+mailTypeChoosed);
             }
             else {
-                System.out.println("-- on check changed on Ship type group");
                 shipTypeChoosed=rb.getText().toString();
                 shipDateStr = calculateShipDate(shipTypeChoosed);
                 dueDate.setText(shipDateStr);
