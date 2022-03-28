@@ -16,8 +16,7 @@ import java.util.List;
 @Entity (tableName = "Mail",
             foreignKeys = @ForeignKey(entity = PostWorkerEntity.class,
                                        parentColumns = "idPostWorker",
-                                            childColumns = "idPostWorker",
-                                        onDelete = ForeignKey.CASCADE
+                                            childColumns = "idPostWorker"
            ),
             indices = {
                @Index(

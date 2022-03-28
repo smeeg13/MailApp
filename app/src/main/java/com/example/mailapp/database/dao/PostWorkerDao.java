@@ -40,6 +40,8 @@ public interface PostWorkerDao {
     @Delete
     void delete(PostWorkerEntity postWorker);
 
+
+
     @Query("DELETE FROM PostWorker" )
     void deleteAll();
 

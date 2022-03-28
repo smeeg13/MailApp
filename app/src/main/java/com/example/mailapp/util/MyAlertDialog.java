@@ -66,6 +66,7 @@ public class MyAlertDialog {
             System.out.println(" by the User");
             System.out.println("------------------------");
             SharedPreferences.Editor editor = context.getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+            editor.remove(BaseActivity.PREFS_NAME);
             editor.remove(BaseActivity.PREFS_USER);
             editor.apply();
 
