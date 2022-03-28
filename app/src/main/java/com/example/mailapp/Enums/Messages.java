@@ -22,13 +22,15 @@ public enum Messages {
     MAIL_CREATED("Mail Created", 300),
     MAIL_CREATED_FAILED("Mail Created Failed", 300),
     MAIL_DELETED_FAILED("Mail Deleted Failed ", 300),
-    MAIL_DELETED("Mail Deleted", 300);
+    MAIL_DELETED("Mail Deleted", 300),
+    MAIL_UPDATED("Mail Updated",300 ),
+    MAIL_UPDATE_FAILED("Mail Update Failed",300 );
 
 
     private String stringValue;
     private int intValue;
 
-    private Messages(String toString, int value) {
+     Messages(String toString, int value) {
         stringValue = toString;
         intValue = value;
     }

@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 import java.util.Objects;
 
-public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapterForAll<T> extends RecyclerView.Adapter<RecyclerAdapterForAll.ViewHolder> {
 
     static Animation open, close, toright,fromright;
 
@@ -48,15 +48,15 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         }
     }
 
-    public RecyclerAdapter( RecyclerViewItemClickListener listener) {
+    public RecyclerAdapterForAll(RecyclerViewItemClickListener listener) {
         this.listener = listener;
     }
 
-    public RecyclerAdapter( ) {
+    public RecyclerAdapterForAll( ) {
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerAdapterForAll.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_layout, parent, false);
         final ViewHolder viewHolder = new ViewHolder(v);
@@ -100,7 +100,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerAdapterForAll.ViewHolder holder, int position) {
         T item = mdata.get(position);
         if (item.getClass().equals(MailEntity.class)) {
             holder.city.setText(((MailEntity) item).getCity());
@@ -133,7 +133,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
                 @Override
                 public int getOldListSize() {
-                    return RecyclerAdapter.this.mdata.size();
+                    return RecyclerAdapterForAll.this.mdata.size();
                 }
 
                 @Override
@@ -152,7 +152,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
 
                 @Override
                 public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    if (RecyclerAdapter.this.mdata instanceof MailEntity) {
+                    if (RecyclerAdapterForAll.this.mdata instanceof MailEntity) {
                        MailEntity newMail = (MailEntity) mdata.get(newItemPosition);
                         MailEntity oldMail = (MailEntity) mdata.get(newItemPosition);
                         return Objects.equals(newMail.getIdMail(), oldMail.getIdMail());

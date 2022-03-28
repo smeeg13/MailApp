@@ -5,51 +5,66 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
-import com.example.mailapp.Enums.Status;
+import com.example.mailapp.database.async.mail.UpdateMail;
 import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.MyDatabase;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.R;
 
+import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
+import com.example.mailapp.viewModel.MailViewModel;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MyAccountFragment extends Fragment {
-    private static final String TAG = "AccountDetails";
 
+    private static final String TAG = "AccountDetails";
+    private final int ADMIN_ID = 3;
     private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
     private Button inputDeleteButton;
     private ImageView inputaccountImage;
     private Boolean aBoolean = true;
     private PostWorkerEntity postWorkerEntity;
+    private PostWorkerEntity postWorkerAdmin;
     private PostWorkerDao postWorkerDao;
     private MyDatabase myDatabase;
     private View v;
+
+    private List<MailEntity> mails;
     private String firstname, lastname;
+    private ArrayList<TextView> inputs = new ArrayList<>();
     private PostworkerRepository postworkerRepository;
     private SharedPreferences settings;
     private String sharedPrefMail;
-    private PostWorkerViewModel viewModel;
+    private PostWorkerViewModel postWorkerViewModel;
+    private MailViewModel mailViewModel;
+    private MailRepository mailRepository;
+    private int numberOfMails=0;
 
     public MyAccountFragment() {
         // Required empty public constructor
@@ -67,28 +82,39 @@ public class MyAccountFragment extends Fragment {
             enableEdit(true);
             aBoolean = false;
             inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_save_24);
-
         } else {
-            enableEdit(false);
+            if (!InputsAreGood()) {
+                Toast.makeText(getContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
+//            inputPassword.setText("");
+//            inputConfirmPwd.setText("");
+            } else {
 
-            postWorkerEntity.setZip(inputZip.getText().toString());
-            postWorkerEntity.setCity(inputLocation.getText().toString());
-            postWorkerEntity.setAddress(inputAddress.getText().toString());
-            postWorkerEntity.setPhone(inputPhone.getText().toString());
+                enableEdit(false);
+                postWorkerEntity.setPassword(inputPassword.getText().toString());
+                postWorkerEntity.setEmail(inputEmail.getText().toString());
+                postWorkerEntity.setZip(inputZip.getText().toString());
+                postWorkerEntity.setCity(inputLocation.getText().toString());
+                postWorkerEntity.setAddress(inputAddress.getText().toString());
+                postWorkerEntity.setPhone(inputPhone.getText().toString());
 
-            inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
-            aBoolean = true;
-            viewModel.updatePostWorker(postWorkerEntity, new OnAsyncEventListener() {
-                @Override
-                public void onSuccess() {
-                    System.out.println(Messages.ACCOUNT_UPDATED);
-                }
+                inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
+                aBoolean = true;
 
-                @Override
-                public void onFailure(Exception e) {
-                    System.out.println(Messages.ACCOUNT_UPDATED_FAILED);
-                }
-            });
+                postWorkerViewModel.updatePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                    @Override
+                    public void onSuccess() {
+                        System.out.println(Messages.ACCOUNT_UPDATED);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        System.out.println(Messages.ACCOUNT_UPDATED_FAILED);
+                    }
+                });
+
+            }
+
+
         }
     }
 
@@ -109,6 +135,7 @@ public class MyAccountFragment extends Fragment {
         inputDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("DELETE METHOD");
                 deleteAccount();
             }
         });
@@ -121,7 +148,7 @@ public class MyAccountFragment extends Fragment {
         // sub method
         if (b == true) {
 
-            inputEmail.setEnabled(true);
+            //inputEmail.setEnabled(true);
             inputPhone.setEnabled(true);
             inputAddress.setEnabled(true);
             inputZip.setEnabled(true);
@@ -131,7 +158,7 @@ public class MyAccountFragment extends Fragment {
             inputConfirmPassword.setEnabled(true);
 
         } else {
-            inputEmail.setEnabled(false);
+            //inputEmail.setEnabled(false);
             inputPhone.setEnabled(false);
             inputAddress.setEnabled(false);
             inputZip.setEnabled(false);
@@ -143,54 +170,105 @@ public class MyAccountFragment extends Fragment {
     }
 
     public void deleteAccount() {
+
         AlertDialog.Builder ab = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
         ab.setTitle("Confirmation of Delete");
         ab.setMessage("You will be delete your account. Are you sure ?");
         ab.setPositiveButton("Yes", (dialog, which) -> {
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-            editor.remove(BaseActivity.PREFS_USER);
-            editor.apply();
 
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-            viewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
-                @Override
-                public void onSuccess() {
-                    System.out.println(Messages.ACCOUNT_DELETED);
-                }
+            if (inputEmail.getText().toString().equals("admin")) {
+                Toast.makeText(getActivity().getBaseContext(), "You can't delete the admin account !", Toast.LENGTH_SHORT).show();
+            } else {
+                //get list of the postWorker mails
+                mails = new ArrayList<MailEntity>();
+                mailRepository.getAllByPostworker(postWorkerEntity.getIdPostWorker(), getActivity().getApplication()).observe(getActivity(), mailEntities -> {
 
-                @Override
-                public void onFailure(Exception e) {
-                    System.out.println(Messages.ACCOUNT_DELETED_FAILED);
-                }
-            });
+                    for (MailEntity mail : mailEntities) {
+                        mail.setIdPostWorker(ADMIN_ID);
+
+                        mailRepository.update(mail, new OnAsyncEventListener() {
+                            @Override
+                            public void onSuccess() {
+                                System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
+                                numberOfMails ++;
+
+                                if (numberOfMails == mailEntities.size()){
+                                    System.out.println("number of mails variable :"+numberOfMails);
+                                    postWorkerViewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            System.out.println(Messages.ACCOUNT_DELETED);
+                                            numberOfMails = 0;
+                                        }
+
+                                        //
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            System.out.println(Messages.ACCOUNT_DELETED_FAILED);
+                                        }
+                                    });
+                                }
+                            }
+                            @Override
+                            public void onFailure(Exception e) {
+                                System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
+                            }
+                        }, getActivity().getApplication());
+                    }
+
+                });
+
+
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+                editor.remove(BaseActivity.PREFS_NAME);
+                editor.remove(BaseActivity.PREFS_USER);
+
+                editor.apply();
+
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                startActivity(intent);
+            }
+
         });
         ab.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         ab.show();
+
     }
 
     public void initialize(View v) {
-
+        mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
+        postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
-        inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
-        inputEmail = v.findViewById(R.id.AccountEmailTextView);
-        inputPhone = v.findViewById(R.id.AccountPhoneTextView);
-        inputAddress = v.findViewById(R.id.AccountAddressTextView);
-        inputZip = v.findViewById(R.id.AccountZipTextView);
-        inputLocation = v.findViewById(R.id.AccountLocationTextView);
-        inputPassword = v.findViewById(R.id.AccountPasswordTextView);
-        inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
 
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        String sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
+
+
+        //inputs opened for modifications
+        inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
+        inputEmail = v.findViewById(R.id.AccountEmailTextView);
+        inputEmail.setEnabled(false);
+        inputPhone = v.findViewById(R.id.AccountPhoneTextView);
+        inputs.add(inputPhone);
+        inputAddress = v.findViewById(R.id.AccountAddressTextView);
+        inputs.add(inputAddress);
+        inputZip = v.findViewById(R.id.AccountZipTextView);
+        inputs.add(inputZip);
+        inputLocation = v.findViewById(R.id.AccountLocationTextView);
+        inputs.add(inputLocation);
+        inputPassword = v.findViewById(R.id.AccountPasswordTextView);
+        inputs.add(inputPassword);
+        inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
+        inputs.add(inputConfirmPassword);
+
+        settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
+        sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
 
         PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), sharedPrefMail);
-
-        viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
-        viewModel.getClient().observe(getActivity(), postworker -> {
+        postWorkerViewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
+        postWorkerViewModel.getClient().observe(getActivity(), postworker -> {
 
             if (postworker != null) {
 
@@ -203,6 +281,10 @@ public class MyAccountFragment extends Fragment {
                 inputFirstnameAndLastname.setText(firstname + " " + lastname);
 
                 inputEmail.setText(postWorkerEntity.getEmail());
+
+                inputPassword.setText(postWorkerEntity.getPassword());
+
+                inputConfirmPassword.setText(postWorkerEntity.getPassword());
 
                 inputPhone.setText(postWorkerEntity.getPhone());
 
@@ -218,5 +300,107 @@ public class MyAccountFragment extends Fragment {
 
     }
 
+    public boolean InputsAreGood() {
+        int IsOk = 0;
 
+        boolean[] booleans = new boolean[4];
+
+        //Check if all entries has been completed
+        booleans[0] = CheckEmpty();
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches())
+            booleans[1] = true;
+        booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
+        System.out.println(inputPassword.getText().toString());
+        booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPassword.getText().toString());
+
+        for (boolean b : booleans) {
+            if (b) {
+                IsOk++;
+            }
+        }
+        return IsOk <= 0;
+    }
+
+    /**
+     * To Check if all the fields have been completed
+     * Return true if the 1 input is Empty
+     */
+    public boolean CheckEmpty() {
+        int IsEmpty = 0;
+
+        //For each check if empty
+        for (TextView in : inputs) {
+            if (in.getText().toString().isEmpty()) {
+                showError(in, "Can not be empty");
+                //If empty add 1 to IsEmpty
+                IsEmpty++;
+            }
+        }
+        return IsEmpty > 0;
+    }
+
+    /**
+     * To Check if the Confirm password entered is the same as the Password
+     * Return true if the two Pwd are not the same
+     */
+    public boolean CheckSamePwd(String pwd, String ConfPwd) {
+
+        if (!pwd.equals(ConfPwd)) {
+            showError(inputConfirmPassword, "Password are not the Same");
+            return true;
+        } else
+            return false;
+    }
+
+
+    /**
+     * To Check if the password entered is strong or not
+     * Return true if the Pwd is Weak
+     */
+    public boolean CheckPasswordWeak(String password) {
+        boolean isWeak = true;
+        int passwordLength = 8, upChars = 0, lowChars = 0;
+        int special = 0, digits = 0;
+        char ch;
+
+        int totalChar = password.length();
+        if (totalChar < passwordLength) {
+            System.out.println("\n## The Password is invalid !");
+            return true;
+        } else {
+            for (int i = 0; i < totalChar; i++) {
+                ch = password.charAt(i);
+                if (Character.isUpperCase(ch))
+                    upChars = 1;
+                else if (Character.isLowerCase(ch))
+                    lowChars = 1;
+                else if (Character.isDigit(ch))
+                    digits = 1;
+                else
+                    special = 1;
+            }
+        }
+        if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
+            System.out.println("\n## The Password is Strong.");
+
+            isWeak = false;
+        } else {
+            System.out.println("\n## The Password is Weak.");
+            showError(inputPassword, "Password too weak");
+            System.out.println(inputPassword.getText().toString());
+            System.out.println(inputConfirmPassword.getText().toString());
+        }
+
+
+        return isWeak;
+    }
+
+
+    /**
+     * To Add the Red Info with a message in the field
+     */
+    public static void showError(TextView input, String s) {
+        input.setError(s);
+    }
 }
+

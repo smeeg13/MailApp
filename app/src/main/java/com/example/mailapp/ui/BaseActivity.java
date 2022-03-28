@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mailapp.BaseApplication;
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AboutFragment;
@@ -133,12 +134,12 @@ public class BaseActivity extends AppCompatActivity {
             postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
                 @Override
                 public void onSuccess() {
-
+                    System.out.println("LOGGED OUT");
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    System.out.println("LOGGED OUT FAILED");
                 }
             },getApplication());
 

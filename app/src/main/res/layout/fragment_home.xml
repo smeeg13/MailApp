@@ -5,67 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="ui.Fragments.HomeFragment"
     android:theme="@style/Theme.MailAppNoBar"
-    >
+    tools:context="ui.Fragments.HomeFragment">
 
 
     <!-- TODO: Update blank fragment layout -->
 
 
-    <ImageButton
-        android:id="@+id/mapFilterBtn"
-        android:layout_width="76dp"
-        android:layout_height="50dp"
-        android:layout_gravity="start"
-        android:contentDescription="Filter"
-        android:src="@drawable/ic_baseline_filter_alt_24"
-        app:layout_constraintEnd_toStartOf="@+id/HomeSearchBar"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <SearchView
-        android:id="@+id/HomeSearchBar"
-        android:layout_width="301dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="4dp"
-        android:background="#D7DADADA"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/mapFilterBtn"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:text="Your Progression : "
         android:textColor="#000000"
-        app:layout_constraintEnd_toStartOf="@+id/HomeProgressBar"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapFilterBtn" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/HomeSeeAllMailsBtn"
         android:layout_width="62dp"
         android:layout_height="62dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/btn_bg_blue"
         android:backgroundTint="@color/blue"
         android:text="See All"
         android:textColor="#000000"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/HomeProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/HomeProgressBar"
-        app:layout_constraintTop_toTopOf="@+id/HomeProgressBar"
-        app:layout_constraintVertical_bias="0.697"
+        app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@color/black" />
 
     <ProgressBar
@@ -73,12 +44,12 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="158dp"
         android:layout_height="31dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="156dp"
+        android:progressTint="@color/blue"
         app:layout_constraintEnd_toStartOf="@+id/HomeSeeAllMailsBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/HomeSearchBar" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/HomeRecyclerView"
@@ -88,7 +59,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HomeSeeAllMailsBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/HomeSeeAllMailsBtn"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/ProgressPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/HomeSeeAllMailsBtn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/HomeProgressBar"
+        app:layout_constraintTop_toTopOf="@+id/HomeProgressBar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

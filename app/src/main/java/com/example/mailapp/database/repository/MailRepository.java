@@ -58,6 +58,11 @@ public class MailRepository {
         return ((BaseApplication) application).getDatabase().mailDao().getAllByPostworker(idWorker);
     }
 
+    public LiveData<List<MailEntity>> getInProgressByPostworker(final int IdPostWorker,String status, Application application){
+        return ((BaseApplication) application).getDatabase().mailDao().getInProgressByPostworker(IdPostWorker,status);
+
+    }
+
     public void insert(final MailEntity mail, OnAsyncEventListener callback, Application a) {
         new CreateMail(a, callback).execute(mail);
     }

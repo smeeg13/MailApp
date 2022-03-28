@@ -88,7 +88,7 @@ public class SettingsFragment extends Fragment {
             editor.putString(BaseActivity.PREFS_BACKGROUND, "black");
             editor.apply();
             sharedPrefBackground =  settings.getString(BaseActivity.PREFS_BACKGROUND, null);
-            System.out.println("editor : black -> "+sharedPrefBackground +"string color is "+color);
+            System.out.println("editor : black -> "+sharedPrefBackground);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else if (buttonWhite.isChecked()) {
 
@@ -108,16 +108,16 @@ public class SettingsFragment extends Fragment {
 
         if (sharedPrefBackground == null){
             System.out.println("the background is null");
-        }
 
-        if (sharedPrefBackground.equals("white")) {
-            buttonWhite.setChecked(true);
-            buttonBlack.setChecked(false);
-        } else {
-            buttonWhite.setChecked(false);
-            buttonBlack.setChecked(true);
+        }else{
+            if (sharedPrefBackground.equals("white")) {
+                buttonWhite.setChecked(true);
+                buttonBlack.setChecked(false);
+            } else {
+                buttonWhite.setChecked(false);
+                buttonBlack.setChecked(true);
+            }
         }
-
 
     }
 

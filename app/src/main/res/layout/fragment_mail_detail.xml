@@ -56,7 +56,7 @@
         android:paddingTop="2dp"
         android:paddingEnd="2dp"
         android:paddingRight="2dp"
-        android:text="@string/id_111232"
+        android:text="111232"
         android:textColor="@color/darkBlue"
         android:textSize="17sp"
         android:textStyle="bold"

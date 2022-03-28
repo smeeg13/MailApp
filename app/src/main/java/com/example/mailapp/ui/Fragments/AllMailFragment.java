@@ -17,39 +17,37 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.mailapp.adapter.RecyclerAdapter;
-import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.R;
+import com.example.mailapp.adapter.RecyclerAdapter;
+import com.example.mailapp.adapter.RecyclerAdapterForAll;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
 import com.example.mailapp.viewModel.MailViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+public class AllMailFragment extends Fragment {
 
-public class HomeFragment extends Fragment {
-    private static final String TAG = "HomeFragment";
+    private static final String TAG = "AllMailFragment";
 
+    private FloatingActionButton backHome;
     private RecyclerView recyclerView;
-    private Button HomeSeeAllMailsBtn;
-    private ProgressBar HomeProgressBar;
-    private TextView ProgressPercent;
-    private List<MailEntity> mailsInProgress;
+
     private List<MailEntity> mailsAll;
-    private RecyclerAdapter<MailEntity> adapter;
-    private MailListViewModel viewModel;
+    private RecyclerAdapterForAll<MailEntity> adapter;
     private String workerConnectedEmailStr;
-    private MailListViewModel mailViewModel;
     private MailViewModel currentViewModel;
     private MailEntity currentMail;
     private MailListViewModel viewModelAllMail;
 
-    public HomeFragment() {
+    public AllMailFragment() {
         // Required empty public constructor
     }
 
@@ -62,12 +60,10 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_all_mail, container, false);
 
-        ProgressPercent = v.findViewById(R.id.ProgressPercent);
-        HomeProgressBar = v.findViewById(R.id.HomeProgressBar);
-        HomeSeeAllMailsBtn = v.findViewById(R.id.HomeSeeAllMailsBtn);
-        recyclerView = v.findViewById(R.id.HomeRecyclerView);
+        backHome = v.findViewById(R.id.backHomeButtonFromAll);
+        recyclerView = v.findViewById(R.id.AllRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));//Reverse = true for the last one go on top
 
         SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
@@ -77,17 +73,17 @@ public class HomeFragment extends Fragment {
         System.out.println("On create View WorkerConnected : " + workerConnectedEmailStr);
         System.out.println("On create View WorkerConnected ID : " + workerConnectedIdStr);
 
-        mailsInProgress = new ArrayList<>();
-        adapter = new RecyclerAdapter<>(new RecyclerViewItemClickListener() {
+        mailsAll = new ArrayList<>();
+        adapter = new RecyclerAdapterForAll<>(new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(String todo, View v, int position) {
                 Log.d(TAG, "clicked position:" + position);
-                Log.d(TAG, "clicked on: " + mailsInProgress.get(position).getIdMail());
+                Log.d(TAG, "clicked on: " + mailsAll.get(position).getIdMail());
 
                 if (todo.equals("edit")) { //Clicked on edit
                     System.out.println("btn clicked edit");
                     Bundle datas = new Bundle();
-                    datas.putInt("MailID", mailsInProgress.get(position).getIdMail());
+                    datas.putInt("MailID", mailsAll.get(position).getIdMail());
                     datas.putBoolean("Enable", false);
                     replaceFragment(new MailDetailFragment(), datas);
                 } else { //Clicked on done
@@ -97,7 +93,7 @@ public class HomeFragment extends Fragment {
 
                     //Take back the mail choosed and display the infos
                     MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                            getActivity().getApplication(), mailsInProgress.get(position).getIdMail());
+                            getActivity().getApplication(), mailsAll.get(position).getIdMail());
                     currentViewModel = ViewModelProviders.of(getActivity(), factory2).get(MailViewModel.class);
 
                     currentViewModel.getMail().observe(getActivity(), mailEntity -> {
@@ -108,15 +104,15 @@ public class HomeFragment extends Fragment {
 
                     currentMail.setStatus("Done");
 
-                    viewModel.updateMail(currentMail, new OnAsyncEventListener() {
+                    viewModelAllMail.updateMail(currentMail, new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
-                            System.out.println("Status Update : success for mail ID : " + mailsInProgress.get(position).getIdMail());
+                            System.out.println("Status Update : success for mail ID : " + mailsAll.get(position).getIdMail());
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            System.out.println("Status NOT Update : FAILURE ERROR for mail ID : " + mailsInProgress.get(position).getIdMail());
+                            System.out.println("Status NOT Update : FAILURE ERROR for mail ID : " + mailsAll.get(position).getIdMail());
                             System.out.println(e);
                         }
                     });
@@ -128,15 +124,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemLongClick(View v, int position) {
                 Log.d(TAG, "longClicked position:" + position);
-                Log.d(TAG, "longClicked on: " + mailsInProgress.get(position).getIdMail());
+                Log.d(TAG, "longClicked on: " + mailsAll.get(position).getIdMail());
                 //Delete
                 createDeleteDialog(position);
             }
         });
         recyclerView.setAdapter(adapter);
 
-         AtomicInteger sizeMailInProg = new AtomicInteger(-1);
-         AtomicInteger sizeAll = new AtomicInteger(-1);
 
 
         MailListViewModel.Factory factory2 = new MailListViewModel.Factory(
@@ -145,31 +139,17 @@ public class HomeFragment extends Fragment {
         viewModelAllMail.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsAll = mailEntities;
-                sizeAll.set(mailsAll.size());
-                updateProgressBar(mailsAll.size(),sizeMailInProg.get());
+                adapter.setMdata(mailsAll);
             }
         });
 
-        //Get back own mails NOT DONE
-        MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedIdInt);
-        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
-        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
-            if (mailEntities != null) {
-                mailsInProgress = mailEntities;
-                sizeMailInProg.set(mailsInProgress.size());
-                adapter.setMdata(mailsInProgress);
-
-                updateProgressBar(sizeAll.get(),mailsInProgress.size());
-            }
-        });
-
-        HomeSeeAllMailsBtn.setOnClickListener(new View.OnClickListener() {
+        backHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("## go to all mail Frag");
+                getActivity().getViewModelStore().clear();
+                System.out.println("Arrow Back Home Clicked");
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.HomeFrameLayout, new AllMailFragment())
+                        .replace(R.id.HomeFrameLayout, new HomeFragment())
                         .commit();
             }
         });
@@ -177,15 +157,6 @@ public class HomeFragment extends Fragment {
         return v;
     }
 
-    private void updateProgressBar(int All, int inProg) {
-        HomeProgressBar.setMax(All);
-        System.out.println("Total mail : "+ All);
-        HomeProgressBar.setMin(0);
-        HomeProgressBar.setProgress(All-inProg);
-        System.out.println("Todo mail : "+ All);
-        System.out.println("Total mail done (progression) : "+ HomeProgressBar.getProgress());
-        ProgressPercent.setText(HomeProgressBar.getProgress()+" / "+All);
-    }
 
     private void replaceFragment(MailDetailFragment newfragment, Bundle datas) {
         newfragment.setArguments(datas);
@@ -195,14 +166,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void createDeleteDialog(final int position) {
-        final MailEntity mail = mailsInProgress.get(position);
+        final MailEntity mail = mailsAll.get(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         final View view = inflater.inflate(R.layout.row_delete_item, null);
         String separator = System.lineSeparator();
         String msg = "You're going to delete a mail : " + separator +
                 "ID of the Mail : " + mail.idMail + separator + "Are you sure ?";
         final MyAlertDialog myAlert = new MyAlertDialog(getContext(), "Delete Mail", msg, "Yes, Delete");
-        myAlert.DeleteMail(mail, viewModel, view);
+        myAlert.DeleteMail(mail, viewModelAllMail, view);
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle("Delete Mail");
         alertDialog.setCancelable(false);
