@@ -64,8 +64,8 @@ public class MyAccountFragment extends Fragment {
     private String sharedPrefMail;
     private PostWorkerViewModel postWorkerViewModel;
     private MailViewModel mailViewModel;
-    private MailRepository mailRepository,mailRepository2;
-
+    private MailRepository mailRepository, mailRepository2;
+    private int numberOfMails=0;
     public MyAccountFragment() {
         // Required empty public constructor
     }
@@ -170,6 +170,7 @@ public class MyAccountFragment extends Fragment {
     }
 
     public void deleteAccount() {
+
         AlertDialog.Builder ab = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
         ab.setTitle("Confirmation of Delete");
         ab.setMessage("You will be delete your account. Are you sure ?");
@@ -179,28 +180,62 @@ public class MyAccountFragment extends Fragment {
                 Toast.makeText(getActivity().getBaseContext(), "You can't delete the admin account !", Toast.LENGTH_SHORT).show();
             } else {
                 //get list of the postWorker mails
-                mails   = new ArrayList<MailEntity>();
+                mails = new ArrayList<MailEntity>();
                 mailRepository.getAllByPostworker(postWorkerEntity.getIdPostWorker(), getActivity().getApplication()).observe(getActivity(), mailEntities -> {
-                    for (MailEntity mail: mailEntities) {
+
+                    for (MailEntity mail : mailEntities) {
                         mail.setIdPostWorker(ID_ADMIN);
 
                         mailRepository.update(mail, new OnAsyncEventListener() {
                             @Override
                             public void onSuccess() {
-                                System.out.println("Mail id"+mail.getIdMail() +"has been redirected to admin");
+                                System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
+                                numberOfMails ++;
+                                if (numberOfMails == mailEntities.size()){
+                                    System.out.println("number of mails variable :"+numberOfMails);
+                                    postWorkerViewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            System.out.println(Messages.ACCOUNT_DELETED);
+                                            numberOfMails = 0;
+                                        }
+
+                                        //
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            System.out.println(Messages.ACCOUNT_DELETED_FAILED);
+                                        }
+                                    });
+
+                                }
                             }
 
                             @Override
                             public void onFailure(Exception e) {
-                                System.out.println("Mail id"+mail.getIdMail() +"has been NOT redirected to admin");
+                                System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
                             }
-                        },getActivity().getApplication());
+                        }, getActivity().getApplication());
                     }
+
                 });
+
+                //postworkerRepository.delete(postWorkerEntity, new OnAsyncEventListener() {
+                //   @Override
+                //   public void onSuccess() {
+                //       System.out.println("ACCOUNT DELETED");
+                //   }
+                //
+                //   @Override
+                //   public void onFailure(Exception e) {
+                //       System.out.println("ACCOUNT DELETE FAILED");
+                //   }
+                //  },getActivity().getApplication());
+
 
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
                 editor.remove(BaseActivity.PREFS_NAME);
                 editor.remove(BaseActivity.PREFS_USER);
+
                 editor.apply();
 
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -208,18 +243,6 @@ public class MyAccountFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 startActivity(intent);
-
-                postWorkerViewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        System.out.println(Messages.ACCOUNT_DELETED);
-                    }
-//
-                   @Override
-                    public void onFailure(Exception e) {
-                        System.out.println(Messages.ACCOUNT_DELETED_FAILED);
-                    }
-                });
             }
 
         });
@@ -228,48 +251,9 @@ public class MyAccountFragment extends Fragment {
 
     }
 
-    private void test1() {
-        mailRepository.getAllByPostworker(postWorkerEntity.getIdPostWorker(), getActivity().getApplication()).observe(getActivity(), mailEntities -> {
-            for (MailEntity mail : mailEntities) {
-                System.out.println("BEFORE ID:" +mail.getIdPostWorker());
-                mail.setIdPostWorker(ID_ADMIN);
-                //MigrateMailsToAdmin(mail);
-                mailRepository.update(mail, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        System.out.println(Messages.MAIL_UPDATED);
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        System.out.println(Messages.MAIL_UPDATE_FAILED);
-                    }
-
-                },getActivity().getApplication());
-
-                System.out.println("AFTER ID:" +mail.getIdPostWorker());
-                System.out.println("has been transfered to admin");
-            }
-        });
-    }
-
-    private void MigrateMailsToAdmin(MailEntity mailEntity) {
-        new UpdateMail(getActivity().getApplication(), new OnAsyncEventListener() {
-            @Override
-            public void onSuccess() {
-                System.out.println("succeded");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                System.out.println("failed");
-
-            }
-        }).execute(mailEntity);
-    }
-
     public void initialize(View v) {
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
+        postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
 
@@ -310,6 +294,7 @@ public class MyAccountFragment extends Fragment {
                 inputEmail.setText(postWorkerEntity.getEmail());
 
                 inputPassword.setText(postWorkerEntity.getPassword());
+
                 inputConfirmPassword.setText(postWorkerEntity.getPassword());
 
                 inputPhone.setText(postWorkerEntity.getPhone());
