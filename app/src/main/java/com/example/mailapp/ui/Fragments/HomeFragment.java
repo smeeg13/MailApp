@@ -19,6 +19,7 @@ import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.R;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.MyAlertDialog;
+import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
 
@@ -79,7 +80,18 @@ public class HomeFragment extends Fragment  {
                 }
                 else { //Clicked on done
                     System.out.println("btn clicked done");
-                    //TODO Update the status of the mail choosed to done
+//                    //TODO Update the status of the mail choosed to done
+//                    viewModel.updateMail(mails.get(position).getIdMail(), new OnAsyncEventListener() {
+//                        @Override
+//                        public void onSuccess() {
+//                            System.out.println( "deleteAccount: success");
+//                        }
+//                        @Override
+//                        public void onFailure(Exception e) {
+//                            System.out.println("deleteAccount: failure ERROR : ");
+//                            System.out.println(e);
+//                        }
+//                    });
 
                 }
             }
