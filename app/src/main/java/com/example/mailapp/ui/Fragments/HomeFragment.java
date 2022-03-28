@@ -103,12 +103,11 @@ public class HomeFragment extends Fragment {
                     currentViewModel.getMail().observe(getActivity(), mailEntity -> {
                         if (mailEntity != null) {
                             currentMail = mailEntity;
+                            currentMail.setStatus("Done");
                         }
                     });
 
-                    currentMail.setStatus("Done");
-
-                    viewModel.updateMail(currentMail, new OnAsyncEventListener() {
+                    currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
                             System.out.println("Status Update : success for mail ID : " + mailsInProgress.get(position).getIdMail());
