@@ -42,9 +42,8 @@ import java.util.List;
 
 public class MyAccountFragment extends Fragment {
 
-    final private int ID_ADMIN = 3;
     private static final String TAG = "AccountDetails";
-
+    private final int ADMIN_ID = 3;
     private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
     private Button inputDeleteButton;
@@ -64,8 +63,9 @@ public class MyAccountFragment extends Fragment {
     private String sharedPrefMail;
     private PostWorkerViewModel postWorkerViewModel;
     private MailViewModel mailViewModel;
-    private MailRepository mailRepository, mailRepository2;
+    private MailRepository mailRepository;
     private int numberOfMails=0;
+
     public MyAccountFragment() {
         // Required empty public constructor
     }
@@ -184,13 +184,14 @@ public class MyAccountFragment extends Fragment {
                 mailRepository.getAllByPostworker(postWorkerEntity.getIdPostWorker(), getActivity().getApplication()).observe(getActivity(), mailEntities -> {
 
                     for (MailEntity mail : mailEntities) {
-                        mail.setIdPostWorker(ID_ADMIN);
+                        mail.setIdPostWorker(ADMIN_ID);
 
                         mailRepository.update(mail, new OnAsyncEventListener() {
                             @Override
                             public void onSuccess() {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
                                 numberOfMails ++;
+
                                 if (numberOfMails == mailEntities.size()){
                                     System.out.println("number of mails variable :"+numberOfMails);
                                     postWorkerViewModel.deletePostWorker(postWorkerEntity, new OnAsyncEventListener() {
@@ -206,10 +207,8 @@ public class MyAccountFragment extends Fragment {
                                             System.out.println(Messages.ACCOUNT_DELETED_FAILED);
                                         }
                                     });
-
                                 }
                             }
-
                             @Override
                             public void onFailure(Exception e) {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
@@ -218,18 +217,6 @@ public class MyAccountFragment extends Fragment {
                     }
 
                 });
-
-                //postworkerRepository.delete(postWorkerEntity, new OnAsyncEventListener() {
-                //   @Override
-                //   public void onSuccess() {
-                //       System.out.println("ACCOUNT DELETED");
-                //   }
-                //
-                //   @Override
-                //   public void onFailure(Exception e) {
-                //       System.out.println("ACCOUNT DELETE FAILED");
-                //   }
-                //  },getActivity().getApplication());
 
 
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
@@ -256,6 +243,8 @@ public class MyAccountFragment extends Fragment {
         postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
+
+
 
         //inputs opened for modifications
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
