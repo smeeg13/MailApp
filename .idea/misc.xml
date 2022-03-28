@@ -40,6 +40,7 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_local_phone_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.2015" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.1" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_baseline_security_24.xml" value="0.2015" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2015" />
@@ -70,7 +71,8 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/activity_sign_up.xml" value="0.3223958333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/appbar.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_add_new.xml" value="0.3333333333333333" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_home.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_all_mail.xml" value="0.1" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_logout.xml" value="0.259375" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_mail_detail.xml" value="0.3223958333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/fragment_map.xml" value="0.3333333333333333" />
@@ -84,7 +86,7 @@
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/row_layout_test.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/layout/settings_activity.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/bottom_menu.xml" value="0.25462962962962965" />
-        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/menu/first_menu.xml" value="0.22" />
         <entry key="..\:/Users/megan/OneDrive - HESSO/FIG 604_F Sem 4/Android_Workspace/MailApp/app/src/main/res/xml/root_preferences.xml" value="0.5449490268767377" />
       </map>

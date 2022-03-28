@@ -26,6 +26,8 @@ public class MailListViewModel  extends AndroidViewModel {
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<List<MailEntity>> observableMails;
     private final MediatorLiveData<List<MailEntity>> observableOwnMails;
+    private final MediatorLiveData<List<MailEntity>> observableOwnMailsInProg;
+
 
     public MailListViewModel(@NonNull Application application,final int IdPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
         super(application);
@@ -36,17 +38,22 @@ public class MailListViewModel  extends AndroidViewModel {
 
         observableMails = new MediatorLiveData<>();
         observableOwnMails = new MediatorLiveData<>();
+        observableOwnMailsInProg = new MediatorLiveData<>();
 
         // set by default null, until we get data from the database.
         observableMails.setValue(null);
         observableOwnMails.setValue(null);
+        observableOwnMailsInProg.setValue(null);
 
         LiveData<List<MailEntity>> mails = repository.getAllMails(application);
         LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker,application);
 
+         LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress",application);
+
         // observe the changes of the entities from the database and forward them
         observableMails.addSource(mails, observableMails::setValue);
         observableOwnMails.addSource(ownMails, observableOwnMails::setValue);
+        observableOwnMailsInProg.addSource(ownMailsInProg, observableOwnMailsInProg::setValue);
     }
 
     /**
@@ -85,6 +92,9 @@ public class MailListViewModel  extends AndroidViewModel {
 
     public LiveData<List<MailEntity>> getOwnMails() {
         return observableOwnMails;
+    }
+    public LiveData<List<MailEntity>> getOwnMailsInProgress() {
+        return observableOwnMailsInProg;
     }
 
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {

@@ -47,12 +47,7 @@ public class MailDetailFragment extends Fragment {
     private static final DateFormat DATE_FORMAT= new SimpleDateFormat("dd MMMM yyyy");
     private static final String TODAY = DATE_FORMAT.format(Calendar.getInstance().getTime());
 
-    //Management Variables
-    private Boolean enableEdit = true;
-    private Boolean isEditMode;
-    private int idMailChoose;
-    private MailEntity currentMail;
-    private MailViewModel mailViewModel;
+
     private PostWorkerEntity workerConnected, postWorkerResponsible;
     private String workerCoEmail, workerRespEmail;
     private int workerCoId, workerRespId;
@@ -60,12 +55,18 @@ public class MailDetailFragment extends Fragment {
     private PostworkerRepository repository;
     private PostWorkerEntity workerAssigned ;
     private PostWorkerViewModel postWorkerViewModel;
-    private View v;
     private PostWorkerEntity centralWorker;
 //---------------------------------------------------------
+//Management Variables
+private Boolean enableEdit = true;
+    private Boolean isEditMode;
+    private int idMailChooseFromList;
+    private MailEntity currentMail;
+    private MailViewModel mailViewModel;
     private String workerConnectedEmailStr;
     private String workerConnectedIdStr;
     private PostWorkerEntity centralAccount ;
+    private View v;
 
 
     //UI variables
@@ -109,7 +110,7 @@ public class MailDetailFragment extends Fragment {
             //Log.v("Switch assigned to State=", ""+isChecked);
             if (isChecked) {//IF assign to me
                 postworkerAssigned.setText(workerConnectedEmailStr);
-            } else {//TODO mettre pas en "dur"
+            } else {
                 postworkerAssigned.setText(CENTRAL_EMAIL);
             }
         });
@@ -119,14 +120,14 @@ public class MailDetailFragment extends Fragment {
         boolean putEnable = false;
         if (data != null) {
             putEnable = data.getBoolean("Enable");
-            idMailChoose = data.getInt("MailID");
+            idMailChooseFromList = data.getInt("MailID");
         }
         enableEdit(putEnable);
         editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
 
 
         //Decide if we add or edit depending on if we received a valid mail id or not
-        if (idMailChoose == -1) { //We want to create one
+        if (idMailChooseFromList == -1) { //We want to create one
             System.out.println("## Open Page for creating Mail ");
             editAddButton.setImageResource(R.drawable.ic_baseline_add_24);
             deleteButton.hide();
@@ -135,7 +136,7 @@ public class MailDetailFragment extends Fragment {
             Toast.makeText(getActivity().getBaseContext(), "Now you can Create a new mail !", Toast.LENGTH_SHORT).show();
             isEditMode = false;
         } else { //We want to edit the one choosed !
-            System.out.println("## Open Detail of Mail choose from list : " + idMailChoose);
+            System.out.println("## Open Detail of Mail choose from list : " + idMailChooseFromList);
             editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
             deleteButton.show();
             idnumTextStr.setVisibility(View.VISIBLE);
@@ -146,7 +147,7 @@ public class MailDetailFragment extends Fragment {
 
         //Take back the mail choosed and display the infos
         MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                getActivity().getApplication(), idMailChoose);
+                getActivity().getApplication(), idMailChooseFromList);
         mailViewModel = ViewModelProviders.of(getActivity(), factory2).get(MailViewModel.class);
         if (isEditMode) {
             mailViewModel.getMail().observe(getActivity(), mailEntity -> {
@@ -161,8 +162,6 @@ public class MailDetailFragment extends Fragment {
 
     private void BackHome() {
         getActivity().getViewModelStore().clear();
-        currentMail= null;
-        mailViewModel=null;
         System.out.println("Arrow Back Home Clicked");
         getFragmentManager().beginTransaction()
                 .replace(R.id.HomeFrameLayout, new HomeFragment())
@@ -224,6 +223,8 @@ public class MailDetailFragment extends Fragment {
                         Log.d(TAG, "## Create Mail : success");
                         Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
                         replaceFragment(new HomeFragment()); //Go back to home after
+                        getActivity().getViewModelStore().clear();
+
                     }
 
                     @Override
@@ -259,8 +260,10 @@ public class MailDetailFragment extends Fragment {
                 });
                 editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
                 enableEdit = true;
+
             }
         } else {
+         //   currentMail.setIdMail(Integer.parseInt(null));
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             enableEdit(true);
             enableEdit = false;
@@ -341,7 +344,6 @@ public class MailDetailFragment extends Fragment {
             System.out.println("@@## ADD ID OF connected");
         }
         else{
-            //TODO Assign to central  not manually would be better
             PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
             PostWorkerViewModel viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
             viewModel.getClient().observe(getActivity(), entity -> {
@@ -381,7 +383,7 @@ public class MailDetailFragment extends Fragment {
                 break;
             case "Package":
                 packages.setChecked(true);
-                weight.setText(mail.weight);
+                weight.setText(Integer.toString(mail.getWeight()));
                 break;
         }
         switch (mail.shippingType) {

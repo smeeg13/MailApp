@@ -26,6 +26,7 @@ public class DatabaseInitializer {
 
     private static void addMail(final MyDatabase db, final int idPostWorker,final String mailfrom, final String mailto, final String mailType,final String shipType, final String address, final String zip, final String city) {
         MailEntity mail = new MailEntity(idPostWorker,mailfrom, mailto, mailType, shipType,address,zip,city);
+        mail.setStatus("In Progress");
         db.mailDao().insert(mail);
     }
 
@@ -37,6 +38,8 @@ public class DatabaseInitializer {
 
         addMail(db,3, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
         addMail(db, 3,"Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
+        addMail(db, 3,"Loic", "Jane", "Packages","B-Mail", "Rte", "1950 ","Sion");
+
 
     }
 
