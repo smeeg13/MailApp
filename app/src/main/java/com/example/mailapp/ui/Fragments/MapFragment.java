@@ -134,7 +134,6 @@ public class MapFragment extends Fragment {
                                     markerClicked++;
                                 }else {
                                     if (markerClicked == 1){
-                                        //TODO display mail choosed detail
                                         System.out.println("Marker Clicked Title: "+marker.getTitle());
                                         String idstr = marker.getTitle();
                                         String str = null;

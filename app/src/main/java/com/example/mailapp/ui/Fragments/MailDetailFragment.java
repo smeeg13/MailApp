@@ -1,4 +1,5 @@
 package com.example.mailapp.ui.Fragments;
+
 import static com.example.mailapp.ui.RegisterActivity.showError;
 
 import android.content.SharedPreferences;
@@ -44,29 +45,20 @@ public class MailDetailFragment extends Fragment {
     private static final String TAG = "MailFragment";
     private static final String CENTRAL_EMAIL = "admin";
     private static final int CENTRAL_ID = 3;
-    private static final DateFormat DATE_FORMAT= new SimpleDateFormat("dd MMMM yyyy");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
     private static final String TODAY = DATE_FORMAT.format(Calendar.getInstance().getTime());
 
-
-    private PostWorkerEntity workerConnected, postWorkerResponsible;
-    private String workerCoEmail, workerRespEmail;
-    private int workerCoId, workerRespId;
-
-    private PostworkerRepository repository;
-    private PostWorkerEntity workerAssigned ;
-    private PostWorkerViewModel postWorkerViewModel;
-    private PostWorkerEntity centralWorker;
-//---------------------------------------------------------
-//Management Variables
-private Boolean enableEdit = true;
+    //Management Variables
+    private Boolean enableEdit = true;
     private Boolean isEditMode;
     private int idMailChooseFromList;
     private MailEntity currentMail;
     private MailViewModel mailViewModel;
     private String workerConnectedEmailStr;
     private String workerConnectedIdStr;
-    private PostWorkerEntity centralAccount ;
+    private PostWorkerEntity centralAccount;
     private View v;
+    private PostworkerRepository repository;
 
 
     //UI variables
@@ -75,7 +67,7 @@ private Boolean enableEdit = true;
     private RadioGroup shipTypeRGroup, mailTypeRGroup;
     private RadioButton letter, packages, amail, bmail, recmail;
     private String mailTypeChoosed, shipTypeChoosed, shipDateStr;
-    private TextView postworkerAssigned,idnumber,idnumTextStr, dueDate;
+    private TextView postworkerAssigned, idnumber, idnumTextStr, dueDate;
     private Switch assignedToMe;
     private FloatingActionButton editAddButton, deleteButton, backHomeBtn;
 
@@ -90,17 +82,16 @@ private Boolean enableEdit = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
+        // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_mail_detail, container, false);
 
-    //Take back the postworker connected
+        //Take back the postworker connected
         SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
         workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
         workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
-        System.out.println("-- User taken back from shared pref : "+ workerConnectedEmailStr+" (Id : "+workerConnectedIdStr+")");
         initialize(v);
 
-    //Instantiate actions for buttons
+        //Instantiate actions for buttons
         editAddButton.setOnClickListener(v -> changes());
         deleteButton.setOnClickListener(view -> deleteMail());
         backHomeBtn.setOnClickListener(view -> BackHome());
@@ -115,7 +106,7 @@ private Boolean enableEdit = true;
             }
         });
 
-    //Take back the id of the mail we Choose on the list
+        //Take back the id of the mail we Choose on the list
         Bundle data = getArguments();
         boolean putEnable = false;
         if (data != null) {
@@ -128,7 +119,6 @@ private Boolean enableEdit = true;
 
         //Decide if we add or edit depending on if we received a valid mail id or not
         if (idMailChooseFromList == -1) { //We want to create one
-            System.out.println("## Open Page for creating Mail ");
             editAddButton.setImageResource(R.drawable.ic_baseline_add_24);
             deleteButton.hide();
             idnumTextStr.setVisibility(View.INVISIBLE);
@@ -136,7 +126,6 @@ private Boolean enableEdit = true;
             Toast.makeText(getActivity().getBaseContext(), "Now you can Create a new mail !", Toast.LENGTH_SHORT).show();
             isEditMode = false;
         } else { //We want to edit the one choosed !
-            System.out.println("## Open Detail of Mail choose from list : " + idMailChooseFromList);
             editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
             deleteButton.show();
             idnumTextStr.setVisibility(View.VISIBLE);
@@ -162,7 +151,6 @@ private Boolean enableEdit = true;
 
     private void BackHome() {
         getActivity().getViewModelStore().clear();
-        System.out.println("Arrow Back Home Clicked");
         getFragmentManager().beginTransaction()
                 .replace(R.id.HomeFrameLayout, new HomeFragment())
                 .commit();
@@ -184,7 +172,7 @@ private Boolean enableEdit = true;
         editTexts.add(city);
         weight = v.findViewById(R.id.DetailWeightEditText);
         mailTypeRGroup = v.findViewById(R.id.MailTypeRadioGroup);
-       letter = v.findViewById(R.id.DetailLetterRadioBtn);
+        letter = v.findViewById(R.id.DetailLetterRadioBtn);
         packages = v.findViewById(R.id.DetailPackageRadioBtn);
         shipTypeRGroup = v.findViewById(R.id.ShipTypeRadioGroup);
         amail = v.findViewById(R.id.DetailAMailRadioBtn);
@@ -210,7 +198,7 @@ private Boolean enableEdit = true;
 
             editMode();
         else { //Creation of a new mail
-            if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup,  packages,
+            if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup, packages,
                     dueDate)) {
                 Toast.makeText(getActivity().getBaseContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
             } else {
@@ -239,8 +227,8 @@ private Boolean enableEdit = true;
 
     public void editMode() {
         if (!enableEdit) {
-            if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup,  packages,
-                      dueDate)) {
+            if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup, packages,
+                    dueDate)) {
                 Toast.makeText(getActivity().getBaseContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
             } else {
                 enableEdit(false);
@@ -265,7 +253,7 @@ private Boolean enableEdit = true;
 
             }
         } else {
-         //   currentMail.setIdMail(Integer.parseInt(null));
+            //   currentMail.setIdMail(Integer.parseInt(null));
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             enableEdit(true);
             enableEdit = false;
@@ -317,7 +305,6 @@ private Boolean enableEdit = true;
             assignedToMe.setEnabled(true);
             postworkerAssigned.setEnabled(true);
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
-            System.out.println("## Is enabled");
         } else {
             mailFrom.setEnabled(false);
             mailTo.setEnabled(false);
@@ -334,34 +321,29 @@ private Boolean enableEdit = true;
             postworkerAssigned.setEnabled(false);
             assignedToMe.setEnabled(false);
             editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
-            System.out.println("## Is  NOT enabled");
         }
     }
 
-
+//Insert the mail information inside a new mail Entity
     private MailEntity takeBackInfoIntoMail() {
         MailEntity newMail = new MailEntity();
         if (assignedToMe.isChecked()) {
             newMail.setIdPostWorker(Integer.parseInt(workerConnectedIdStr));
-            System.out.println("@@## ADD ID OF connected");
-        }
-        else{
+        } else {
             PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
             PostWorkerViewModel viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
             viewModel.getClient().observe(getActivity(), entity -> {
                 if (entity != null) {
                     centralAccount = entity;
                     newMail.setIdPostWorker(centralAccount.getIdPostWorker());
-                    System.out.println("@@## ADD ID OF CENTRAL");
                 }
             });
         }
-
         newMail.setMailFrom(mailFrom.getText().toString());
         newMail.setMailTo(mailTo.getText().toString());
         newMail.setMailType(mailTypeChoosed);
         String weightstr = weight.getText().toString();
-        if (weightstr.equals("")){
+        if (weightstr.equals("")) {
             weightstr = "0"; //weight by default is 0
         }
         newMail.setWeight(Integer.parseInt(weightstr));
@@ -374,6 +356,7 @@ private Boolean enableEdit = true;
         return newMail;
     }
 
+    //initialize info of the mail to display
     private void initializeFieldWithMailData(MailEntity mail) {
         idnumber.setText(Integer.toString(mail.idMail));
         mailFrom.setText(mail.mailFrom);
@@ -403,7 +386,6 @@ private Boolean enableEdit = true;
         address.setText(mail.address);
         zip.setText(mail.zip);
         city.setText(mail.city);
-        System.out.println("+++  Initialization of fields with data from mail choosed : "+mail.idMail+"  +++");
     }
 
     /**
@@ -444,7 +426,6 @@ private Boolean enableEdit = true;
                     break;
             }
         }
-        System.out.println("+++ Shipping Due Date : " + dueDatestr+", According to ship type "+shipTypeStr);
         return dueDatestr;
     }
 
@@ -476,7 +457,6 @@ private Boolean enableEdit = true;
                 IsEmpty++;
             }
         }
-
         //Check if shipping type has been choosed
         if (shipTypeRGroup.getCheckedRadioButtonId() == -1) {
             // no radio buttons are checked
@@ -485,31 +465,27 @@ private Boolean enableEdit = true;
         }
         if (dueDate.getText().toString().isEmpty() || dueDate.getText().toString().equals(" ")) {
             IsEmpty++;
-            //Notice that its this field that is empty
-            //dueDate.setBackgroundResource(R.drawable.red_bg);
             dueDate.setError("Please select a shipping type");
         }
-        System.out.println("+++  Check Empty done : "+IsEmpty+" are empty  +++");
         return IsEmpty > 0;
     }
 
+    //Change fragment
     public void replaceFragment(Fragment newfragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
-        System.out.println("+++  HomeFragment layout replaced with "+newfragment.getTag()+"  +++");
-
         fragmentTransaction.commit();
     }
 
-
-    public void resetError(){
-       for(EditText eText : editTexts){
-           eText.setError(null);
-       }
-       packages.setError(null);
-       recmail.setError(null);
-       dueDate.setError(null);
+//Add the icon to notify an error
+    public void resetError() {
+        for (EditText eText : editTexts) {
+            eText.setError(null);
+        }
+        packages.setError(null);
+        recmail.setError(null);
+        dueDate.setError(null);
     }
 
     public static String getTAG() {
@@ -518,32 +494,30 @@ private Boolean enableEdit = true;
 
     private class MyOncheckChangeListener implements RadioGroup.OnCheckedChangeListener {
         RadioGroup groupConcerned;
-        public MyOncheckChangeListener(RadioGroup  groupConcerned) {
+
+        public MyOncheckChangeListener(RadioGroup groupConcerned) {
             this.groupConcerned = groupConcerned;
         }
 
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
-            int id=radioGroup.getCheckedRadioButtonId();
-            RadioButton rb=(RadioButton) v.findViewById(id);
-            if (radioGroup==mailTypeRGroup){
-                mailTypeChoosed=rb.getText().toString();
+            int id = radioGroup.getCheckedRadioButtonId();
+            RadioButton rb = (RadioButton) v.findViewById(id);
+            if (radioGroup == mailTypeRGroup) {
+                mailTypeChoosed = rb.getText().toString();
                 if (mailTypeChoosed.equals("Letter")) {
                     weight.setText("0");
                     weight.setEnabled(false);
-                }
-                else
+                } else
                     weight.setEnabled(true);
-                System.out.println("mail type choosed : "+mailTypeChoosed);
-            }
-            else {
-                shipTypeChoosed=rb.getText().toString();
+                System.out.println("mail type choosed : " + mailTypeChoosed);
+            } else {
+                shipTypeChoosed = rb.getText().toString();
                 shipDateStr = calculateShipDate(shipTypeChoosed);
                 dueDate.setText(shipDateStr);
-                System.out.println("ship type choosed : "+shipTypeChoosed);
+                System.out.println("ship type choosed : " + shipTypeChoosed);
             }
         }
     }
-
 }
 
