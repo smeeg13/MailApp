@@ -247,6 +247,8 @@ private Boolean enableEdit = true;
                 //Save all the modification to the database
                 currentMail = takeBackInfoIntoMail();
                 currentMail.setIdMail(Integer.parseInt(idnumber.getText().toString()));
+                currentMail.setStatus("In Progress");
+                currentMail.setReceiveDate(TODAY);
                 mailViewModel.updateMail(currentMail, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {

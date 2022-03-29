@@ -32,13 +32,13 @@ public class DatabaseInitializer {
 
     private static void populateWithTestData(MyDatabase db) {
 
-        addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1823","Sion");
-        addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","1950","Sierre");
+        addPostWorker(db, "Abdullah","Binjos","07961623823","binjabdu@gmail.com","@dminHevs01","Rue des pommes 12","1950","Sion");
+        addPostWorker(db, "Megane","Solliard","3630","Smeg@gmail.com","@dminHevs01","Rue des carou 12","3960","Sierre");
         addPostWorker(db, "admin","admin","admin","admin","1234","admin","admin","admin");
 
         addMail(db,3, "Abdullah", "Meg", "Letter","A-Mail", "Rte", "1965 ","Saviese");
         addMail(db, 3,"Meg", "Emilie", "Packages","B-Mail", "Rte", "1950 ","Sion");
-        addMail(db, 3,"Loic", "Jane", "Packages","B-Mail", "Rte", "1950 ","Sion");
+        addMail(db, 3,"Loic", "Jane", "Packages","B-Mail", "Plaine Bellevue", "3960 ","Sierre");
 
 
     }
