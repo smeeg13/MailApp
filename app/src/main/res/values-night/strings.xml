@@ -1,23 +1,29 @@
 <resources>
     <string name="app_name">MailApp</string>
 
-    <!-- Input-->
-
-    <!-- Button-->
-
-
+    <!-- Texts-->
     <string name="FirstnameTxt">Firstname</string>
     <string name="LastnameTxt">Lastname</string>
     <string name="PasswordTxt">Your password</string>
-    <string name="LoginBtn">Login</string>
-    <string name="SignUpBtn">Sign Up</string>
-    <string name="WelcomeTxt">Welcome</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
     <string name="EmailTxt">Your email</string>
     <string name="PhoneTxt">Your phone</string>
     <string name="AddressTxt">Your address</string>
     <string name="ConfirmPasswordTxt">Confirm your password</string>
+
+
+
+    <!-- Input-->
+
+    <!-- Button-->
+    <string name="LoginBtn">Login</string>
+    <string name="SignUpBtn">Sign Up</string>
+
+
+
+    <string name="WelcomeTxt">Welcome</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
     <string name="CreateAccountBtn">Create Account</string>
     <string name="title_activity_home_screen_two">HomeScreen_Two</string>
     <string name="title_home">Home</string>
@@ -29,7 +35,6 @@
     <string name="add_new">Add New</string>
     <string name="map">Map</string>
     <string name="my_account">My Account</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_my_account">Create my Account</string>
     <string name="already_have_an_account">Already Have an Account ?</string>
@@ -59,7 +64,7 @@
     <string name="city">City</string>
     <string name="del">DEL</string>
     <string name="edit">EDIT</string>
-    <string-array name="locationsAvailables_array">
+    <string-array name="ThemesAvailables_array">
         <item>White</item>
         <item>Black</item>
     </string-array>

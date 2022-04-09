@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.mailapp.R;
 import com.example.mailapp.adapter.RecyclerAdapter;
 import com.example.mailapp.database.entities.MailEntity;
@@ -24,7 +22,6 @@ import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
 import com.example.mailapp.viewModel.MailViewModel;
 import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
