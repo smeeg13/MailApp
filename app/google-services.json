@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "690784325708",
+    "project_id": "application-mail-delivery",
+    "storage_bucket": "application-mail-delivery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690784325708:android:ac48c10a9b8e59f59964e9",
+        "android_client_info": {
+          "package_name": "com.example.mailapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690784325708-e0riei916pje35jot43rs7j3mb4h5uf1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkmgidowtA9_ETe_ii61qqjkj11oAcg8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690784325708-e0riei916pje35jot43rs7j3mb4h5uf1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

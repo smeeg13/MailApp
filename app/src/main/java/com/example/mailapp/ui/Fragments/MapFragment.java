@@ -7,15 +7,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
@@ -23,17 +22,13 @@ import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.viewModel.MailListViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,97 +81,78 @@ public class MapFragment extends Fragment {
 
         //Get back own mails NOT DONE
         MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedIdInt);
-        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
+                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
         viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsInProgress = mailEntities;
 
-                //Todo Place marker for every mails in prog
                 addressesStrings = new ArrayList<>();
                 for (MailEntity mail : mailsInProgress){
-                    String coordinate = getCoordinates(mail.address+" "+mail.zip+" "+mail.city)+"-"+mail.idMail;
+                    String coordinate = getCoordinates(mail.getAddress()+" "+mail.getZip()+" "+mail.getCity())+"-"+mail.getIdMail();
                     addressesStrings.add(coordinate);
                 }
-                supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(@NonNull GoogleMap googleMap) {
-                        String latitude =null;
-                        String longitude = null;
-                        String idmail = null;
-                        for (String coordinate : addressesStrings){
-                            if (coordinate.contains("-")) {
-                                // Split it.
-                                String[] parts = coordinate.split("-");
-                                 latitude = parts[0];
-                                 longitude = parts[1];
-                                 idmail = parts[2];
-                            }
-                            if(idmail!=null){
-                                LatLng latLng = new LatLng(Double.parseDouble(latitude),
-                                        Double.parseDouble(longitude));
+                supportMapFragment.getMapAsync(googleMap -> {
+                    String latitude =null;
+                    String longitude = null;
+                    String idmail = null;
+                    for (String coordinate : addressesStrings){
+                        if (coordinate.contains("-")) {
+                            // Split it.
+                            String[] parts = coordinate.split("-");
+                             latitude = parts[0];
+                             longitude = parts[1];
+                             idmail = parts[2];
+                        }
+                        if(idmail!=null){
+                            LatLng latLng = new LatLng(Double.parseDouble(latitude),
+                                    Double.parseDouble(longitude));
 
-                                MarkerOptions options = new MarkerOptions().position(latLng)
-                                        .title("ID Mail : "+idmail);
+                            MarkerOptions options = new MarkerOptions().position(latLng)
+                                    .title("ID Mail : "+idmail);
 
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                                googleMap.addMarker(options);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            googleMap.addMarker(options);
+                        }
+                    }
+
+
+                    googleMap.setOnMarkerClickListener(marker -> {
+                        if(markerClicked ==0) {
+                            markerClicked++;
+                        }else {
+                            if (markerClicked == 1){
+                                System.out.println("Marker Clicked Title: "+marker.getTitle());
+                                String idstr = marker.getTitle();
+                                String str = null;
+                                String id = null;
+                                if (idstr.contains(" : ")) {
+                                    // Split it.
+                                    String[] parts = idstr.split(" : ");
+                                    str = parts[0];
+                                    id = parts[1];
+                                }
+                                if(id!=null){
+                                    Bundle datas = new Bundle();
+                                    datas.putInt("MailID", Integer.parseInt(id));
+                                    datas.putBoolean("Enable", false);
+                                    MailDetailFragment newfragment = new MailDetailFragment();
+                                    newfragment.setArguments(datas);
+                                    getFragmentManager().beginTransaction()
+                                            .replace(R.id.HomeFrameLayout, newfragment)
+                                            .commit();
+                                }
+                                markerClicked =0;
                             }
                         }
+                        return false;
+                    });
 
-
-                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(@NonNull Marker marker) {
-
-
-                                if(markerClicked ==0) {
-                                    markerClicked++;
-                                }else {
-                                    if (markerClicked == 1){
-                                        System.out.println("Marker Clicked Title: "+marker.getTitle());
-                                        String idstr = marker.getTitle();
-                                        String str = null;
-                                        String id = null;
-                                        if (idstr.contains(" : ")) {
-                                            // Split it.
-                                            String[] parts = idstr.split(" : ");
-                                            str = parts[0];
-                                            id = parts[1];
-                                        }
-                                        if(id!=null){
-                                            Bundle datas = new Bundle();
-                                            datas.putInt("MailID", Integer.parseInt(id));
-                                            datas.putBoolean("Enable", false);
-                                            MailDetailFragment newfragment = new MailDetailFragment();
-                                            newfragment.setArguments(datas);
-                                            getFragmentManager().beginTransaction()
-                                                    .replace(R.id.HomeFrameLayout, newfragment)
-                                                    .commit();
-                                        }
-                                        markerClicked =0;
-                                    }
-
-                                }
-
-
-
-                                return false;
-                            }
-                        });
-
-                    }
                 });
             }
         });
 
-        myPositionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCurrentLocation();
-            }
-        });
-
+        myPositionButton.setOnClickListener(view -> getCurrentLocation());
         return v;
     }
 
@@ -202,7 +178,7 @@ public class MapFragment extends Fragment {
     }
     private String getCoordinates(String address){
         Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> addresses = null;
+        List<Address> addresses ;
         String latLongStg = "";
             try {
                 addresses = (geocoder.getFromLocationName(address, 1));
@@ -223,7 +199,7 @@ public class MapFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               // getCurrentLocation();
+                getCurrentLocation();
             }
         }
     }

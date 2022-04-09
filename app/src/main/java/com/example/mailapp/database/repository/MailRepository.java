@@ -1,17 +1,14 @@
 package com.example.mailapp.database.repository;
 
-import android.app.Application;
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 
-import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.async.mail.CreateMail;
-import com.example.mailapp.database.async.mail.DeleteMail;
-import com.example.mailapp.database.async.mail.UpdateMail;
 import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.firebase.MailListLiveData;
+import com.example.mailapp.database.firebase.MailLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -34,45 +31,59 @@ public class MailRepository {
         return instance;
     }
 
-    public LiveData<List<MailEntity>> getAllMails(Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAll();
+    public LiveData<MailEntity> getMailById(final String id) {
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("mails")
+                .child(id);
+        return new MailLiveData(reference);
     }
 
-    public LiveData<List<MailEntity>> getAllByStatus(final String status, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByStatus(status);
+    public LiveData<List<MailEntity>> getAllByPostworker(final String idWorker) {
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("postworker")
+                .child(idWorker)
+                .child("mails");
+        return new MailListLiveData(reference, idWorker);
     }
 
-    public LiveData<List<MailEntity>> getAllByMailType(final String mailType, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByMailType(mailType);
+    //TODO HOW TO get only those in progress ??
+    public LiveData<List<MailEntity>> getInProgressByPostworker(final String idWorker,String status){
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("postworker")
+                .child(idWorker)
+                .child("mails");
+        return new MailListLiveData(reference, idWorker);
     }
 
-    public LiveData<List<MailEntity>> getAllByCity(final String city, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByCity(city);
+    public void insert(final MailEntity mail, OnAsyncEventListener callback) {
+          }
+
+    public void update(final MailEntity mail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("mails")
+                .child(mail.getIdMail())
+                .updateChildren(mail.toMap(), (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
     }
 
-    public LiveData<MailEntity> getMailById(final int id, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getById(id);
-    }
-
-    public LiveData<List<MailEntity>> getAllByPostworker(final int idWorker, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByPostworker(idWorker);
-    }
-
-    public LiveData<List<MailEntity>> getInProgressByPostworker(final int IdPostWorker,String status, Application application){
-        return ((BaseApplication) application).getDatabase().mailDao().getInProgressByPostworker(IdPostWorker,status);
-
-    }
-
-    public void insert(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new CreateMail(a, callback).execute(mail);
-    }
-
-    public void update(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new UpdateMail(a, callback).execute(mail);
-    }
-
-    public void delete(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new DeleteMail(a, callback).execute(mail);
+    public void delete(final MailEntity mail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("mails")
+                .child(mail.getIdMail())
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
     }
 }
 

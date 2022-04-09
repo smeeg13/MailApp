@@ -63,4 +63,5 @@
         <item>White</item>
         <item>Black</item>
     </string-array>
+    <string name="error_invalid_email">Invalid Login Credentials</string>
 </resources>

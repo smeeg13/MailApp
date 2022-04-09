@@ -19,39 +19,35 @@ import java.util.List;
 
 public class MailListViewModel  extends AndroidViewModel {
 
+    private static final String TAG = "MailListViewModel";
+
+
     private MailRepository repository;
 
-    private Application application;
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
-    private final MediatorLiveData<List<MailEntity>> observableMails;
     private final MediatorLiveData<List<MailEntity>> observableOwnMails;
     private final MediatorLiveData<List<MailEntity>> observableOwnMailsInProg;
 
 
-    public MailListViewModel(@NonNull Application application,final int IdPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
+    public MailListViewModel(@NonNull Application application,final String IdPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
         super(application);
 
         repository = mailRepository;
 
-        this.application = application;
 
-        observableMails = new MediatorLiveData<>();
         observableOwnMails = new MediatorLiveData<>();
         observableOwnMailsInProg = new MediatorLiveData<>();
 
         // set by default null, until we get data from the database.
-        observableMails.setValue(null);
         observableOwnMails.setValue(null);
         observableOwnMailsInProg.setValue(null);
 
-        LiveData<List<MailEntity>> mails = repository.getAllMails(application);
-        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker,application);
+        LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker);
 
-         LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress",application);
+         LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress");
 
         // observe the changes of the entities from the database and forward them
-        observableMails.addSource(mails, observableMails::setValue);
         observableOwnMails.addSource(ownMails, observableOwnMails::setValue);
         observableOwnMailsInProg.addSource(ownMailsInProg, observableOwnMailsInProg::setValue);
     }
@@ -64,12 +60,12 @@ public class MailListViewModel  extends AndroidViewModel {
         @NonNull
         private final Application application;
 
-        private final int idPostworker;
+        private final String idPostworker;
         private final MailRepository mailRepository;
         private final PostworkerRepository postworkerRepository;
 
 
-        public Factory(@NonNull Application application,int id) {
+        public Factory(@NonNull Application application,String id) {
             this.application = application;
             this.idPostworker = id;
             mailRepository =  ((BaseApplication) application).getMailRepository();
@@ -86,9 +82,6 @@ public class MailListViewModel  extends AndroidViewModel {
     /**
      * Expose the LiveData MailEntities query so the UI can observe it.
      */
-    public LiveData<List<MailEntity>> getAllMails() {
-        return observableMails;
-    }
 
     public LiveData<List<MailEntity>> getOwnMails() {
         return observableOwnMails;
@@ -98,10 +91,10 @@ public class MailListViewModel  extends AndroidViewModel {
     }
 
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.delete(mail, callback, application);
-    }
+        ((BaseApplication) getApplication()).getMailRepository()
+                .delete(mail, callback);    }
     public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.update(mail, callback, application);
+        ((BaseApplication) getApplication()).getMailRepository().update(mail, callback);
     }
 
 }

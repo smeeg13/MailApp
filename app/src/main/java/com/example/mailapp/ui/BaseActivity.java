@@ -1,21 +1,24 @@
 package com.example.mailapp.ui;
 
-import static com.example.mailapp.R.id.*;
+import static com.example.mailapp.R.id.AboutBtn;
+import static com.example.mailapp.R.id.AccountBtn;
 import static com.example.mailapp.R.id.AddNewBtn;
+import static com.example.mailapp.R.id.HomeBtn;
+import static com.example.mailapp.R.id.HomeFrameLayout;
 import static com.example.mailapp.R.id.LogoutBtn;
+import static com.example.mailapp.R.id.MapBtn;
 import static com.example.mailapp.R.id.SettingsBtn;
+import static com.example.mailapp.R.id.myToolbar;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mailapp.BaseApplication;
-import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AboutFragment;
@@ -26,6 +29,7 @@ import com.example.mailapp.ui.Fragments.MyAccountFragment;
 import com.example.mailapp.ui.Fragments.SettingsFragment;
 import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -73,7 +77,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     protected void setActions(){
         //Home Nav Bar
-        binding.HomeTopNavBar.setOnItemSelectedListener(item -> {
+        binding.HomeTopNavBar.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case SettingsBtn:
                     replaceFragment(new SettingsFragment(), null);
@@ -90,7 +94,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
         //Bottom Nav Bar
-        binding.HomeBottomNavBar.setOnItemSelectedListener(item2 -> {
+        binding.HomeBottomNavBar.setOnNavigationItemSelectedListener(item2 -> {
             switch (item2.getItemId()) {
                 case AddNewBtn:
                      Bundle datas = new Bundle();
@@ -129,7 +133,7 @@ public class BaseActivity extends AppCompatActivity {
         settings = getSharedPreferences(BaseActivity.PREFS_NAME, 0);
         sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
         sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
-        postworkerRepository.getPostworkerByEmail(sharedPrefMail, getApplication()).observe(BaseActivity.this, postWorkerEntity -> {
+        postworkerRepository.getPostWorker(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(BaseActivity.this, postWorkerEntity -> {
             postWorkerEntity.setBackground(sharedPrefBackground);
             postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
                 @Override
@@ -141,7 +145,7 @@ public class BaseActivity extends AppCompatActivity {
                 public void onFailure(Exception e) {
                     System.out.println("LOGGED OUT FAILED");
                 }
-            },getApplication());
+            });
 
         });
 

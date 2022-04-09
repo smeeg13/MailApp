@@ -1,14 +1,6 @@
 package com.example.mailapp.ui.Fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +9,21 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mailapp.R;
 import com.example.mailapp.adapter.RecyclerAdapter;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.R;
-import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
 import com.example.mailapp.viewModel.MailViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class HomeFragment extends Fragment {
     private List<MailEntity> mailsAll;
     private RecyclerAdapter<MailEntity> adapter;
     private MailListViewModel viewModel;
-    private String workerConnectedEmailStr;
+
     private MailListViewModel mailViewModel;
     private MailViewModel currentViewModel;
     private MailEntity currentMail;
@@ -70,12 +68,8 @@ public class HomeFragment extends Fragment {
         recyclerView = v.findViewById(R.id.HomeRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));//Reverse = true for the last one go on top
 
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        String workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
-        int workerConnectedIdInt = Integer.parseInt(workerConnectedIdStr);
-        System.out.println("On create View WorkerConnected : " + workerConnectedEmailStr);
-        System.out.println("On create View WorkerConnected ID : " + workerConnectedIdStr);
+
+        System.out.println("On create View WorkerConnected : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         mailsInProgress = new ArrayList<>();
         adapter = new RecyclerAdapter<>(new RecyclerViewItemClickListener() {
@@ -87,18 +81,18 @@ public class HomeFragment extends Fragment {
                 if (todo.equals("edit")) { //Clicked on edit
                     System.out.println("btn clicked edit");
                     Bundle datas = new Bundle();
-                    datas.putInt("MailID", mailsInProgress.get(position).getIdMail());
+                    datas.putString("MailID", mailsInProgress.get(position).getIdMail());
                     datas.putBoolean("Enable", false);
                     replaceFragment(new MailDetailFragment(), datas);
                 } else { //Clicked on done
                     System.out.println("btn clicked done");
-//                    //TODO Update the status of the mail choosed to done
-
-
                     //Take back the mail choosed and display the infos
                     MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                            getActivity().getApplication(), mailsInProgress.get(position).getIdMail());
-                    currentViewModel = ViewModelProviders.of(getActivity(), factory2).get(MailViewModel.class);
+                            getActivity().getApplication(),
+                            FirebaseAuth.getInstance().getCurrentUser().getUid()
+                    );
+
+                    currentViewModel =new ViewModelProvider(requireActivity(), factory2).get(MailViewModel.class);
 
                     currentViewModel.getMail().observe(getActivity(), mailEntity -> {
                         if (mailEntity != null) {
@@ -139,8 +133,8 @@ public class HomeFragment extends Fragment {
 
 
         MailListViewModel.Factory factory2 = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedIdInt);
-        viewModelAllMail = ViewModelProviders.of(this, factory2).get(MailListViewModel.class);
+                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+        viewModelAllMail = new ViewModelProvider(requireActivity(), factory2).get(MailListViewModel.class);
         viewModelAllMail.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsAll = mailEntities;
@@ -151,8 +145,8 @@ public class HomeFragment extends Fragment {
 
         //Get back own mails NOT DONE
         MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedIdInt);
-        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
+                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
         viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsInProgress = mailEntities;
@@ -199,17 +193,12 @@ public class HomeFragment extends Fragment {
         final View view = inflater.inflate(R.layout.row_delete_item, null);
         String separator = System.lineSeparator();
         String msg = "You're going to delete a mail : " + separator +
-                "ID of the Mail : " + mail.idMail + separator + "Are you sure ?";
+                "ID of the Mail : " + mail.getIdMail() + separator + "Are you sure ?";
         final MyAlertDialog myAlert = new MyAlertDialog(getContext(), "Delete Mail", msg, "Yes, Delete");
         myAlert.DeleteMail(mail, viewModel, view);
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle("Delete Mail");
         alertDialog.setCancelable(false);
-    }
-
-
-    public void getMails() {
-
     }
 
     public static String getTAG() {

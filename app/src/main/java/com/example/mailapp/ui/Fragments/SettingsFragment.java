@@ -2,32 +2,24 @@ package com.example.mailapp.ui.Fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import com.example.mailapp.database.dao.PostWorkerDao;
-import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.entities.PostWorkerEntity;
-import com.example.mailapp.R;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
 
+import com.example.mailapp.R;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.ui.BaseActivity;
 
 public class SettingsFragment extends Fragment {
 
     private PostWorkerEntity postWorkerEntity;
-    private PostWorkerDao postWorkerDao;
-    private MyDatabase myDatabase;
+
     private View v;
     private Spinner inputSpinner;
     private SharedPreferences settings;
@@ -54,7 +46,6 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_settings, container, false);
         settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
         sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
         editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
 

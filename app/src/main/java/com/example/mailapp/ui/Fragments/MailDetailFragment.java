@@ -4,13 +4,6 @@ import static com.example.mailapp.ui.RegisterActivity.showError;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +15,24 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
+import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.MailViewModel;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,7 +51,7 @@ public class MailDetailFragment extends Fragment {
     //Management Variables
     private Boolean enableEdit = true;
     private Boolean isEditMode;
-    private int idMailChooseFromList;
+    private String idMailChooseFromList;
     private MailEntity currentMail;
     private MailViewModel mailViewModel;
     private String workerConnectedEmailStr;
@@ -111,14 +111,14 @@ public class MailDetailFragment extends Fragment {
         boolean putEnable = false;
         if (data != null) {
             putEnable = data.getBoolean("Enable");
-            idMailChooseFromList = data.getInt("MailID");
+            idMailChooseFromList = data.getString("MailID");
         }
         enableEdit(putEnable);
         editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
 
 
         //Decide if we add or edit depending on if we received a valid mail id or not
-        if (idMailChooseFromList == -1) { //We want to create one
+        if (idMailChooseFromList == null) { //We want to create one
             editAddButton.setImageResource(R.drawable.ic_baseline_add_24);
             deleteButton.hide();
             idnumTextStr.setVisibility(View.INVISIBLE);
@@ -136,8 +136,8 @@ public class MailDetailFragment extends Fragment {
 
         //Take back the mail choosed and display the infos
         MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                getActivity().getApplication(), idMailChooseFromList);
-        mailViewModel = ViewModelProviders.of(getActivity(), factory2).get(MailViewModel.class);
+                getActivity().getApplication(),  FirebaseAuth.getInstance().getCurrentUser().getUid());
+        mailViewModel = new ViewModelProvider(requireActivity(), factory2).get(MailViewModel.class);
         if (isEditMode) {
             mailViewModel.getMail().observe(getActivity(), mailEntity -> {
                 if (mailEntity != null) {
@@ -234,7 +234,6 @@ public class MailDetailFragment extends Fragment {
                 enableEdit(false);
                 //Save all the modification to the database
                 currentMail = takeBackInfoIntoMail();
-                currentMail.setIdMail(Integer.parseInt(idnumber.getText().toString()));
                 currentMail.setStatus("In Progress");
                 currentMail.setReceiveDate(TODAY);
                 mailViewModel.updateMail(currentMail, new OnAsyncEventListener() {
@@ -328,10 +327,11 @@ public class MailDetailFragment extends Fragment {
     private MailEntity takeBackInfoIntoMail() {
         MailEntity newMail = new MailEntity();
         if (assignedToMe.isChecked()) {
-            newMail.setIdPostWorker(Integer.parseInt(workerConnectedIdStr));
+            newMail.setIdPostWorker(workerConnectedIdStr);
         } else {
+            //TODO GET THE CENTRAL
             PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
-            PostWorkerViewModel viewModel = ViewModelProviders.of(this, factory).get(PostWorkerViewModel.class);
+            PostWorkerViewModel viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
             viewModel.getClient().observe(getActivity(), entity -> {
                 if (entity != null) {
                     centralAccount = entity;
@@ -358,10 +358,10 @@ public class MailDetailFragment extends Fragment {
 
     //initialize info of the mail to display
     private void initializeFieldWithMailData(MailEntity mail) {
-        idnumber.setText(Integer.toString(mail.idMail));
-        mailFrom.setText(mail.mailFrom);
-        mailTo.setText(mail.mailTo);
-        switch (mail.mailType) {
+        idnumber.setText(mail.getIdMail());
+        mailFrom.setText(mail.getMailFrom());
+        mailTo.setText(mail.getMailTo());
+        switch (mail.getMailType()) {
             case "Letter":
                 letter.setChecked(true);
                 weight.setEnabled(false);
@@ -371,7 +371,7 @@ public class MailDetailFragment extends Fragment {
                 weight.setText(Integer.toString(mail.getWeight()));
                 break;
         }
-        switch (mail.shippingType) {
+        switch (mail.getShippingType()) {
             case "A-Mail":
                 amail.setChecked(true);
                 break;
@@ -382,10 +382,10 @@ public class MailDetailFragment extends Fragment {
                 recmail.setChecked(true);
                 break;
         }
-        dueDate.setText(mail.shippedDate);
-        address.setText(mail.address);
-        zip.setText(mail.zip);
-        city.setText(mail.city);
+        dueDate.setText(mail.getShippedDate());
+        address.setText(mail.getAddress());
+        zip.setText(mail.getZip());
+        city.setText(mail.getCity());
     }
 
     /**

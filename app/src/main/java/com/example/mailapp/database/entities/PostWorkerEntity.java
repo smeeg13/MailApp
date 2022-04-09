@@ -1,60 +1,51 @@
 package com.example.mailapp.database.entities;
 
-import androidx.annotation.Nullable;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
-import java.util.List;
+import com.google.firebase.database.Exclude;
 
-@Entity(tableName = "PostWorker")
-public class PostWorkerEntity {
+import java.util.HashMap;
+import java.util.Map;
 
-    public PostWorkerEntity( String firstname, String lastname, String phone, String email, String password, String address, String zip, String city) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.zip = zip;
-        this.city = city;
-    }
 
-    @PrimaryKey(autoGenerate = true)
-    public int idPostWorker;
+public class PostWorkerEntity implements Comparable{
 
-    @ColumnInfo(name = "firstname")
-    public String firstname;
-    @ColumnInfo(name = "lastname")
-    public String lastname;
-    @ColumnInfo(name = "phone")
-    public String phone;
-    @ColumnInfo(name = "email")
-    public String email;
-    @ColumnInfo(name = "password")
-    public String password;
-    @ColumnInfo(name = "address")
-    public String address;
-    @ColumnInfo(name = "zip")
-    public String zip;
-    @ColumnInfo(name = "city")
-    public String city;
-    @ColumnInfo(name = "background")
-    public String background;
-
-    @Ignore
-    public PostWorkerEntity() {
-
+    public PostWorkerEntity(String firstname, String lastname, String phone, @NonNull String email, String password, String address, String zip, String city) {
+        setFirstname(firstname);
+        setLastname(lastname);
+        setPhone(phone);
+        setEmail(email);
+       setPassword(password);
+       setAddress(address);
+       setZip(zip);
+       setCity(city);
     }
 
 
-    public int getIdPostWorker() {
+    private String idPostWorker;
+
+    private String firstname;
+
+    private String lastname;
+    private String phone;
+    private String email;
+    private String password;
+
+    private String address;
+
+    private String zip;
+
+    private String city;
+
+    private String background;
+
+
+    @Exclude
+    public String getIdPostWorker() {
         return idPostWorker;
     }
 
-    public void setIdPostWorker(int idPostWorker) {
+    public void setIdPostWorker(String idPostWorker) {
         this.idPostWorker = idPostWorker;
     }
 
@@ -86,7 +77,7 @@ public class PostWorkerEntity {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NonNull String email) {
         this.email = email;
     }
 
@@ -142,34 +133,37 @@ public class PostWorkerEntity {
     @Override
     public String toString() {
         String sep = System.getProperty("line.separator");
-        return "/////////////////"+sep+
-                "ID : " + idPostWorker+sep+
-                " Email : " + email+sep+
-                "Firstame : " + firstname+sep+
-                "Lastname : " + lastname+sep+
-                "Phone number : " + phone+sep+
-                "Address : "+ address+sep+
-                "City : " + city+sep+
-                "Zip : " + zip+sep+
-                "Backbroung settings : "+ background+sep+
+        return "/////////////////" + sep +
+                "ID : " + idPostWorker + sep +
+                " Email : " + email + sep +
+                "Firstame : " + firstname + sep +
+                "Lastname : " + lastname + sep +
+                "Phone number : " + phone + sep +
+                "Address : " + address + sep +
+                "City : " + city + sep +
+                "Zip : " + zip + sep +
+                "Backbroung settings : " + background + sep +
                 "/////////////////";
     }
 
+    @Override
+    public int compareTo(@NonNull Object o) {
+        return toString().compareTo(o.toString());
+    }
 
-    public  void postWorkersToString(List<PostWorkerEntity> postWorkerEntities) {
 
-        for (PostWorkerEntity postWorkerEntity : postWorkerEntities) {
-            System.out.println("///////////////// ");
-            System.out.println(" ID of post worker : " + postWorkerEntity.getIdPostWorker());
-            System.out.println(" Email :" + postWorkerEntity.getEmail());
-            System.out.println(" Firstname :" + postWorkerEntity.getFirstname());
-            System.out.println(" Lastname :" + postWorkerEntity.getLastname());
-            System.out.println(" Phone :" + postWorkerEntity.getPhone());
-            System.out.println(" Address :" + postWorkerEntity.getAddress());
-            System.out.println(" City :" + postWorkerEntity.getCity());
-            System.out.println(" Zip :" + postWorkerEntity.getZip());
-            System.out.println(" Background :" + postWorkerEntity.getBackground());
-
-        }
+    //To update specific entity
+    @Exclude
+    public Map<String,Object> toMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("firstname", firstname);
+        result.put("lastname", lastname);
+        result.put("email", email);
+        result.put("phone", phone);
+        result.put("address", address);
+        result.put("zip", zip);
+        result.put("city", city);
+        result.put("background",background);
+        return result;
     }
 }

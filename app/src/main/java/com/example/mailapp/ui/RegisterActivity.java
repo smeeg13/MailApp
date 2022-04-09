@@ -1,31 +1,21 @@
 package com.example.mailapp.ui;
 
-import static com.example.mailapp.database.MyDatabase.initializeDemoData;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
-import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.async.postworker.CreatePostWorker;
-import com.example.mailapp.database.dao.PostWorkerDao;
 import com.example.mailapp.database.entities.PostWorkerEntity;
-import com.example.mailapp.util.MyAlertDialog;
+import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
  * Page to create an account
@@ -37,12 +27,15 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private ArrayList<EditText> inputs = new ArrayList<>();
     private TextView btnLogin;
-    private Button btnResetDB;
+
+    private PostworkerRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        repository = ((BaseApplication) getApplication()).getPostworkerRepository();
 
         initialize();
        }
@@ -72,20 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.RegisterLoginBtn);
         // ONCLICK LOGIN BUTTON
         btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
-
-        btnResetDB = findViewById(R.id.ResetDbBtn);
-        btnResetDB.setOnClickListener(view -> {
-            reinitializeDatabase();
-        });
     }
 
-
-    private void reinitializeDatabase() {
-        MyAlertDialog dialog = new MyAlertDialog(this,
-                "Reset DB Demo Data",
-                "Do you really want to reset the Database ?","Yes, Reset");
-        dialog.resetBD();
-    }
 
     /**
      * Called when the user click on the Create Account button
@@ -106,21 +87,15 @@ public class RegisterActivity extends AppCompatActivity {
         //& if the 2 pwd entered are same
         if (!InputsAreGood()){
             Toast.makeText(getApplicationContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
-//            inputPassword.setText("");
-//            inputConfirmPwd.setText("");
         }
         else {
             //Create the post worker with info entered
             PostWorkerEntity newWorker = new PostWorkerEntity(stfirstname,stlastname,staddress, stmail,stpwd,stphone,stloca,stzip);
-            //Save post worker in database
             newWorker.setBackground("white");
-            System.out.println("register activity background :" +newWorker.getBackground());
-            new CreatePostWorker(getApplication(), new OnAsyncEventListener() {
+            repository.register(newWorker, new OnAsyncEventListener() {
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "createUserWithEmail: success");
-                    System.out.println("## POST WORKER ADDED");
-                    System.out.println(newWorker.toString());
                     setResponse(true);
                 }
 
@@ -129,16 +104,12 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d(TAG, "createUserWithEmail: failure", e);
                     setResponse(false);
                 }
-            }).execute(newWorker);
+            });
         }
     }
 
     private void setResponse(Boolean response) {
         if (response) {
-            final SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-            editor.putString(BaseActivity.PREFS_USER, inputEmail.getText().toString());
-            editor.putString(BaseActivity.PREFS_BACKGROUND, "white");
-            editor.apply();
             Toast.makeText(this,Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -148,9 +119,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void resetDB(View view){
-
-    }
 
     /**
      * To know if all the fields are checked and Valid
