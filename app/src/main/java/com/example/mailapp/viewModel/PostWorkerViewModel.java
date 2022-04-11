@@ -41,7 +41,6 @@ public class PostWorkerViewModel extends AndroidViewModel {
     }
 
 
-
     /**
      * A creator is used to inject the account id into the ViewModel
      */

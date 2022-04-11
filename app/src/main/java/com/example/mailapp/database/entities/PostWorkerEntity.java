@@ -34,6 +34,9 @@ public class PostWorkerEntity implements Comparable{
        setCity(city);
     }
 
+    public PostWorkerEntity() {
+    }
+
     @Exclude
     public String getIdPostWorker() {
         return idPostWorker;
