@@ -10,6 +10,7 @@ import static com.example.mailapp.R.id.MapBtn;
 import static com.example.mailapp.R.id.SettingsBtn;
 import static com.example.mailapp.R.id.myToolbar;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -130,25 +131,13 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void logout(){
         MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out");
-        settings = getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        sharedPrefMail = settings.getString(BaseActivity.PREFS_USER, null);
-        sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
-        postworkerRepository.getPostWorker(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(BaseActivity.this, postWorkerEntity -> {
-            postWorkerEntity.setBackground(sharedPrefBackground);
-            postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
-                @Override
-                public void onSuccess() {
-                    System.out.println("LOGGED OUT");
-                }
 
-                @Override
-                public void onFailure(Exception e) {
-                    System.out.println("LOGGED OUT FAILED");
-                }
-            });
+        FirebaseAuth.getInstance().signOut();
 
-        });
-
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        startActivity(intent);
 
         ab.backToLoginPage();
     }

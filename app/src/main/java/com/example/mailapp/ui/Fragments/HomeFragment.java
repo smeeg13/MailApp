@@ -137,6 +137,9 @@ public class HomeFragment extends Fragment {
                 mailsAll = mailEntities;
                 sizeAll.set(mailsAll.size());
                 updateProgressBar(mailsAll.size(),sizeMailInProg.get());
+                System.out.println("|||||||||||||||||||||||||||||");
+                System.out.println(mailsAll.size());
+
             }
         });
 
@@ -154,14 +157,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        HomeSeeAllMailsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("## go to all mail Frag");
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.HomeFrameLayout, new AllMailFragment())
-                        .commit();
-            }
+        HomeSeeAllMailsBtn.setOnClickListener(view -> {
+            System.out.println("## go to all mail Frag");
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.HomeFrameLayout, new AllMailFragment())
+                    .commit();
         });
 
         return v;

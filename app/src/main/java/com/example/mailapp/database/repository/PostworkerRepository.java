@@ -84,7 +84,8 @@ public class PostworkerRepository {
                         callback.onSuccess();
                         Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
                     }
-                });    }
+                });
+    }
 
     public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         FirebaseDatabase.getInstance()
