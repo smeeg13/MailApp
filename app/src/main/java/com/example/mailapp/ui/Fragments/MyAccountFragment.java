@@ -43,16 +43,15 @@ public class MyAccountFragment extends Fragment {
     private Button inputDeleteButton;
     private Boolean aBoolean = true;
     private View v;
-    private String owner;
     private String firstname, lastname;
     private ArrayList<TextView> inputs = new ArrayList<>();
     private PostWorkerEntity postWorkerEntity;
-    private PostWorkerViewModel postWorkerViewModel;
     private MailRepository mailRepository;
-    private int numberOfMails=0;
+    private int numberOfMails = 0;
     private ArrayList<MailEntity> mails;
     private PostworkerRepository postworkerRepository;
     private PostWorkerViewModel viewModel;
+
     public MyAccountFragment() {
         // Required empty public constructor
     }
@@ -85,7 +84,7 @@ public class MyAccountFragment extends Fragment {
                 inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
                 aBoolean = true;
 
-                postWorkerViewModel.updatePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
                         System.out.println(Messages.ACCOUNT_UPDATED);
@@ -98,8 +97,6 @@ public class MyAccountFragment extends Fragment {
                 });
 
             }
-
-
         }
     }
 
@@ -175,11 +172,11 @@ public class MyAccountFragment extends Fragment {
                             @Override
                             public void onSuccess() {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
-                                numberOfMails ++;
+                                numberOfMails++;
 
-                                if (numberOfMails == mailEntities.size()){
-                                    System.out.println("number of mails variable :"+numberOfMails);
-                                    postWorkerViewModel.deleteClient(postWorkerEntity, new OnAsyncEventListener() {
+                                if (numberOfMails == mailEntities.size()) {
+                                    System.out.println("number of mails variable :" + numberOfMails);
+                                  /*  postWorkerViewModel.deleteClient(postWorkerEntity, new OnAsyncEventListener() {
                                         @Override
                                         public void onSuccess() {
                                             Log.d(TAG, "deleteUser: success");
@@ -191,8 +188,13 @@ public class MyAccountFragment extends Fragment {
                                             Log.d(TAG, "deleteUser: failure", e);
                                         }
                                     });
+                                     */
+
                                 }
+
+
                             }
+
                             @Override
                             public void onFailure(Exception e) {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
@@ -244,14 +246,14 @@ public class MyAccountFragment extends Fragment {
         inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
         inputs.add(inputConfirmPassword);
 
-        owner = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //TODO AccountID is null -> check in the login section if there is something to add
-        String accountId = getActivity().getIntent().getStringExtra("accountId");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("User firebaseUser : "+ user.getDisplayName()+" "+user.getEmail()+" "+user.getPhoneNumber());
-        System.out.println("owner is "+ owner);
-        System.out.println("accountID is "+accountId);
-        System.out.println("PostWorker get uid "+FirebaseAuth.getInstance().getCurrentUser().getUid());
+        // owner = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        //  String accountId = getActivity().getIntent().getStringExtra("accountId");
+        //  FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //  System.out.println("User firebaseUser : "+ user.getDisplayName()+" "+user.getEmail()+" "+user.getPhoneNumber());
+        // System.out.println("owner is "+ owner);
+        //  System.out.println("accountID is "+accountId);
+        //  System.out.println("PostWorker get uid "+FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(),
                 FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -260,64 +262,30 @@ public class MyAccountFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
 
         viewModel.getClient().observe(getActivity(), postWorker -> {
-                if (postWorker != null) {
-                    postWorkerEntity = postWorker;
+            if (postWorker != null) {
+                postWorkerEntity = postWorker;
 
-                    firstname = postWorker.getFirstname();
+                firstname = postWorker.getFirstname();
 
-                    lastname = postWorker.getLastname();
-
-                    inputFirstnameAndLastname.setText(firstname + " " + lastname);
-
-                    inputEmail.setText(postWorker.getEmail());
-
-                    inputPassword.setText(postWorker.getPassword());
-
-                    inputConfirmPassword.setText(postWorker.getPassword());
-
-                    inputPhone.setText(postWorker.getPhone());
-
-                    inputAddress.setText(postWorker.getAddress());
-
-                    inputZip.setText(postWorker.getZip());
-
-                    inputLocation.setText(postWorker.getCity());
-                }
-            });
-
-
-
-     //   postWorkerViewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
-     /*   postWorkerViewModel.getClient().observe(getActivity(), postworker -> {
-
-            if (postworker != null) {
-
-                postWorkerEntity = postworker;
-
-                firstname = postWorkerEntity.getFirstname();
-
-                lastname = postWorkerEntity.getLastname();
+                lastname = postWorker.getLastname();
 
                 inputFirstnameAndLastname.setText(firstname + " " + lastname);
 
-                inputEmail.setText(postWorkerEntity.getEmail());
+                inputEmail.setText(postWorker.getEmail());
 
-                inputPassword.setText(postWorkerEntity.getPassword());
+                inputPassword.setText(postWorker.getPassword());
 
-                inputConfirmPassword.setText(postWorkerEntity.getPassword());
+                inputConfirmPassword.setText(postWorker.getPassword());
 
-                inputPhone.setText(postWorkerEntity.getPhone());
+                inputPhone.setText(postWorker.getPhone());
 
-                inputAddress.setText(postWorkerEntity.getAddress());
+                inputAddress.setText(postWorker.getAddress());
 
-                inputZip.setText(postWorkerEntity.getZip());
+                inputZip.setText(postWorker.getZip());
 
-                inputLocation.setText(postWorkerEntity.getCity());
-
+                inputLocation.setText(postWorker.getCity());
             }
         });
-*/
-
     }
 
     public boolean InputsAreGood() {

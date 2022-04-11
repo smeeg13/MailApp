@@ -60,7 +60,6 @@ public class MailDetailFragment extends Fragment {
     private View v;
     private PostworkerRepository repository;
 
-
     //UI variables
     private final ArrayList<EditText> editTexts = new ArrayList<>();
     private EditText mailFrom, mailTo, weight, address, zip, city;
@@ -105,7 +104,6 @@ public class MailDetailFragment extends Fragment {
                 postworkerAssigned.setText(CENTRAL_EMAIL);
             }
         });
-
         //Take back the id of the mail we Choose on the list
         Bundle data = getArguments();
         boolean putEnable = false;
@@ -115,7 +113,6 @@ public class MailDetailFragment extends Fragment {
         }
         enableEdit(putEnable);
         editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
-
 
         //Decide if we add or edit depending on if we received a valid mail id or not
         if (idMailChooseFromList == null) { //We want to create one
@@ -133,7 +130,6 @@ public class MailDetailFragment extends Fragment {
             Toast.makeText(getActivity().getBaseContext(), "Now you can Edit the mail choosed !", Toast.LENGTH_SHORT).show();
             isEditMode = true;
         }
-
         //Take back the mail choosed and display the infos
         MailViewModel.Factory factory2 = new MailViewModel.Factory(
                 getActivity().getApplication(),  FirebaseAuth.getInstance().getCurrentUser().getUid());
