@@ -96,8 +96,9 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "createUserWithEmail: success");
-                    setResponse(true);
-                }
+                    Toast.makeText(getApplication(),Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);                }
 
                 @Override
                 public void onFailure(Exception e) {
@@ -110,9 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setResponse(Boolean response) {
         if (response) {
-            Toast.makeText(this,Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
-            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(intent);
+
         } else {
             inputEmail.setError(Messages.EMAIL_ALREADY_EXIST.toString());
             inputEmail.requestFocus();

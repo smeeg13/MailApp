@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.firebase.PostWorkerLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -81,6 +82,7 @@ public class PostworkerRepository {
                                 });
                     } else {
                         callback.onSuccess();
+                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
                     }
                 });    }
 
