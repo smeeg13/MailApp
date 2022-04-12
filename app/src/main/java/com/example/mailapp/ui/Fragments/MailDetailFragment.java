@@ -85,8 +85,6 @@ public class MailDetailFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_mail_detail, container, false);
 
         //Take back the postworker connected
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
         workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 initialize(v);
 

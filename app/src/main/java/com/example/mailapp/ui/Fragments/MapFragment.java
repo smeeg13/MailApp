@@ -42,6 +42,8 @@ public class MapFragment extends Fragment {
     private SupportMapFragment supportMapFragment;
     private String workerConnectedIdStr;
     private List<MailEntity> mailsInProgress;
+
+    private List<MailEntity> mailsAll;
     private ArrayList<LatLng> markersLatLng = new ArrayList<>();
     private MailListViewModel viewModel;
     List<String> addressesStrings;
@@ -76,9 +78,11 @@ public class MapFragment extends Fragment {
         MailListViewModel.Factory factory = new MailListViewModel.Factory(
                 getActivity().getApplication(), workerConnectedIdStr);
         viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
-        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
+        viewModel.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
-                mailsInProgress = mailEntities;
+                mailsAll = mailEntities;
+                mailsInProgress = mailsAll;
+                mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
 
                 addressesStrings = new ArrayList<>();
                 for (MailEntity mail : mailsInProgress){
