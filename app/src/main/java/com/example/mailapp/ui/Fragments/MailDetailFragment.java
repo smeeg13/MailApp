@@ -85,10 +85,8 @@ public class MailDetailFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_mail_detail, container, false);
 
         //Take back the postworker connected
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
-        initialize(v);
+        workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                initialize(v);
 
         //Instantiate actions for buttons
         editAddButton.setOnClickListener(v -> changes());
@@ -325,7 +323,6 @@ public class MailDetailFragment extends Fragment {
         if (assignedToMe.isChecked()) {
             newMail.setIdPostWorker(workerConnectedIdStr);
         } else {
-            //TODO GET THE CENTRAL
             PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
             PostWorkerViewModel viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
             viewModel.getClient().observe(getActivity(), entity -> {

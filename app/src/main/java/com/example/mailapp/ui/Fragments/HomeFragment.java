@@ -137,31 +137,43 @@ public class HomeFragment extends Fragment {
                 mailsAll = mailEntities;
                 sizeAll.set(mailsAll.size());
                 updateProgressBar(mailsAll.size(),sizeMailInProg.get());
-            }
-        });
+                System.out.println("|||||||||||||||||||||||||||||");
+                System.out.println(mailsAll.size());
 
-        //Get back own mails NOT DONE
-        MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
-        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
-            if (mailEntities != null) {
-                mailsInProgress = mailEntities;
+
+                mailsInProgress = mailsAll;
+                mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
                 sizeMailInProg.set(mailsInProgress.size());
                 adapter.setMdata(mailsInProgress);
 
                 updateProgressBar(sizeAll.get(),mailsInProgress.size());
+
             }
         });
 
-        HomeSeeAllMailsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("## go to all mail Frag");
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.HomeFrameLayout, new AllMailFragment())
-                        .commit();
-            }
+//        //Get back own mails NOT DONE
+//        MailListViewModel.Factory factory = new MailListViewModel.Factory(
+//                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+//        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
+//        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
+//            if (mailEntities != null) {
+//                mailsInProgress = mailEntities;
+//                for (MailEntity mail : mailsInProgress){
+//                    if (!mail.getStatus().equals("In Progress"))
+//                        mailsInProgress.remove(mail);
+//                }
+//                sizeMailInProg.set(mailsInProgress.size());
+//                adapter.setMdata(mailsInProgress);
+//
+//                updateProgressBar(sizeAll.get(),mailsInProgress.size());
+//            }
+//        });
+
+        HomeSeeAllMailsBtn.setOnClickListener(view -> {
+            System.out.println("## go to all mail Frag");
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.HomeFrameLayout, new AllMailFragment())
+                    .commit();
         });
 
         return v;

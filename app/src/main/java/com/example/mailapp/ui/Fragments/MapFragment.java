@@ -40,16 +40,15 @@ public class MapFragment extends Fragment {
     private FloatingActionButton myPositionButton;
     private FusedLocationProviderClient client;
     private SupportMapFragment supportMapFragment;
-    private String workerConnectedEmailStr;
+    private String workerConnectedIdStr;
     private List<MailEntity> mailsInProgress;
+
+    private List<MailEntity> mailsAll;
     private ArrayList<LatLng> markersLatLng = new ArrayList<>();
     private MailListViewModel viewModel;
     List<String> addressesStrings;
-    private static final int REQUEST_CODE = 101;
-    private static final String ADDRESS = "Route de Roumaz";
-    private static final String ZIP = "1965";
-    private static final String CITY = "Savièse";
     private int markerClicked =0;
+    private ArrayList<String> citesAutorized;
 
 
     public MapFragment() {
@@ -73,19 +72,17 @@ public class MapFragment extends Fragment {
         myPositionButton = v.findViewById(R.id.myPositionButton);
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        String workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
-        int workerConnectedIdInt = Integer.parseInt(workerConnectedIdStr);
+       workerConnectedIdStr =  FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //Get back own mails NOT DONE
         MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+                getActivity().getApplication(), workerConnectedIdStr);
         viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
-        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
+        viewModel.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
-                mailsInProgress = mailEntities;
+                mailsAll = mailEntities;
+                mailsInProgress = mailsAll;
+                mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
 
                 addressesStrings = new ArrayList<>();
                 for (MailEntity mail : mailsInProgress){

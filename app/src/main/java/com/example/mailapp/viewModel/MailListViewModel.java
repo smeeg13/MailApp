@@ -45,7 +45,8 @@ public class MailListViewModel  extends AndroidViewModel {
 
         LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker);
 
-         LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress");
+         LiveData<List<MailEntity>> ownMailsInProg = repository.getAllByPostworker(IdPostWorker);
+        // LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress");
 
         // observe the changes of the entities from the database and forward them
         observableOwnMails.addSource(ownMails, observableOwnMails::setValue);
