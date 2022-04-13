@@ -94,6 +94,7 @@ public class MailListViewModel  extends AndroidViewModel {
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
         ((BaseApplication) getApplication()).getMailRepository()
                 .delete(mail, callback);    }
+
     public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
         ((BaseApplication) getApplication()).getMailRepository().update(mail, callback);
     }

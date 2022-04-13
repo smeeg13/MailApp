@@ -29,13 +29,13 @@
         android:id="@+id/DetailAssignedToSwitch"
         android:layout_width="128dp"
         android:layout_height="48dp"
-        android:textColor="@color/black"
-
         android:layout_gravity="start|top"
+
         android:layout_marginStart="44dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="84dp"
         android:showText="true"
         android:text="@string/assigned_to_me"
+        android:textColor="@color/black"
         android:textOff="@string/no"
         android:textOn="@string/yes"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,7 @@
         android:id="@+id/DetailMailToTextView"
         android:layout_width="138dp"
         android:layout_height="21dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="140dp"
         android:text="@string/mail_to"
         android:textColor="#000000"
         android:textStyle="bold"
@@ -324,16 +324,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976" />
-
-    <TextView
-        android:id="@+id/DetailAssignToTextView"
-        android:layout_width="82dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="88dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.076"
-        app:layout_constraintStart_toEndOf="@+id/DetailAssignedToSwitch"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
         android:id="@+id/ShipTypeRadioGroup"

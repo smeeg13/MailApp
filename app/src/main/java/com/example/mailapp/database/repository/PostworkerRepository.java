@@ -1,10 +1,13 @@
 package com.example.mailapp.database.repository;
 
+import static android.util.Log.INFO;
+
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.firebase.PostWorkerLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -85,6 +88,37 @@ public class PostworkerRepository {
                         Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
                     }
                 });
+    }
+    public void insertANewMail(final String idWorker, final String idMail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(idWorker)
+                .child("mails")
+                .child(idMail)
+                .setValue(idMail, (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                        Log.d(TAG, "Rollback failed: signInWithEmail:failur");
+                    } else {
+                        callback.onSuccess();
+                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
+                    }
+                });
+    }
+    public void removeAMail(final String idOldWorker, final String idMail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(idOldWorker)
+                .child("mails")
+                .child(idMail)
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
+        Log.println(Log.WARN,TAG,idMail+" Removed from "+idOldWorker);
     }
 
     public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {

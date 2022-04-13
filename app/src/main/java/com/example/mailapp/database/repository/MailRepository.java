@@ -41,9 +41,7 @@ public class MailRepository {
 
     public LiveData<MailEntity> getMailById(final String id) {
         DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference("postworkers")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("mails")
+                .getReference("mails")
                 .child(id);
         return new MailLiveData(reference);
     }
@@ -64,32 +62,20 @@ public class MailRepository {
                     idsmailsofWorker.add(childDataSnapshot. getKey());
                 } //take back the key for the node Log.
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
         return new MailListLiveData(mailReference,idsmailsofWorker, idWorker);
-
     }
-
-    //TODO HOW TO get only those in progress ??
-//    public LiveData<List<MailEntity>> getInProgressByPostworker(final String idWorker, String status) {
-//        DatabaseReference reference = FirebaseDatabase.getInstance()
-//                .getReference("postworker")
-//                .child(idWorker)
-//                .child("mails");
-//        return new MailListLiveData(reference, idWorker);
-//    }
 
     public void insert(final MailEntity mail, OnAsyncEventListener callback) {
 
         //Ajout dans mail en générant id du mail
-        DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference("mails");
-        mail.setIdMail(reference.push().getKey());
+//        DatabaseReference reference = FirebaseDatabase.getInstance()
+//                .getReference("mails");
+//        mail.setIdMail(reference.push().getKey());
         FirebaseDatabase.getInstance().getReference("mails")
                 .child(mail.getIdMail())
                 .setValue(mail, (databaseError, databaseReference) -> {
@@ -129,6 +115,21 @@ public class MailRepository {
     }
 
     public void delete(final MailEntity mail, OnAsyncEventListener callback) {
+        //Delete de l'id mail dans postworker
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("mails")
+                .child(mail.getIdMail())
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
+
+        //Delete du mail
         FirebaseDatabase.getInstance()
                 .getReference("mails")
                 .child(mail.getIdMail())
@@ -139,6 +140,7 @@ public class MailRepository {
                         callback.onSuccess();
                     }
                 });
+
     }
 }
 

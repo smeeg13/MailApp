@@ -52,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mail.setError(null);
         pwd.setError(null);
+
+        //Stores the new values entered
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
         boolean cancel = false;
@@ -77,9 +79,13 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("--------");
             System.out.println("## LOGIN NOT OK");
             System.out.println("--------");
+            focusView.requestFocus();
         } else {
             postworkerRepository.signIn(stmail, stpwd, task -> {
                 if (task.isSuccessful()) {
+                    System.out.println("--------");
+                    System.out.println("## LOGIN OK");
+                    System.out.println("--------");
                     Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                     startActivity(intent);
                     mail.setText("");

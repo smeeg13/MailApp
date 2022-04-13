@@ -99,7 +99,7 @@ public class BaseActivity extends AppCompatActivity {
             switch (item2.getItemId()) {
                 case AddNewBtn:
                      Bundle datas = new Bundle();
-                    datas.putInt("MailID", -1); //put -1 cause we want to create a new one
+                    datas.putString("MailID", null); //put null cause we want to create a new one
                     datas.putBoolean("Enable",true);
                     replaceFragment(new MailDetailFragment(), datas);
                     break;
@@ -131,14 +131,6 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void logout(){
         MyAlertDialog ab = new MyAlertDialog(this, "Log Out","You will be disconnected, are you sure ?","Yes, Log Out");
-
-        FirebaseAuth.getInstance().signOut();
-
-//        Intent intent = new Intent(this, LoginActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//        startActivity(intent);
-
         ab.backToLoginPage();
     }
     /**

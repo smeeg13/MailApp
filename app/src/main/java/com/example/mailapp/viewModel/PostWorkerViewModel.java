@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.BaseApplication;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -82,4 +83,5 @@ public class PostWorkerViewModel extends AndroidViewModel {
         ((BaseApplication) getApplication()).getPostworkerRepository()
                 .delete(client, callback);
     }
+
 }
