@@ -1,32 +1,37 @@
 package com.example.mailapp.database.repository;
 
-import android.app.Application;
-import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.MyDatabase;
-import com.example.mailapp.database.async.mail.CreateMail;
-import com.example.mailapp.database.async.mail.DeleteMail;
-import com.example.mailapp.database.async.mail.UpdateMail;
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.firebase.MailListLiveData;
+import com.example.mailapp.database.firebase.MailLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MailRepository {
-
-
+    private static final String TAG = "MailRepository";
     private static MailRepository instance;
 
-    private MailRepository(){
+    private MailRepository() {
 
     }
-    public static MailRepository getInstance(){
-        if(instance ==null){
-            synchronized (PostworkerRepository.class){
-                if (instance == null){
+
+    public static MailRepository getInstance() {
+        if (instance == null) {
+            synchronized (PostworkerRepository.class) {
+                if (instance == null) {
                     instance = new MailRepository();
                 }
             }
@@ -34,45 +39,108 @@ public class MailRepository {
         return instance;
     }
 
-    public LiveData<List<MailEntity>> getAllMails(Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAll();
+    public LiveData<MailEntity> getMailById(final String id) {
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("mails")
+                .child(id);
+        return new MailLiveData(reference);
     }
 
-    public LiveData<List<MailEntity>> getAllByStatus(final String status, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByStatus(status);
+    public LiveData<List<MailEntity>> getAllByPostworker(final String idWorker) {
+        ArrayList<String> idsmailsofWorker = new ArrayList<>();
+                DatabaseReference mailReference = FirebaseDatabase.getInstance()
+                .getReference("mails");
+
+        DatabaseReference workerReference = FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(idWorker)
+                .child("mails");
+        workerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childDataSnapshot : snapshot.getChildren()) {
+                    idsmailsofWorker.add(childDataSnapshot. getKey());
+                } //take back the key for the node Log.
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return new MailListLiveData(mailReference,idsmailsofWorker, idWorker);
     }
 
-    public LiveData<List<MailEntity>> getAllByMailType(final String mailType, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByMailType(mailType);
+    public void insert(final MailEntity mail, OnAsyncEventListener callback) {
+
+        //Ajout dans mail en générant id du mail
+//        DatabaseReference reference = FirebaseDatabase.getInstance()
+//                .getReference("mails");
+//        mail.setIdMail(reference.push().getKey());
+        FirebaseDatabase.getInstance().getReference("mails")
+                .child(mail.getIdMail())
+                .setValue(mail, (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                        Log.d(TAG, Messages.MAIL_CREATED.toString());
+                    }
+                });
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(mail.getIdPostWorker())
+                .child("mails")
+                .child(mail.getIdMail())
+                .setValue(mail.getIdMail(), (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                        Log.d(TAG, "mail add to postworker : "+ mail.getIdPostWorker());
+                    }
+                });
     }
 
-    public LiveData<List<MailEntity>> getAllByCity(final String city, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByCity(city);
+    public void update(final MailEntity mail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("mails")
+                .child(mail.getIdMail())
+                .updateChildren(mail.toMap(), (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
     }
 
-    public LiveData<MailEntity> getMailById(final int id, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getById(id);
-    }
+    public void delete(final MailEntity mail, OnAsyncEventListener callback) {
+        //Delete de l'id mail dans postworker
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("mails")
+                .child(mail.getIdMail())
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
 
-    public LiveData<List<MailEntity>> getAllByPostworker(final int idWorker, Application application) {
-        return ((BaseApplication) application).getDatabase().mailDao().getAllByPostworker(idWorker);
-    }
+        //Delete du mail
+        FirebaseDatabase.getInstance()
+                .getReference("mails")
+                .child(mail.getIdMail())
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
 
-    public LiveData<List<MailEntity>> getInProgressByPostworker(final int IdPostWorker,String status, Application application){
-        return ((BaseApplication) application).getDatabase().mailDao().getInProgressByPostworker(IdPostWorker,status);
-
-    }
-
-    public void insert(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new CreateMail(a, callback).execute(mail);
-    }
-
-    public void update(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new UpdateMail(a, callback).execute(mail);
-    }
-
-    public void delete(final MailEntity mail, OnAsyncEventListener callback, Application a) {
-        new DeleteMail(a, callback).execute(mail);
     }
 }
 

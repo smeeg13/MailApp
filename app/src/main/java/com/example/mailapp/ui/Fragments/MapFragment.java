@@ -1,60 +1,61 @@
 package com.example.mailapp.ui.Fragments;
 
 import android.Manifest;
-import android.content.SharedPreferences;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.viewModel.MailListViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MapFragment extends Fragment {
 
+    private static final String TAG = "MapFragment";
     private FloatingActionButton myPositionButton;
     private FusedLocationProviderClient client;
     private SupportMapFragment supportMapFragment;
-    private String workerConnectedEmailStr;
+    private String workerConnectedIdStr;
     private List<MailEntity> mailsInProgress;
+
+    private List<MailEntity> mailsAll;
     private ArrayList<LatLng> markersLatLng = new ArrayList<>();
     private MailListViewModel viewModel;
     List<String> addressesStrings;
-    private static final int REQUEST_CODE = 101;
-    private static final String ADDRESS = "Route de Roumaz";
-    private static final String ZIP = "1965";
-    private static final String CITY = "Savièse";
-    private int markerClicked =0;
+    private int markerClicked = 0;
+    private static ArrayList<String> citesAutorized;
+    private Object JsonArray;
 
 
     public MapFragment() {
@@ -78,105 +79,84 @@ public class MapFragment extends Fragment {
         myPositionButton = v.findViewById(R.id.myPositionButton);
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        String workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
-        int workerConnectedIdInt = Integer.parseInt(workerConnectedIdStr);
+        workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //Get back own mails NOT DONE
         MailListViewModel.Factory factory = new MailListViewModel.Factory(
-                getActivity().getApplication(), workerConnectedIdInt);
-        viewModel = ViewModelProviders.of(this, factory).get(MailListViewModel.class);
-        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
+                getActivity().getApplication(), workerConnectedIdStr);
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
+        viewModel.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
-                mailsInProgress = mailEntities;
-
-                //Todo Place marker for every mails in prog
+                mailsAll = mailEntities;
+                mailsInProgress = mailsAll;
+                mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
+                FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
                 addressesStrings = new ArrayList<>();
-                for (MailEntity mail : mailsInProgress){
-                    String coordinate = getCoordinates(mail.address+" "+mail.zip+" "+mail.city)+"-"+mail.idMail;
+                for (MailEntity mail : mailsInProgress) {
+                    String coordinate = getCoordinates(mail.getAddress() + " " + mail.getZip() + " " + mail.getCity()) + "-" + mail.getIdMail();
                     addressesStrings.add(coordinate);
                 }
-                supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(@NonNull GoogleMap googleMap) {
-                        String latitude =null;
-                        String longitude = null;
-                        String idmail = null;
-                        for (String coordinate : addressesStrings){
-                            if (coordinate.contains("-")) {
-                                // Split it.
-                                String[] parts = coordinate.split("-");
-                                 latitude = parts[0];
-                                 longitude = parts[1];
-                                 idmail = parts[2];
-                            }
-                            if(idmail!=null){
-                                LatLng latLng = new LatLng(Double.parseDouble(latitude),
-                                        Double.parseDouble(longitude));
+                supportMapFragment.getMapAsync(googleMap -> {
+                    String latitude = null;
+                    String longitude = null;
+                    String idmail = null;
+                    for (String coordinate : addressesStrings) {
+                        if (coordinate.contains("-")) {
+                            // Split it.
+                            String[] parts = coordinate.split("-");
+                            latitude = parts[0];
+                            longitude = parts[1];
+                            idmail = parts[2];
+                        }
+                        if (idmail != null) {
+                            LatLng latLng = new LatLng(Double.parseDouble(latitude),
+                                    Double.parseDouble(longitude));
 
-                                MarkerOptions options = new MarkerOptions().position(latLng)
-                                        .title("ID Mail : "+idmail);
+                            MarkerOptions options = new MarkerOptions().position(latLng)
+                                    .title("ID Mail : " + idmail);
 
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                                googleMap.addMarker(options);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            googleMap.addMarker(options);
+                        }
+                    }
+
+
+                    googleMap.setOnMarkerClickListener(marker -> {
+                        if (markerClicked == 0) {
+                            markerClicked++;
+                        } else {
+                            if (markerClicked == 1) {
+                                System.out.println("Marker Clicked Title: " + marker.getTitle());
+                                String idstr = marker.getTitle();
+                                String str = null;
+                                String id = null;
+                                if (idstr.contains(" : ")) {
+                                    // Split it.
+                                    String[] parts = idstr.split(" : ");
+                                    str = parts[0];
+                                    id = parts[1];
+                                }
+                                if (id != null) {
+                                    Bundle datas = new Bundle();
+                                    datas.putInt("MailID", Integer.parseInt(id));
+                                    datas.putBoolean("Enable", false);
+                                    MailDetailFragment newfragment = new MailDetailFragment();
+                                    newfragment.setArguments(datas);
+                                    getFragmentManager().beginTransaction()
+                                            .replace(R.id.HomeFrameLayout, newfragment)
+                                            .commit();
+                                }
+                                markerClicked = 0;
                             }
                         }
+                        return false;
+                    });
 
-
-                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(@NonNull Marker marker) {
-
-
-                                if(markerClicked ==0) {
-                                    markerClicked++;
-                                }else {
-                                    if (markerClicked == 1){
-                                        System.out.println("Marker Clicked Title: "+marker.getTitle());
-                                        String idstr = marker.getTitle();
-                                        String str = null;
-                                        String id = null;
-                                        if (idstr.contains(" : ")) {
-                                            // Split it.
-                                            String[] parts = idstr.split(" : ");
-                                            str = parts[0];
-                                            id = parts[1];
-                                        }
-                                        if(id!=null){
-                                            Bundle datas = new Bundle();
-                                            datas.putInt("MailID", Integer.parseInt(id));
-                                            datas.putBoolean("Enable", false);
-                                            MailDetailFragment newfragment = new MailDetailFragment();
-                                            newfragment.setArguments(datas);
-                                            getFragmentManager().beginTransaction()
-                                                    .replace(R.id.HomeFrameLayout, newfragment)
-                                                    .commit();
-                                        }
-                                        markerClicked =0;
-                                    }
-
-                                }
-
-
-
-                                return false;
-                            }
-                        });
-
-                    }
                 });
             }
         });
 
-        myPositionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCurrentLocation();
-            }
-        });
-
+        myPositionButton.setOnClickListener(view -> getCurrentLocation());
         return v;
     }
 
@@ -200,20 +180,21 @@ public class MapFragment extends Fragment {
             }
         });
     }
-    private String getCoordinates(String address){
+
+    private String getCoordinates(String address) {
         Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> addresses = null;
+        List<Address> addresses;
         String latLongStg = "";
-            try {
-                addresses = (geocoder.getFromLocationName(address, 1));
-                if (addresses != null){
-                    double latit = addresses.get(0).getLatitude();
-                    double longit = addresses.get(0).getLongitude();
-                    latLongStg = latit+"-"+longit;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            addresses = (geocoder.getFromLocationName(address, 1));
+            if (addresses != null) {
+                double latit = addresses.get(0).getLatitude();
+                double longit = addresses.get(0).getLongitude();
+                latLongStg = latit + "-" + longit;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return latLongStg;
 
@@ -223,8 +204,48 @@ public class MapFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               // getCurrentLocation();
+                getCurrentLocation();
             }
         }
+    }
+
+    static String getJsonFromAssets(Activity activity, String fileName) {
+        String jsonString;
+        try {
+            InputStream is = activity.getAssets().open(fileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            jsonString = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return jsonString;
+    }
+
+    public static boolean readCitiesAuthorizedFromJSON(String cityEntered,Activity activity) {
+        ArrayList<String> m_li = null;
+        boolean isValid = false;
+
+        try {
+            JSONArray m_jArry = new JSONArray(getJsonFromAssets(activity, "Cities_in_CH.json"));
+
+            for (int i = 0; i < m_jArry.length(); i++) {
+                JSONObject jo_inside = m_jArry.getJSONObject(i);
+                String city_name = jo_inside.getString("city");
+                Log.i("Detail Json :",city_name);
+                //Add your values in your `ArrayList` as below:
+                if (city_name.equals(cityEntered)) {
+                    isValid = true;
+                    System.out.println("The city entered : " + cityEntered + " correspond to : " + city_name);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(TAG+" :  "+e);
+        }
+        return isValid;
     }
 }

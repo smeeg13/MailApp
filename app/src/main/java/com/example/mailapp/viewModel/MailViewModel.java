@@ -1,7 +1,6 @@
 package com.example.mailapp.viewModel;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,9 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
-import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
 
 public class MailViewModel  extends AndroidViewModel {
@@ -22,27 +19,28 @@ public class MailViewModel  extends AndroidViewModel {
 
     private MailRepository repository;
 
-    private Application application;
 
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<MailEntity> observableMail;
 
     public MailViewModel(@NonNull Application application,
-                               final int idMail, MailRepository repository) {
+                               final String idMail, MailRepository repo) {
         super(application);
 
-        this.repository = repository;
+        repository = repo;
 
-        this.application = application;
 
         observableMail = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
         observableMail.setValue(null);
 
-        LiveData<MailEntity> mail = this.repository.getMailById(idMail, application);
+        if (idMail != null){
+            LiveData<MailEntity> mail = this.repository.getMailById(idMail);
+            // observe the changes of the client entity from the database and forward them
+            observableMail.addSource(mail, observableMail::setValue);
+        }
 
-        // observe the changes of the client entity from the database and forward them
-        observableMail.addSource(mail, observableMail::setValue);
+
     }
 
     /**
@@ -51,22 +49,22 @@ public class MailViewModel  extends AndroidViewModel {
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         @NonNull
-        private final Application application;
+        private final Application mApplication;
 
-        private final int mailID;
+        private final String MMailID;
 
         private final MailRepository repository;
 
-        public Factory(@NonNull Application application, int mailID) {
-            this.application = application;
-            this.mailID = mailID;
-            repository = ((BaseApplication)application).getMailRepository();
+        public Factory(@NonNull Application application, String mailID) {
+            mApplication = application;
+            MMailID = mailID;
+            repository = ((BaseApplication) application).getMailRepository();
         }
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new MailViewModel(application, mailID, repository);
+            return (T) new MailViewModel(mApplication, MMailID, repository);
         }
     }
 
@@ -78,14 +76,15 @@ public class MailViewModel  extends AndroidViewModel {
     }
 
     public void createMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.insert(mail, callback, application);
-    }
+        ((BaseApplication) getApplication()).getMailRepository()
+                .insert(mail, callback);    }
 
     public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.update(mail, callback, application);
-    }
+        ((BaseApplication) getApplication()).getMailRepository()
+                .update(mail, callback);    }
 
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
-        repository.delete(mail, callback, application);
+        ((BaseApplication) getApplication()).getMailRepository()
+                .delete(mail, callback);
     }
 }

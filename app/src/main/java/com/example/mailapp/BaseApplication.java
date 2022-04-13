@@ -2,7 +2,6 @@ package com.example.mailapp;
 
 import android.app.Application;
 
-import com.example.mailapp.database.MyDatabase;
 import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
 
@@ -13,10 +12,7 @@ public class BaseApplication extends Application {
         super.onCreate();
     }
 
-    public MyDatabase getDatabase() {
-        return MyDatabase.getInstance(this);
-    }
-
+ 
     public PostworkerRepository getPostworkerRepository() {
         return PostworkerRepository.getInstance();
     }

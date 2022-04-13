@@ -1,19 +1,24 @@
 package com.example.mailapp.database.repository;
 
-import android.app.Application;
+import static android.util.Log.INFO;
+
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.async.postworker.CreatePostWorker;
-import com.example.mailapp.database.async.postworker.DeletePostWorker;
-import com.example.mailapp.database.async.postworker.UpdatePostWorker;
+import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
+import com.example.mailapp.database.firebase.PostWorkerLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
-
-import java.util.List;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class PostworkerRepository {
+    private static final String TAG = "PostWorkerRepository";
 
     private static PostworkerRepository instance;
 
@@ -31,38 +36,118 @@ public class PostworkerRepository {
         return instance;
     }
 
-    public LiveData<List<PostWorkerEntity>> getAllPostworkers(Application application) {
-        return ((BaseApplication) application).getDatabase().postWorkerDao().getAll();
+
+    public void signIn(final String email, final String password,
+                       final OnCompleteListener<AuthResult> listener) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(listener);
     }
 
-    public LiveData<PostWorkerEntity> getPostworkerById(final int id, Application application) {
-        return ((BaseApplication) application).getDatabase().postWorkerDao().getById(id);
+    public LiveData<PostWorkerEntity> getPostWorker(final String workerId) {
+        DatabaseReference reference = FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(workerId);
+        return new PostWorkerLiveData(reference);
+    }
+
+    public void register(final PostWorkerEntity workerEntity, final OnAsyncEventListener callback) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                workerEntity.getEmail(),
+                workerEntity.getPassword()
+        ).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                workerEntity.setIdPostWorker(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                insert(workerEntity, callback);
+            } else {
+                callback.onFailure(task.getException());
+            }
+        });
     }
 
 
-    public LiveData<PostWorkerEntity> getPostworkerByEmail(final String email, Application application) {
-        return ((BaseApplication) application).getDatabase().postWorkerDao().getByEmail(email);
-
+    public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .setValue(postWorker, (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                        FirebaseAuth.getInstance().getCurrentUser().delete()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        callback.onFailure(null);
+                                        Log.d(TAG, "Rollback successful: User account deleted");
+                                    } else {
+                                        callback.onFailure(task.getException());
+                                        Log.d(TAG, "Rollback failed: signInWithEmail:failure",
+                                                task.getException());
+                                    }
+                                });
+                    } else {
+                        callback.onSuccess();
+                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
+                    }
+                });
+    }
+    public void insertANewMail(final String idWorker, final String idMail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(idWorker)
+                .child("mails")
+                .child(idMail)
+                .setValue(idMail, (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                        Log.d(TAG, "Rollback failed: signInWithEmail:failur");
+                    } else {
+                        callback.onSuccess();
+                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
+                    }
+                });
+    }
+    public void removeAMail(final String idOldWorker, final String idMail, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(idOldWorker)
+                .child("mails")
+                .child(idMail)
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
+        Log.println(Log.WARN,TAG,idMail+" Removed from "+idOldWorker);
     }
 
-    public LiveData<PostWorkerEntity> getPostworkerByName(final String firstname, final String lastname, Application application) {
-        return ((BaseApplication) application).getDatabase().postWorkerDao().getByName(firstname,lastname);
-    }
+    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(postWorker.getIdPostWorker())
+                .updateChildren(postWorker.toMap(), (databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
+        FirebaseAuth.getInstance().getCurrentUser().updatePassword(postWorker.getPassword())
+                .addOnFailureListener(
+                        e -> Log.d(TAG, "updatePassword failure!", e)
+                );    }
 
-    public void updatePostWorkerBackground(final String background, final String email){
-        updatePostWorkerBackground(background,email);
-    }
-
-    public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
-        new CreatePostWorker(application, callback).execute(postWorker);
-    }
-
-    public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback,Application application) {
-        new UpdatePostWorker(application, callback).execute(postWorker);
-    }
-
-    public void delete(final PostWorkerEntity postWorker, OnAsyncEventListener callback, Application application) {
-        new DeletePostWorker(application, callback).execute(postWorker);
+    public void delete(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
+        FirebaseDatabase.getInstance()
+                .getReference("postworkers")
+                .child(postWorker.getIdPostWorker())
+                .removeValue((databaseError, databaseReference) -> {
+                    if (databaseError != null) {
+                        callback.onFailure(databaseError.toException());
+                    } else {
+                        callback.onSuccess();
+                    }
+                });
     }
 
 }

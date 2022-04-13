@@ -16,6 +16,7 @@ import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Page For the Login
@@ -51,9 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mail.setError(null);
         pwd.setError(null);
+
+        //Stores the new values entered
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
-
         boolean cancel = false;
         View focusView = null;
 
@@ -77,52 +79,25 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("--------");
             System.out.println("## LOGIN NOT OK");
             System.out.println("--------");
+            focusView.requestFocus();
         } else {
-            postworkerRepository.getPostworkerByEmail(stmail, getApplication()).observe(LoginActivity.this, postWorkerEntity -> {
-                if (postWorkerEntity != null) {
-                    if (postWorkerEntity.getPassword().equals(stpwd)) {
-                        // We need an Editor object to make preference changes.
-                        // All objects are from android.context.Context
-                        SharedPreferences.Editor editor = getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-                        editor.putString(BaseActivity.PREFS_USER, postWorkerEntity.getEmail());
-                        editor.putString(BaseActivity.PREFS_ID_USER, String.valueOf(postWorkerEntity.getIdPostWorker()));
-                        editor.putString(BaseActivity.PREFS_BACKGROUND, String.valueOf(postWorkerEntity.getBackground()));
-                        editor.apply();
-
-                        if (postWorkerEntity.getBackground() == null){
-                            postWorkerEntity.setBackground("white");
-                        }
-
-                        if (postWorkerEntity.getBackground().equals("black")){
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        }else{
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        }
-
-                        Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        System.out.println("--------");
-                        System.out.println("## LOGIN OK");
-                        System.out.println(postWorkerEntity.toString());
-                        System.out.println("--------");
-
-                        mail.setText("");
-                        pwd.setText("");
-                    } else {
-                        showError(pwd, Messages.WRONG_INFO.toString());
-                        pwd.requestFocus();
-                        pwd.setText("");
-                    }
+            postworkerRepository.signIn(stmail, stpwd, task -> {
+                if (task.isSuccessful()) {
+                    System.out.println("--------");
+                    System.out.println("## LOGIN OK");
+                    System.out.println("--------");
+                    Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
+                    startActivity(intent);
+                    mail.setText("");
+                    pwd.setText("");
                 } else {
-                    showError(mail, Messages.WRONG_INFO.toString());
+                    mail.setError(getString(R.string.error_invalid_email));
                     mail.requestFocus();
                     pwd.setText("");
                 }
             });
         }
     }
-
     private void showError(EditText input, String s) {
         input.setError(s);
     }
