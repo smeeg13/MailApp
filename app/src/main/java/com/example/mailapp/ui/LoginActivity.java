@@ -16,6 +16,7 @@ import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Page For the Login
@@ -51,9 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         mail.setError(null);
         pwd.setError(null);
+
+        //Stores the new values entered
         String stmail = mail.getText().toString();
         String stpwd = pwd.getText().toString();
-
         boolean cancel = false;
         View focusView = null;
 
@@ -77,9 +79,13 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println("--------");
             System.out.println("## LOGIN NOT OK");
             System.out.println("--------");
+            focusView.requestFocus();
         } else {
             postworkerRepository.signIn(stmail, stpwd, task -> {
                 if (task.isSuccessful()) {
+                    System.out.println("--------");
+                    System.out.println("## LOGIN OK");
+                    System.out.println("--------");
                     Intent intent = new Intent(LoginActivity.this, BaseActivity.class);
                     startActivity(intent);
                     mail.setText("");
@@ -92,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
     }
-
     private void showError(EditText input, String s) {
         input.setError(s);
     }

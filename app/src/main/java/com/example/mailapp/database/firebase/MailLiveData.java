@@ -39,8 +39,6 @@ public class MailLiveData extends LiveData<MailEntity> {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             MailEntity entity = dataSnapshot.getValue(MailEntity.class);
-            entity.setIdMail(dataSnapshot.getKey());
-            entity.setIdPostWorker(worker);
             setValue(entity);
         }
 

@@ -12,9 +12,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mailapp.BaseApplication;
 import com.example.mailapp.R;
 import com.example.mailapp.adapter.RecyclerAdapterForAll;
 import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
@@ -160,10 +162,23 @@ public class AllMailFragment extends Fragment {
         String msg = "You're going to delete a mail : " + separator +
                 "ID of the Mail : " + mail.getIdMail() + separator + "Are you sure ?";
         final MyAlertDialog myAlert = new MyAlertDialog(getContext(), "Delete Mail", msg, "Yes, Delete");
-        myAlert.DeleteMail(mail, viewModelAllMail, view);
-        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-        alertDialog.setTitle("Delete Mail");
-        alertDialog.setCancelable(false);
+        boolean hasBeenDeleted = myAlert.DeleteMail(mail, viewModelAllMail, view);
+        System.out.println("@@@@@@@ Alert dialog for deleting the mail has been accepted : "+hasBeenDeleted);
+        if (hasBeenDeleted){
+            PostworkerRepository repo = ((BaseApplication)getActivity().getApplication()).getPostworkerRepository();
+            repo.removeAMail(FirebaseAuth.getInstance().getUid(), mail.getIdMail(), new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("Mail Removed of Postworker");
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+        }
+
     }
 
     public static String getTAG() {

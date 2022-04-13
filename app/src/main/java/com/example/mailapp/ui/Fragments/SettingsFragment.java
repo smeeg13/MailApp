@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +30,7 @@ public class SettingsFragment extends Fragment {
     private RadioButton buttonBlack;
     private SharedPreferences.Editor editor;
     private RadioGroup radioGroup;
+    private String owner;
 
 
     public SettingsFragment() {
@@ -48,7 +50,7 @@ public class SettingsFragment extends Fragment {
         settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
         sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
         editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-
+        owner = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         System.out.println("YOUR PREFERED COLOR IS : " + sharedPrefBackground);

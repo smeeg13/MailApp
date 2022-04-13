@@ -1,8 +1,8 @@
 package com.example.mailapp.ui.Fragments;
 
+import static com.example.mailapp.ui.Fragments.MapFragment.readCitiesAuthorizedFromJSON;
 import static com.example.mailapp.ui.RegisterActivity.showError;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,26 +25,27 @@ import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
-import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
-import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.MailViewModel;
-import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class MailDetailFragment extends Fragment {
     private static final String TAG = "MailFragment";
-    private static final String CENTRAL_EMAIL = "admin";
-    private static final int CENTRAL_ID = 3;
+    private static final String CENTRAL_EMAIL = "centrale@poste.ch";
+    private static final String CENTRAL_ID = "KiiQrVHOOUP9QRLQpyPHh83lcVg1";
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
     private static final String TODAY = DATE_FORMAT.format(Calendar.getInstance().getTime());
 
@@ -52,14 +53,13 @@ public class MailDetailFragment extends Fragment {
     private Boolean enableEdit = true;
     private Boolean isEditMode;
     private String idMailChooseFromList;
+
     private MailEntity currentMail;
-    private MailViewModel mailViewModel;
-    private String workerConnectedEmailStr;
+    private MailViewModel currentViewModel;
+
     private String workerConnectedIdStr;
-    private PostWorkerEntity centralAccount;
     private View v;
     private PostworkerRepository repository;
-
 
     //UI variables
     private final ArrayList<EditText> editTexts = new ArrayList<>();
@@ -67,9 +67,10 @@ public class MailDetailFragment extends Fragment {
     private RadioGroup shipTypeRGroup, mailTypeRGroup;
     private RadioButton letter, packages, amail, bmail, recmail;
     private String mailTypeChoosed, shipTypeChoosed, shipDateStr;
-    private TextView postworkerAssigned, idnumber, idnumTextStr, dueDate;
+    private TextView  idnumber, idnumTextStr, dueDate;
     private Switch assignedToMe;
     private FloatingActionButton editAddButton, deleteButton, backHomeBtn;
+
 
     public MailDetailFragment() {
     }
@@ -86,25 +87,9 @@ public class MailDetailFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_mail_detail, container, false);
 
         //Take back the postworker connected
-        SharedPreferences settings = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0);
-        workerConnectedEmailStr = settings.getString(BaseActivity.PREFS_USER, null);
-        workerConnectedIdStr = settings.getString(BaseActivity.PREFS_ID_USER, null);
+        workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
         initialize(v);
 
-        //Instantiate actions for buttons
-        editAddButton.setOnClickListener(v -> changes());
-        deleteButton.setOnClickListener(view -> deleteMail());
-        backHomeBtn.setOnClickListener(view -> BackHome());
-        shipTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(shipTypeRGroup));
-        mailTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(mailTypeRGroup));
-        assignedToMe.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            //Log.v("Switch assigned to State=", ""+isChecked);
-            if (isChecked) {//IF assign to me
-                postworkerAssigned.setText(workerConnectedEmailStr);
-            } else {
-                postworkerAssigned.setText(CENTRAL_EMAIL);
-            }
-        });
 
         //Take back the id of the mail we Choose on the list
         Bundle data = getArguments();
@@ -115,7 +100,6 @@ public class MailDetailFragment extends Fragment {
         }
         enableEdit(putEnable);
         editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
-
 
         //Decide if we add or edit depending on if we received a valid mail id or not
         if (idMailChooseFromList == null) { //We want to create one
@@ -133,19 +117,29 @@ public class MailDetailFragment extends Fragment {
             Toast.makeText(getActivity().getBaseContext(), "Now you can Edit the mail choosed !", Toast.LENGTH_SHORT).show();
             isEditMode = true;
         }
-
+         AtomicReference<String> oldWorkerID = new AtomicReference<>();
         //Take back the mail choosed and display the infos
         MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                getActivity().getApplication(),  FirebaseAuth.getInstance().getCurrentUser().getUid());
-        mailViewModel = new ViewModelProvider(requireActivity(), factory2).get(MailViewModel.class);
+                getActivity().getApplication(),  idMailChooseFromList);
+        currentViewModel = new ViewModelProvider(requireActivity(), factory2).get(MailViewModel.class);
         if (isEditMode) {
-            mailViewModel.getMail().observe(getActivity(), mailEntity -> {
+            currentViewModel.getMail().observe(getActivity(), mailEntity -> {
                 if (mailEntity != null) {
                     currentMail = mailEntity;
+                    currentMail.setIdMail(idMailChooseFromList);
+                   oldWorkerID.set(currentMail.getIdPostWorker());
                     initializeFieldWithMailData(currentMail);
                 }
             });
         }
+
+        //Instantiate actions for buttons
+        editAddButton.setOnClickListener(v -> changes(oldWorkerID));
+        deleteButton.setOnClickListener(view -> deleteMail());
+        backHomeBtn.setOnClickListener(view -> BackHome());
+        shipTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(shipTypeRGroup));
+        mailTypeRGroup.setOnCheckedChangeListener(new MyOncheckChangeListener(mailTypeRGroup));
+
         return v;
     }
 
@@ -154,7 +148,6 @@ public class MailDetailFragment extends Fragment {
         getFragmentManager().beginTransaction()
                 .replace(R.id.HomeFrameLayout, new HomeFragment())
                 .commit();
-
     }
 
     public void initialize(View v) {
@@ -182,8 +175,6 @@ public class MailDetailFragment extends Fragment {
         idnumTextStr = v.findViewById(R.id.MailIdStrTextView);
         assignedToMe = v.findViewById(R.id.DetailAssignedToSwitch);
         assignedToMe.setChecked(true);
-        postworkerAssigned = v.findViewById(R.id.DetailAssignToTextView);
-        postworkerAssigned.setText(workerConnectedEmailStr);
         dueDate = v.findViewById(R.id.DetailShipDateEditText);
         editAddButton = v.findViewById(R.id.DetailEditButton);
         deleteButton = v.findViewById(R.id.DetailDeleteButton);
@@ -193,39 +184,52 @@ public class MailDetailFragment extends Fragment {
 
     }
 
-    private void changes() {
+    private void changes(AtomicReference<String> oldWorkerID) {
         if (isEditMode) //Update of a given mail
 
-            editMode();
+            editMode(oldWorkerID);
         else { //Creation of a new mail
             if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup, packages,
                     dueDate)) {
                 Toast.makeText(getActivity().getBaseContext(), Messages.EMPTY_FIELDS.toString(), Toast.LENGTH_SHORT).show();
             } else {
                 MailEntity newMail = takeBackInfoIntoMail();
-                newMail.setStatus("In Progress");
-                newMail.setReceiveDate(TODAY);
-                mailViewModel.createMail(newMail, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "## Create Mail : success");
-                        Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
-                        replaceFragment(new HomeFragment()); //Go back to home after
-                        getActivity().getViewModelStore().clear();
+                //Check on City
+                if (!readCitiesAuthorizedFromJSON(city.getText().toString(),getActivity())) {
+                    city.setError("City doesn't exist in Swiss");
+                    System.out.println("The city name entered was : "+newMail.getCity());
+                } else {
+                    newMail.setStatus("In Progress");
+                    newMail.setReceiveDate(TODAY);
 
-                    }
+                    DatabaseReference reference = FirebaseDatabase.getInstance()
+                            .getReference("mails");
+                    newMail.setIdMail(reference.push().getKey());
+                    assignToAWorker(newMail);
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "## Create Mail : failure", e);
-                        Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_CREATED_FAILED.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                    currentViewModel.createMail(newMail, new OnAsyncEventListener() {
+                        @Override
+                        public void onSuccess() {
+
+                            Log.d(TAG, "## Create Mail : success");
+                            Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                            replaceFragment(new HomeFragment()); //Go back to home after
+                            getActivity().getViewModelStore().clear();
+
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.d(TAG, "## Create Mail : failure", e);
+                            Toast.makeText(getActivity(), Messages.MAIL_CREATED_FAILED.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
         }
     }
 
-    public void editMode() {
+    public void editMode(AtomicReference<String> oldWorkerID) {
         if (!enableEdit) {
             if (checkEmpty(editTexts, mailTypeRGroup, shipTypeRGroup, packages,
                     dueDate)) {
@@ -234,12 +238,17 @@ public class MailDetailFragment extends Fragment {
                 enableEdit(false);
                 //Save all the modification to the database
                 currentMail = takeBackInfoIntoMail();
+                reAssignToAWorker(currentMail, String.valueOf(oldWorkerID));
                 currentMail.setStatus("In Progress");
                 currentMail.setReceiveDate(TODAY);
-                mailViewModel.updateMail(currentMail, new OnAsyncEventListener() {
+                currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "## Update Mail: success");
+                        editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
+                        enableEdit = true;
+                        currentMail = null;
+
                     }
 
                     @Override
@@ -247,9 +256,7 @@ public class MailDetailFragment extends Fragment {
                         Log.d(TAG, "## Update Mail: failure", e);
                     }
                 });
-                editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
-                enableEdit = true;
-
+                getActivity().getViewModelStore().clear();
             }
         } else {
             //   currentMail.setIdMail(Integer.parseInt(null));
@@ -267,7 +274,7 @@ public class MailDetailFragment extends Fragment {
         builder.setTitle("Delete Mail ");
         builder.setMessage("Are you sure you want to delete the mail : " + idnumber.getText().toString() + " ? ");
         builder.setPositiveButton(android.R.string.yes, (dialog, which) ->
-                mailViewModel.deleteMail(mail, new OnAsyncEventListener() {
+                currentViewModel.deleteMail(mail, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "## Delete Mail: success");
@@ -282,7 +289,7 @@ public class MailDetailFragment extends Fragment {
                     }
                 }));
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-            //Do Noting
+            //Do Nothing
         });
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -302,7 +309,6 @@ public class MailDetailFragment extends Fragment {
             bmail.setEnabled(true);
             recmail.setEnabled(true);
             assignedToMe.setEnabled(true);
-            postworkerAssigned.setEnabled(true);
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
         } else {
             mailFrom.setEnabled(false);
@@ -317,28 +323,72 @@ public class MailDetailFragment extends Fragment {
             bmail.setEnabled(false);
             recmail.setEnabled(false);
             assignedToMe.setEnabled(true);
-            postworkerAssigned.setEnabled(false);
             assignedToMe.setEnabled(false);
             editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
         }
     }
 
-//Insert the mail information inside a new mail Entity
-    private MailEntity takeBackInfoIntoMail() {
-        MailEntity newMail = new MailEntity();
+    private void reAssignToAWorker(MailEntity mail, String oldWorkerID){
+
+        if (assignedToMe.isChecked()) {
+            mail.setIdPostWorker(workerConnectedIdStr);
+        } else {
+            PostworkerRepository repo = ((BaseApplication)getActivity().getApplication()).getPostworkerRepository();
+            mail.setIdPostWorker(CENTRAL_ID);
+
+            repo.insertANewMail(CENTRAL_ID, mail.getIdMail(), new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                    if (!Objects.equals(oldWorkerID, mail.getIdPostWorker())){
+                    repo.removeAMail(workerConnectedIdStr, mail.getIdMail(), new OnAsyncEventListener() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("Success ; Removing the mail from the worker : "+workerConnectedIdStr);
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            System.out.println("Failed removing the mail from postworker : "+workerConnectedIdStr);
+                        }
+                    });
+                }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    System.out.println("Failed adding the mail to postworker : "+CENTRAL_ID);
+                }
+            });
+
+
+        }
+    }
+
+    private void assignToAWorker(MailEntity newMail){
         if (assignedToMe.isChecked()) {
             newMail.setIdPostWorker(workerConnectedIdStr);
         } else {
-            //TODO GET THE CENTRAL
-            PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), CENTRAL_EMAIL);
-            PostWorkerViewModel viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
-            viewModel.getClient().observe(getActivity(), entity -> {
-                if (entity != null) {
-                    centralAccount = entity;
-                    newMail.setIdPostWorker(centralAccount.getIdPostWorker());
+            PostworkerRepository repo = ((BaseApplication)getActivity().getApplication()).getPostworkerRepository();
+            newMail.setIdPostWorker(CENTRAL_ID);
+
+            repo.insertANewMail(CENTRAL_ID, newMail.getIdMail(), new OnAsyncEventListener() {
+                @Override
+                public void onSuccess() {
+                   }
+
+                @Override
+                public void onFailure(Exception e) {
+                    System.out.println("Failed adding the mail to postworker : "+CENTRAL_ID);
                 }
             });
         }
+    }
+
+//Insert the mail information inside a new mail Entity
+    private MailEntity takeBackInfoIntoMail() {
+        final MailEntity newMail = new MailEntity();
+        newMail.setIdMail(idMailChooseFromList);
+
         newMail.setMailFrom(mailFrom.getText().toString());
         newMail.setMailTo(mailTo.getText().toString());
         newMail.setMailType(mailTypeChoosed);
@@ -386,6 +436,7 @@ public class MailDetailFragment extends Fragment {
         address.setText(mail.getAddress());
         zip.setText(mail.getZip());
         city.setText(mail.getCity());
+
     }
 
     /**

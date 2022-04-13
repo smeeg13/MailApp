@@ -185,15 +185,15 @@ public class MailEntity {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("mailfrom", mailFrom);
-        result.put("mailto", mailTo);
+        result.put("mailFrom", mailFrom);
+        result.put("mailTo", mailTo);
         result.put("address", address);
         result.put("city", city);
         result.put("zip", zip);
-        result.put("mailtype", mailType);
+        result.put("mailType", mailType);
         result.put("weight", weight);
-        result.put("shippingtype", shippingType);
-        result.put("shippingdate", shippedDate);
+        result.put("shippingType", shippingType);
+        result.put("shippingDate", shippedDate);
         result.put("receiveDate", receiveDate);
         result.put("status", status);
 

@@ -24,10 +24,10 @@ public class MailViewModel  extends AndroidViewModel {
     private final MediatorLiveData<MailEntity> observableMail;
 
     public MailViewModel(@NonNull Application application,
-                               final String idMail, MailRepository repository) {
+                               final String idMail, MailRepository repo) {
         super(application);
 
-        this.repository = repository;
+        repository = repo;
 
 
         observableMail = new MediatorLiveData<>();
@@ -49,22 +49,22 @@ public class MailViewModel  extends AndroidViewModel {
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         @NonNull
-        private final Application application;
+        private final Application mApplication;
 
-        private final String mailID;
+        private final String MMailID;
 
         private final MailRepository repository;
 
         public Factory(@NonNull Application application, String mailID) {
-            this.application = application;
-            this.mailID = mailID;
-            repository = ((BaseApplication)application).getMailRepository();
+            mApplication = application;
+            MMailID = mailID;
+            repository = ((BaseApplication) application).getMailRepository();
         }
 
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new MailViewModel(application, mailID, repository);
+            return (T) new MailViewModel(mApplication, MMailID, repository);
         }
     }
 

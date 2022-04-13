@@ -9,6 +9,19 @@ import java.util.Map;
 
 
 public class PostWorkerEntity implements Comparable{
+    private String idPostWorker;
+
+    private String firstname;
+    private String lastname;
+    private String phone;
+    private String email;
+    private String password;
+    private String address;
+    private String zip;
+    private String city;
+    private String background;
+    //private ArrayList<MailEntity> mails;
+
 
     public PostWorkerEntity(String firstname, String lastname, String phone, @NonNull String email, String password, String address, String zip, String city) {
         setFirstname(firstname);
@@ -21,24 +34,8 @@ public class PostWorkerEntity implements Comparable{
        setCity(city);
     }
 
-
-    private String idPostWorker;
-
-    private String firstname;
-
-    private String lastname;
-    private String phone;
-    private String email;
-    private String password;
-
-    private String address;
-
-    private String zip;
-
-    private String city;
-
-    private String background;
-
+    public PostWorkerEntity() {
+    }
 
     @Exclude
     public String getIdPostWorker() {
@@ -156,6 +153,7 @@ public class PostWorkerEntity implements Comparable{
     @Exclude
     public Map<String,Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
+
         result.put("firstname", firstname);
         result.put("lastname", lastname);
         result.put("email", email);

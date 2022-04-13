@@ -16,6 +16,7 @@ import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.viewModel.MailListViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MyAlertDialog {
 
@@ -41,11 +42,11 @@ public class MyAlertDialog {
             System.out.println("KILL PROCESS DONE");
             System.out.println(" by the User");
             System.out.println("------------------------");
+            FirebaseAuth.getInstance().signOut();
+            System.out.println("USER : DISCONNECTED");
             //if you want to kill app . from other then your main avtivity.(Launcher)
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
-            //if you want to finish just current activity
-            // LoginActivity.this.finish();
         });
         myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
         myAlert.show();
@@ -58,32 +59,36 @@ public class MyAlertDialog {
             System.out.println("LOGOUT  DONE");
             System.out.println(" by the User");
             System.out.println("------------------------");
-            SharedPreferences.Editor editor = context.getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-            editor.remove(BaseActivity.PREFS_NAME);
-            editor.remove(BaseActivity.PREFS_USER);
-            editor.apply();
+            FirebaseAuth.getInstance().signOut();
+            System.out.println("USER : DISCONNECTED");
 
             Intent intent= new  Intent(context, LoginActivity.class);
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             context.startActivity(intent);
+            System.out.println("BACK TO LOGIN PAGE");
+
         });
         myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
         myAlert.show();
     }
 
-    public void DeleteMail(MailEntity mail, MailListViewModel viewModel, View view){
+    public boolean DeleteMail(MailEntity mail, MailListViewModel viewModel, View view){
+        final boolean[] isDeleted = {false};
         myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {
             viewModel.deleteMail(mail, new OnAsyncEventListener() {
                 @Override
                 public void onSuccess() {
                     System.out.println( "deleteAccount: success");
+                    isDeleted[0] =true;
+
                 }
                 @Override
                 public void onFailure(Exception e) {
                     System.out.println("deleteAccount: failure ERROR : ");
                     System.out.println(e);
+                    isDeleted[0] =false;
                 }
             });
             Toast.makeText(context.getApplicationContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_LONG).show();
@@ -92,6 +97,7 @@ public class MyAlertDialog {
         myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
         myAlert.setView(view);
         myAlert.show();
+        return isDeleted[0];
     }
 
 

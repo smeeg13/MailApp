@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "690784325708",
+    "firebase_url": "https://application-mail-delivery-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "application-mail-delivery",
     "storage_bucket": "application-mail-delivery.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "690784325708-1kqi1i84s7n70n6chkmdo45d6rt5achd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mailapp",
+            "certificate_hash": "2311aa3f8af5ce7e7421c153d8b3500af13fe5dd"
+          }
+        },
         {
           "client_id": "690784325708-e0riei916pje35jot43rs7j3mb4h5uf1.apps.googleusercontent.com",
           "client_type": 3

@@ -29,6 +29,7 @@ import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -42,15 +43,14 @@ public class MyAccountFragment extends Fragment {
     private Button inputDeleteButton;
     private Boolean aBoolean = true;
     private View v;
-
     private String firstname, lastname;
     private ArrayList<TextView> inputs = new ArrayList<>();
     private PostWorkerEntity postWorkerEntity;
-    private PostWorkerViewModel postWorkerViewModel;
     private MailRepository mailRepository;
-    private int numberOfMails=0;
+    private int numberOfMails = 0;
     private ArrayList<MailEntity> mails;
     private PostworkerRepository postworkerRepository;
+    private PostWorkerViewModel viewModel;
 
     public MyAccountFragment() {
         // Required empty public constructor
@@ -84,7 +84,7 @@ public class MyAccountFragment extends Fragment {
                 inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
                 aBoolean = true;
 
-                postWorkerViewModel.updatePostWorker(postWorkerEntity, new OnAsyncEventListener() {
+                postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
                         System.out.println(Messages.ACCOUNT_UPDATED);
@@ -97,8 +97,6 @@ public class MyAccountFragment extends Fragment {
                 });
 
             }
-
-
         }
     }
 
@@ -108,8 +106,8 @@ public class MyAccountFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_my_account, container, false);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
 
-
         initialize(v);
+
         inputfloatingEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,11 +172,11 @@ public class MyAccountFragment extends Fragment {
                             @Override
                             public void onSuccess() {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
-                                numberOfMails ++;
+                                numberOfMails++;
 
-                                if (numberOfMails == mailEntities.size()){
-                                    System.out.println("number of mails variable :"+numberOfMails);
-                                    postWorkerViewModel.deleteClient(postWorkerEntity, new OnAsyncEventListener() {
+                                if (numberOfMails == mailEntities.size()) {
+                                    System.out.println("number of mails variable :" + numberOfMails);
+                                  /*  postWorkerViewModel.deleteClient(postWorkerEntity, new OnAsyncEventListener() {
                                         @Override
                                         public void onSuccess() {
                                             Log.d(TAG, "deleteUser: success");
@@ -190,8 +188,13 @@ public class MyAccountFragment extends Fragment {
                                             Log.d(TAG, "deleteUser: failure", e);
                                         }
                                     });
+                                     */
+
                                 }
+
+
                             }
+
                             @Override
                             public void onFailure(Exception e) {
                                 System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
@@ -226,8 +229,6 @@ public class MyAccountFragment extends Fragment {
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
 
-
-
         //inputs opened for modifications
         inputFirstnameAndLastname = v.findViewById(R.id.AccountFirstnameLastnameTitle);
         inputEmail = v.findViewById(R.id.AccountEmailTextView);
@@ -245,39 +246,46 @@ public class MyAccountFragment extends Fragment {
         inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
         inputs.add(inputConfirmPassword);
 
+        // owner = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-        postWorkerViewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
-        postWorkerViewModel.getClient().observe(getActivity(), postworker -> {
+        //  String accountId = getActivity().getIntent().getStringExtra("accountId");
+        //  FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //  System.out.println("User firebaseUser : "+ user.getDisplayName()+" "+user.getEmail()+" "+user.getPhoneNumber());
+        // System.out.println("owner is "+ owner);
+        //  System.out.println("accountID is "+accountId);
+        //  System.out.println("PostWorker get uid "+FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-            if (postworker != null) {
+        PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(),
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                postWorkerEntity = postworker;
 
-                firstname = postWorkerEntity.getFirstname();
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
 
-                lastname = postWorkerEntity.getLastname();
+        viewModel.getClient().observe(getActivity(), postWorker -> {
+            if (postWorker != null) {
+                postWorkerEntity = postWorker;
+
+                firstname = postWorker.getFirstname();
+
+                lastname = postWorker.getLastname();
 
                 inputFirstnameAndLastname.setText(firstname + " " + lastname);
 
-                inputEmail.setText(postWorkerEntity.getEmail());
+                inputEmail.setText(postWorker.getEmail());
 
-                inputPassword.setText(postWorkerEntity.getPassword());
+                inputPassword.setText(postWorker.getPassword());
 
-                inputConfirmPassword.setText(postWorkerEntity.getPassword());
+                inputConfirmPassword.setText(postWorker.getPassword());
 
-                inputPhone.setText(postWorkerEntity.getPhone());
+                inputPhone.setText(postWorker.getPhone());
 
-                inputAddress.setText(postWorkerEntity.getAddress());
+                inputAddress.setText(postWorker.getAddress());
 
-                inputZip.setText(postWorkerEntity.getZip());
+                inputZip.setText(postWorker.getZip());
 
-                inputLocation.setText(postWorkerEntity.getCity());
-
+                inputLocation.setText(postWorker.getCity());
             }
         });
-
-
     }
 
     public boolean InputsAreGood() {

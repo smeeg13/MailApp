@@ -22,11 +22,10 @@ import java.util.ArrayList;
  */
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "REGISTER";
+    private static final String TAG = "RegisterActivity";
 
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
-    private ArrayList<EditText> inputs = new ArrayList<>();
-    private TextView btnLogin;
+    private final ArrayList<EditText> inputs = new ArrayList<>();
 
     private PostworkerRepository repository;
 
@@ -62,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         inputs.add(inputConfirmPwd);
 
         //Creation of the link back to Login Page
-        btnLogin = findViewById(R.id.RegisterLoginBtn);
+        TextView btnLogin = findViewById(R.id.RegisterLoginBtn);
         // ONCLICK LOGIN BUTTON
         btnLogin.setOnClickListener(view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
@@ -83,8 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         String stpwd = inputPassword.getText().toString();
 
 
-        //Check if any is empty or if pwd & email are invalid
-        //& if the 2 pwd entered are same
+        //Check if any is empty or if pwd & email are invalid & if the 2 pwd entered are same
         if (!InputsAreGood()){
             Toast.makeText(getApplicationContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
         }
@@ -110,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void setResponse(Boolean response) {
         if (response) {
-            Toast.makeText(this,Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
+            Toast.makeText(getApplication(),Messages.ACCOUNT_CREATED.toString(),Toast.LENGTH_LONG);
             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
             startActivity(intent);
         } else {
@@ -155,7 +153,6 @@ public class RegisterActivity extends AppCompatActivity {
         for (EditText in : inputs) {
             if (in.getText().toString().isEmpty()) {
                 showError(in, "Can not be empty");
-                //If empty add 1 to IsEmpty
                 IsEmpty++;
             }
         }
@@ -182,41 +179,20 @@ public class RegisterActivity extends AppCompatActivity {
      */
     public boolean CheckPasswordWeak(String password) {
         boolean isWeak = true;
-        int passwordLength = 8, upChars = 0, lowChars = 0;
-        int special = 0, digits = 0;
-        char ch;
+        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}";
+        boolean matches = password.matches(pattern);
 
-        int totalChar = password.length();
-        if (totalChar < passwordLength) {
-            System.out.println("\n## The Password is invalid !");
-            return true;
-        } else {
-            for (int i = 0; i < totalChar; i++) {
-                ch = password.charAt(i);
-                if (Character.isUpperCase(ch))
-                    upChars = 1;
-                else if (Character.isLowerCase(ch))
-                    lowChars = 1;
-                else if (Character.isDigit(ch))
-                    digits = 1;
-                else
-                    special = 1;
-            }
-        }
-        if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
+        if (matches){
+            isWeak=false;
             System.out.println("\n## The Password is Strong.");
-
-            isWeak = false;
-        } else {
+        }
+        else {
+            isWeak=true;
             System.out.println("\n## The Password is Weak.");
             showError(inputPassword, "Password too weak");
         }
-
-
         return isWeak;
     }
-
-
 
 
     /**

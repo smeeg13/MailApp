@@ -51,9 +51,7 @@ public class RecyclerAdapterForAll<T> extends RecyclerView.Adapter<RecyclerAdapt
     public RecyclerAdapterForAll(RecyclerViewItemClickListener listener) {
         this.listener = listener;
     }
-
-    public RecyclerAdapterForAll( ) {
-    }
+    
 
     @Override
     public RecyclerAdapterForAll.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
