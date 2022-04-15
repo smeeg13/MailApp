@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,12 +25,10 @@ import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
 import com.example.mailapp.viewModel.MailListViewModel;
-import com.example.mailapp.viewModel.MailViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class HomeFragment extends Fragment {
@@ -48,7 +45,6 @@ public class HomeFragment extends Fragment {
     private RecyclerAdapter<MailEntity> adapter;
 
     private MailRepository mailRepository;
-    private MailViewModel currentViewModel;
 
 
 
@@ -92,7 +88,6 @@ public class HomeFragment extends Fragment {
                 } else { //Clicked on done
                     System.out.println("btn clicked done");
                     UpdateStatusMailChoose(position);
-
                 }
             }
 
@@ -107,49 +102,20 @@ public class HomeFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        AtomicInteger sizeMailInProg = new AtomicInteger(-1);
-        AtomicInteger sizeAll = new AtomicInteger(-1);
-
-
         MailListViewModel.Factory factory2 = new MailListViewModel.Factory(
                 getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
         viewModelAllMail = new ViewModelProvider(requireActivity(), factory2).get(MailListViewModel.class);
         viewModelAllMail.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsAll = mailEntities;
-                sizeAll.set(mailsAll.size());
-                updateProgressBar(mailsAll.size(), sizeMailInProg.get());
-                System.out.println("|||||||||||||||||||||||||||||");
-                System.out.println(mailsAll.size());
-
 
                 mailsInProgress = mailsAll;
                 mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
-                sizeMailInProg.set(mailsInProgress.size());
                 adapter.setMdata(mailsInProgress);
 
-                updateProgressBar(sizeAll.get(), mailsInProgress.size());
-
+                updateProgressBar(mailsAll.size(), mailsInProgress.size());
             }
         });
-
-//        //Get back own mails NOT DONE
-//        MailListViewModel.Factory factory = new MailListViewModel.Factory(
-//                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
-//        viewModel = new ViewModelProvider(requireActivity(), factory).get(MailListViewModel.class);
-//        viewModel.getOwnMailsInProgress().observe(getViewLifecycleOwner(), mailEntities -> {
-//            if (mailEntities != null) {
-//                mailsInProgress = mailEntities;
-//                for (MailEntity mail : mailsInProgress){
-//                    if (!mail.getStatus().equals("In Progress"))
-//                        mailsInProgress.remove(mail);
-//                }
-//                sizeMailInProg.set(mailsInProgress.size());
-//                adapter.setMdata(mailsInProgress);
-//
-//                updateProgressBar(sizeAll.get(),mailsInProgress.size());
-//            }
-//        });
 
         HomeSeeAllMailsBtn.setOnClickListener(view -> {
             System.out.println("## go to all mail Frag");
@@ -157,12 +123,10 @@ public class HomeFragment extends Fragment {
                     .replace(R.id.HomeFrameLayout, new AllMailFragment())
                     .commit();
         });
-
         return v;
     }
 
     private void UpdateStatusMailChoose(int position) {
-
         MailEntity currentMail = new MailEntity();
         currentMail.setIdMail(mailsInProgress.get(position).getIdMail());
         currentMail = mailsInProgress.get(position);
@@ -173,21 +137,18 @@ public class HomeFragment extends Fragment {
             public void onSuccess() {
                 System.out.println(Messages.MAIL_UPDATED);
             }
-
             @Override
             public void onFailure(Exception e) {
                 System.out.println(Messages.MAIL_UPDATE_FAILED);
-
             }
         });
-
     }
 
     private void updateProgressBar(int All, int inProg) {
         HomeProgressBar.setMax(All);
         HomeProgressBar.setMin(0);
         HomeProgressBar.setProgress(All - inProg);
-        System.out.println("Todo mail : " + All);
+        System.out.println("Todo mail All : " + All);
         System.out.println("Total mail done (progression) : " + HomeProgressBar.getProgress());
         ProgressPercent.setText(HomeProgressBar.getProgress() + " / " + All);
     }
@@ -229,5 +190,4 @@ public class HomeFragment extends Fragment {
     public static String getTAG() {
         return TAG;
     }
-
 }

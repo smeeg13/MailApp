@@ -212,9 +212,9 @@ public class MailDetailFragment extends Fragment {
                         public void onSuccess() {
 
                             Log.d(TAG, "## Create Mail : success");
-                            Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(requireActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
                             replaceFragment(new HomeFragment()); //Go back to home after
-                            getActivity().getViewModelStore().clear();
+                            Objects.requireNonNull(getActivity()).getViewModelStore().clear();
 
                         }
 
@@ -238,25 +238,29 @@ public class MailDetailFragment extends Fragment {
                 enableEdit(false);
                 //Save all the modification to the database
                 currentMail = takeBackInfoIntoMail();
-                reAssignToAWorker(currentMail, String.valueOf(oldWorkerID));
-                currentMail.setStatus("In Progress");
-                currentMail.setReceiveDate(TODAY);
-                currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "## Update Mail: success");
-                        editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
-                        enableEdit = true;
-                        currentMail = null;
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d(TAG, "## Update Mail: failure", e);
-                    }
-                });
-                getActivity().getViewModelStore().clear();
+                //Check on City
+                if (!readCitiesAuthorizedFromJSON(city.getText().toString(),getActivity())) {
+                    city.setError("City doesn't exist in Swiss");
+                    System.out.println("The city name entered was : "+currentMail.getCity());
+                } else {
+                    reAssignToAWorker(currentMail, String.valueOf(oldWorkerID));
+                    currentMail.setStatus("In Progress");
+                    currentMail.setReceiveDate(TODAY);
+                    currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "## Update Mail: success");
+                            editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
+                            enableEdit = true;
+                            currentMail = null;
+                        }
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.d(TAG, "## Update Mail: failure", e);
+                        }
+                    });
+                    getActivity().getViewModelStore().clear();
+                }
             }
         } else {
             //   currentMail.setIdMail(Integer.parseInt(null));

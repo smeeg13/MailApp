@@ -73,9 +73,6 @@ public class MailRepository {
     public void insert(final MailEntity mail, OnAsyncEventListener callback) {
 
         //Ajout dans mail en générant id du mail
-//        DatabaseReference reference = FirebaseDatabase.getInstance()
-//                .getReference("mails");
-//        mail.setIdMail(reference.push().getKey());
         FirebaseDatabase.getInstance().getReference("mails")
                 .child(mail.getIdMail())
                 .setValue(mail, (databaseError, databaseReference) -> {

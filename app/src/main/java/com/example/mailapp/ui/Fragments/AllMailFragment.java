@@ -6,16 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mailapp.BaseApplication;
+import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.adapter.RecyclerAdapterForAll;
 import com.example.mailapp.database.entities.MailEntity;
+import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -40,6 +41,10 @@ public class AllMailFragment extends Fragment {
     private MailViewModel currentViewModel;
     private MailEntity currentMail;
     private MailListViewModel viewModelAllMail;
+    private String idWorkerConnected;
+
+    private MailRepository mailRepository;
+
 
     public AllMailFragment() {
         // Required empty public constructor
@@ -55,14 +60,12 @@ public class AllMailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_all_mail, container, false);
-
+        mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
         backHome = v.findViewById(R.id.backHomeButtonFromAll);
         recyclerView = v.findViewById(R.id.AllRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));//Reverse = true for the last one go on top
 
-
-        System.out.println("On create View WorkerConnected : " + FirebaseAuth.getInstance().getCurrentUser().getUid());
-
+        idWorkerConnected = FirebaseAuth.getInstance().getUid();
         mailsAll = new ArrayList<>();
         adapter = new RecyclerAdapterForAll<>(new RecyclerViewItemClickListener() {
             @Override
@@ -78,35 +81,7 @@ public class AllMailFragment extends Fragment {
                     replaceFragment(new MailDetailFragment(), datas);
                 } else { //Clicked on done
                     System.out.println("btn clicked done");
-//                    //TODO Update the status of the mail choosed to done
-
-
-                    //Take back the mail choosed and display the infos
-                    MailViewModel.Factory factory2 = new MailViewModel.Factory(
-                            getActivity().getApplication(), mailsAll.get(position).getIdMail());
-                    currentViewModel = new ViewModelProvider(requireActivity(), factory2).get(MailViewModel.class);
-
-                    currentViewModel.getMail().observe(getActivity(), mailEntity -> {
-                        if (mailEntity != null) {
-                            currentMail = mailEntity;
-                        }
-                    });
-
-                    currentMail.setStatus("Done");
-
-                    viewModelAllMail.updateMail(currentMail, new OnAsyncEventListener() {
-                        @Override
-                        public void onSuccess() {
-                            System.out.println("Status Update : success for mail ID : " + mailsAll.get(position).getIdMail());
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                            System.out.println("Status NOT Update : FAILURE ERROR for mail ID : " + mailsAll.get(position).getIdMail());
-                            System.out.println(e);
-                        }
-                    });
-
+                    UpdateStatusMailChoose(position);
                 }
             }
 
@@ -120,8 +95,6 @@ public class AllMailFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
-
-
 
         MailListViewModel.Factory factory2 = new MailListViewModel.Factory(
                 getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -144,6 +117,23 @@ public class AllMailFragment extends Fragment {
         });
 
         return v;
+    }
+    private void UpdateStatusMailChoose(int position) {
+        MailEntity currentMail = new MailEntity();
+        currentMail.setIdMail(mailsAll.get(position).getIdMail());
+        currentMail = mailsAll.get(position);
+        currentMail.setStatus("Done");
+
+        mailRepository.update(currentMail, new OnAsyncEventListener() {
+            @Override
+            public void onSuccess() {
+                System.out.println(Messages.MAIL_UPDATED);
+            }
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println(Messages.MAIL_UPDATE_FAILED);
+            }
+        });
     }
 
 
@@ -169,12 +159,12 @@ public class AllMailFragment extends Fragment {
             repo.removeAMail(FirebaseAuth.getInstance().getUid(), mail.getIdMail(), new OnAsyncEventListener() {
                 @Override
                 public void onSuccess() {
-                    System.out.println("Mail Removed of Postworker");
+                    System.out.println(Messages.MAIL_DELETED);
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-
+                    System.out.println(Messages.MAIL_DELETED_FAILED);
                 }
             });
         }
