@@ -100,7 +100,7 @@ public class MapFragment extends Fragment {
                         }
                         if (idmail != null) {
                             LatLng latLng = getLocationFromAddress(getContext(), addressStr);
-                            if (latLng==null){
+                            if (latLng!=null){
                                 MarkerOptions options = new MarkerOptions().position(latLng)
                                         .title("ID Mail : " + idmail);
                                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
@@ -211,8 +211,10 @@ public class MapFragment extends Fragment {
             address = coder.getFromLocationName(strAddress, 1);
             if (address != null) {
                 Address location = address.get(0);
+                System.out.println(location);
                 p1 = new LatLng(location.getLatitude(), location.getLongitude());
             } else {
+                System.out.println("NULL");
                 return null;
             }
 

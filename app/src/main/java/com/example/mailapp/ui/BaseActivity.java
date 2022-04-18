@@ -50,7 +50,6 @@ public class BaseActivity extends AppCompatActivity {
 
         initialize();
         replaceFragment(new HomeFragment(), null);
-
     }
 
     private void initialize() {

@@ -8,17 +8,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
-import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
@@ -77,7 +78,6 @@ public class MyAccountFragment extends Fragment {
 
     public void initialize(View v) {
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
-        PostworkerRepository postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
 
@@ -117,8 +117,6 @@ public class MyAccountFragment extends Fragment {
                 inputLocation.setText(postWorker.getCity());
                 if (currentWorker.getEmail().equals("centrale@poste.ch")) {
                     inputDeleteButton.setVisibility(View.INVISIBLE);
-                    System.out.println(" ||| The worker connected Is CENTRALE");
-                    System.out.println(" ||| Delete feature is not available for this account");
                 }
             }
         });
