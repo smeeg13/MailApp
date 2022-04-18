@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -70,7 +69,7 @@ public class PostWorkerViewModel extends AndroidViewModel {
     /**
      * Expose the LiveData ClientEntity query so the UI can observe it.
      */
-    public LiveData<PostWorkerEntity> getClient() {
+    public LiveData<PostWorkerEntity> getWorker() {
         return observablePostworker;
     }
 
@@ -78,6 +77,16 @@ public class PostWorkerViewModel extends AndroidViewModel {
         ((BaseApplication) getApplication()).getPostworkerRepository()
                 .update(client, callback);
     }
+
+    public void insertANewMail(final String idWorker, final String idMail, OnAsyncEventListener callback) {
+        ((BaseApplication) getApplication()).getPostworkerRepository()
+                .insertANewMail(idWorker, idMail,  callback);
+    }
+    public void removeAMail(final String idOldWorker, final String idMail, OnAsyncEventListener callback) {
+        ((BaseApplication) getApplication()).getPostworkerRepository()
+                .removeAMail(idOldWorker, idMail, callback);
+    }
+
 
     public void deleteClient(PostWorkerEntity client, OnAsyncEventListener callback) {
         ((BaseApplication) getApplication()).getPostworkerRepository()

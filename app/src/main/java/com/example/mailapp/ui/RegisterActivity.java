@@ -152,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
         //For each check if empty
         for (EditText in : inputs) {
             if (in.getText().toString().isEmpty()) {
-                showError(in, "Can not be empty");
+                showError(in, getString(R.string.empty_field));
                 IsEmpty++;
             }
         }
@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean CheckSamePwd(String pwd, String ConfPwd) {
 
         if (!inputPassword.getText().toString().equals(inputConfirmPwd.getText().toString())) {
-            showError(inputConfirmPwd, "Password are not the Same");
+            showError(inputConfirmPwd, getString(R.string.pwd_not_same));
             return true;
         } else
             return false;
@@ -179,17 +179,17 @@ public class RegisterActivity extends AppCompatActivity {
      */
     public boolean CheckPasswordWeak(String password) {
         boolean isWeak = true;
-        String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}";
+        String pattern = getString(R.string.pwdPattern);
         boolean matches = password.matches(pattern);
 
         if (matches){
             isWeak=false;
-            System.out.println("\n## The Password is Strong.");
+            System.out.println(R.string.pwd_strong);
         }
         else {
             isWeak=true;
-            System.out.println("\n## The Password is Weak.");
-            showError(inputPassword, "Password too weak");
+            System.out.println(R.string.pwd_weak);
+            showError(inputPassword, getString(R.string.pwd_weak));
         }
         return isWeak;
     }

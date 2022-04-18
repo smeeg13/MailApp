@@ -1,9 +1,7 @@
 package com.example.mailapp.ui.Fragments;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +21,11 @@ import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.MailRepository;
 import com.example.mailapp.database.repository.PostworkerRepository;
-import com.example.mailapp.ui.BaseActivity;
 import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -45,12 +41,16 @@ public class MyAccountFragment extends Fragment {
     private View v;
     private String firstname, lastname;
     private ArrayList<TextView> inputs = new ArrayList<>();
-    private PostWorkerEntity postWorkerEntity;
+
+    private String idWorkerConnected;
+    private static final String ID_CENTRALE = "KiiQrVHOOUP9QRLQpyPHh83lcVg1";
+    private PostWorkerEntity currentWorker;
     private MailRepository mailRepository;
     private int numberOfMails = 0;
     private ArrayList<MailEntity> mails;
     private PostworkerRepository postworkerRepository;
-    private PostWorkerViewModel viewModel;
+    private PostWorkerViewModel currentWorkerViewModel;
+    private boolean IsCentrale = false;
 
     public MyAccountFragment() {
         // Required empty public constructor
@@ -62,166 +62,23 @@ public class MyAccountFragment extends Fragment {
 
     }
 
-    public void editMode() {
-
-        if (aBoolean) {
-            enableEdit(true);
-            aBoolean = false;
-            inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_save_24);
-        } else {
-            if (!InputsAreGood()) {
-                Toast.makeText(getContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
-            } else {
-
-                enableEdit(false);
-                postWorkerEntity.setPassword(inputPassword.getText().toString());
-                postWorkerEntity.setEmail(inputEmail.getText().toString());
-                postWorkerEntity.setZip(inputZip.getText().toString());
-                postWorkerEntity.setCity(inputLocation.getText().toString());
-                postWorkerEntity.setAddress(inputAddress.getText().toString());
-                postWorkerEntity.setPhone(inputPhone.getText().toString());
-
-                inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
-                aBoolean = true;
-
-                postworkerRepository.update(postWorkerEntity, new OnAsyncEventListener() {
-                    @Override
-                    public void onSuccess() {
-                        System.out.println(Messages.ACCOUNT_UPDATED);
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        System.out.println(Messages.ACCOUNT_UPDATED_FAILED);
-                    }
-                });
-
-            }
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_my_account, container, false);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
-
+        idWorkerConnected = FirebaseAuth.getInstance().getUid();
         initialize(v);
 
-        inputfloatingEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editMode();
-            }
-        });
-        inputDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("DELETE METHOD");
-                deleteAccount();
-            }
+        inputfloatingEditButton.setOnClickListener(v -> editMode());
+        inputDeleteButton.setOnClickListener(v -> {
+            deleteAccount();
         });
 
         return v;
     }
 
-
-    public void enableEdit(boolean b) {
-        // sub method
-        if (b == true) {
-
-            //inputEmail.setEnabled(true);
-            inputPhone.setEnabled(true);
-            inputAddress.setEnabled(true);
-            inputZip.setEnabled(true);
-            inputLocation.setEnabled(true);
-            inputPassword.setEnabled(true);
-            inputConfirmPassword.setVisibility(View.VISIBLE);
-            inputConfirmPassword.setEnabled(true);
-
-        } else {
-            //inputEmail.setEnabled(false);
-            inputPhone.setEnabled(false);
-            inputAddress.setEnabled(false);
-            inputZip.setEnabled(false);
-            inputLocation.setEnabled(false);
-            inputPassword.setEnabled(false);
-            inputConfirmPassword.setVisibility(View.INVISIBLE);
-            inputConfirmPassword.setEnabled(false);
-        }
-    }
-
-    public void deleteAccount() {
-
-        AlertDialog.Builder ab = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom);
-        ab.setTitle("Confirmation of Delete");
-        ab.setMessage("You will be delete your account. Are you sure ?");
-        ab.setPositiveButton("Yes", (dialog, which) -> {
-
-            if (inputEmail.getText().toString().equals("admin")) {
-                Toast.makeText(getActivity().getBaseContext(), "You can't delete the admin account !", Toast.LENGTH_SHORT).show();
-            } else {
-                //get list of the postWorker mails
-                mails = new ArrayList<MailEntity>();
-                mailRepository.getAllByPostworker(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getActivity(), mailEntities -> {
-
-                    for (MailEntity mail : mailEntities) {
-                        mail.setIdPostWorker(ADMIN_ID);
-
-                        mailRepository.update(mail, new OnAsyncEventListener() {
-                            @Override
-                            public void onSuccess() {
-                                System.out.println("Mail id" + mail.getIdMail() + "has been redirected to admin");
-                                numberOfMails++;
-
-                                if (numberOfMails == mailEntities.size()) {
-                                    System.out.println("number of mails variable :" + numberOfMails);
-                                  /*  postWorkerViewModel.deleteClient(postWorkerEntity, new OnAsyncEventListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.d(TAG, "deleteUser: success");
-                                            logout();
-                                        }
-
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            Log.d(TAG, "deleteUser: failure", e);
-                                        }
-                                    });
-                                     */
-
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onFailure(Exception e) {
-                                System.out.println("Mail id" + mail.getIdMail() + "has been NOT redirected to admin");
-                            }
-                        });
-                    }
-                });
-
-
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
-                editor.remove(BaseActivity.PREFS_NAME);
-                editor.remove(BaseActivity.PREFS_USER);
-
-                editor.apply();
-
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                startActivity(intent);
-            }
-
-        });
-        ab.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
-        ab.show();
-
-    }
 
     public void initialize(View v) {
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
@@ -246,47 +103,158 @@ public class MyAccountFragment extends Fragment {
         inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
         inputs.add(inputConfirmPassword);
 
-        // owner = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        //  String accountId = getActivity().getIntent().getStringExtra("accountId");
-        //  FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //  System.out.println("User firebaseUser : "+ user.getDisplayName()+" "+user.getEmail()+" "+user.getPhoneNumber());
-        // System.out.println("owner is "+ owner);
-        //  System.out.println("accountID is "+accountId);
-        //  System.out.println("PostWorker get uid "+FirebaseAuth.getInstance().getCurrentUser().getUid());
-
         PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(),
                 FirebaseAuth.getInstance().getCurrentUser().getUid());
+        currentWorkerViewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
 
-
-        viewModel = new ViewModelProvider(requireActivity(), factory).get(PostWorkerViewModel.class);
-
-        viewModel.getClient().observe(getActivity(), postWorker -> {
+        currentWorkerViewModel.getWorker().observe(getActivity(), postWorker -> {
             if (postWorker != null) {
-                postWorkerEntity = postWorker;
-
+                currentWorker = postWorker;
                 firstname = postWorker.getFirstname();
-
                 lastname = postWorker.getLastname();
-
-                inputFirstnameAndLastname.setText(firstname + " " + lastname);
-
+                inputFirstnameAndLastname.setText(new StringBuilder().append(firstname).append(" ").append(lastname).toString());
                 inputEmail.setText(postWorker.getEmail());
-
                 inputPassword.setText(postWorker.getPassword());
-
                 inputConfirmPassword.setText(postWorker.getPassword());
-
                 inputPhone.setText(postWorker.getPhone());
-
                 inputAddress.setText(postWorker.getAddress());
-
                 inputZip.setText(postWorker.getZip());
-
                 inputLocation.setText(postWorker.getCity());
+                if (currentWorker.getEmail().equals("centrale@poste.ch")) {
+                    IsCentrale = true;
+                    inputDeleteButton.setVisibility(View.INVISIBLE);
+                    System.out.println(" ||| The worker connected Is CENTRALE");
+                    System.out.println(" ||| Delete feature is not available for this account");
+                }
             }
         });
     }
+
+    public void editMode() {
+
+        if (aBoolean) {
+            enableEdit(true);
+            aBoolean = false;
+            inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_save_24);
+        } else {
+            if (!InputsAreGood()) {
+                Toast.makeText(getContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
+            } else {
+                enableEdit(false);
+                currentWorker.setPassword(inputPassword.getText().toString());
+                currentWorker.setEmail(inputEmail.getText().toString());
+                currentWorker.setZip(inputZip.getText().toString());
+                currentWorker.setCity(inputLocation.getText().toString());
+                currentWorker.setAddress(inputAddress.getText().toString());
+                currentWorker.setPhone(inputPhone.getText().toString());
+
+                inputfloatingEditButton.setImageResource(R.drawable.ic_baseline_edit_24);
+                aBoolean = true;
+
+                currentWorkerViewModel.updatePostWorker(currentWorker, new OnAsyncEventListener() {
+                    @Override
+                    public void onSuccess() {
+                        System.out.println(Messages.ACCOUNT_UPDATED);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        System.out.println(Messages.ACCOUNT_UPDATED_FAILED);
+
+                    }
+                });
+            }
+        }
+    }
+
+
+    public void enableEdit(boolean b) {
+        // sub method
+        if (b) {
+            inputPhone.setEnabled(true);
+            inputAddress.setEnabled(true);
+            inputZip.setEnabled(true);
+            inputLocation.setEnabled(true);
+            inputPassword.setEnabled(true);
+            inputConfirmPassword.setVisibility(View.VISIBLE);
+            inputConfirmPassword.setEnabled(true);
+        } else {
+            inputPhone.setEnabled(false);
+            inputAddress.setEnabled(false);
+            inputZip.setEnabled(false);
+            inputLocation.setEnabled(false);
+            inputPassword.setEnabled(false);
+            inputConfirmPassword.setVisibility(View.INVISIBLE);
+            inputConfirmPassword.setEnabled(false);
+        }
+    }
+
+    public void deleteAccount() {
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom);
+        ab.setTitle("Confirmation of Delete");
+        ab.setMessage("You will be delete your account. All the mail assigned to you will be transfered to the central. Are you sure ?");
+        ab.setPositiveButton("Yes", (dialog, which) -> {
+
+            //get list of the postWorker mails
+            mails = new ArrayList<MailEntity>();
+            mailRepository.getAllByPostworker(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getActivity(), mailEntities -> {
+
+                for (MailEntity mail : mailEntities) {
+
+                    //Delete mail in the post worker co
+                    currentWorkerViewModel.removeAMail(idWorkerConnected, mail.getIdMail(), new OnAsyncEventListener() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("mail " + mail.getIdMail() + " has been delete from worker : " + idWorkerConnected);
+                            //Add it to the centrale
+                            currentWorkerViewModel.insertANewMail(ID_CENTRALE, mail.getIdMail(), new OnAsyncEventListener() {
+                                @Override
+                                public void onSuccess() {
+                                    System.out.println("mail " + mail.getIdMail() + " has been ADDED from worker : " + ID_CENTRALE);
+
+                                    //Delete of the postworker connected
+                                    currentWorkerViewModel.deleteClient(currentWorker, new OnAsyncEventListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            System.out.println("Worker " + currentWorker.getEmail() + "Has been deleted successfully");
+                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                                            startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            System.out.println("FAILED : Worker " + currentWorker.getEmail() + "Has NOT been deleted !!");
+                                            System.out.println("Error : " + e);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    System.out.println("add failed");
+                                    System.out.println("Error : " + e);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            System.out.println("delete failed");
+                            System.out.println("Error : " + e);
+                        }
+                    });
+                }
+            });
+        });
+        ab.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
+        ab.show();
+
+    }
+
 
     public boolean InputsAreGood() {
         int IsOk = 0;
@@ -319,7 +287,7 @@ public class MyAccountFragment extends Fragment {
         //For each check if empty
         for (TextView in : inputs) {
             if (in.getText().toString().isEmpty()) {
-                showError(in, "Can not be empty");
+                showError(in, getString(R.string.empty_field));
                 //If empty add 1 to IsEmpty
                 IsEmpty++;
             }
@@ -334,7 +302,7 @@ public class MyAccountFragment extends Fragment {
     public boolean CheckSamePwd(String pwd, String ConfPwd) {
 
         if (!pwd.equals(ConfPwd)) {
-            showError(inputConfirmPassword, "Password are not the Same");
+            showError(inputConfirmPassword, getString(R.string.pwd_not_same));
             return true;
         } else
             return false;
@@ -347,39 +315,17 @@ public class MyAccountFragment extends Fragment {
      */
     public boolean CheckPasswordWeak(String password) {
         boolean isWeak = true;
-        int passwordLength = 8, upChars = 0, lowChars = 0;
-        int special = 0, digits = 0;
-        char ch;
+        String pattern = getString(R.string.pwdPattern);
+        boolean matches = password.matches(pattern);
 
-        int totalChar = password.length();
-        if (totalChar < passwordLength) {
-            System.out.println("\n## The Password is invalid !");
-            return true;
-        } else {
-            for (int i = 0; i < totalChar; i++) {
-                ch = password.charAt(i);
-                if (Character.isUpperCase(ch))
-                    upChars = 1;
-                else if (Character.isLowerCase(ch))
-                    lowChars = 1;
-                else if (Character.isDigit(ch))
-                    digits = 1;
-                else
-                    special = 1;
-            }
-        }
-        if (upChars == 1 && lowChars == 1 && digits == 1 && special == 1) {
-            System.out.println("\n## The Password is Strong.");
-
+        if (matches) {
             isWeak = false;
+            System.out.println(getString(R.string.pwd_strong));
         } else {
-            System.out.println("\n## The Password is Weak.");
-            showError(inputPassword, "Password too weak");
-            System.out.println(inputPassword.getText().toString());
-            System.out.println(inputConfirmPassword.getText().toString());
+            isWeak = true;
+            System.out.println(getString(R.string.pwd_weak));
+            showError(inputPassword, String.valueOf(R.string.pwd_weak));
         }
-
-
         return isWeak;
     }
 

@@ -193,7 +193,7 @@ public class MailEntity {
         result.put("mailType", mailType);
         result.put("weight", weight);
         result.put("shippingType", shippingType);
-        result.put("shippingDate", shippedDate);
+        result.put("shippedDate", shippedDate);
         result.put("receiveDate", receiveDate);
         result.put("status", status);
 

@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class MapFragment extends Fragment {
@@ -154,6 +155,7 @@ public class MapFragment extends Fragment {
     }
 
 
+
     public void getMyLocation() {
         if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(requireActivity(),
@@ -257,6 +259,9 @@ public class MapFragment extends Fragment {
                 String city_name = jo_inside.getString("city");
                 Log.i("Detail Json :", city_name);
                 //Add your values in your `ArrayList` as below:
+
+                city_name = city_name.toLowerCase(Locale.ROOT);
+                cityEntered = cityEntered.toLowerCase(Locale.ROOT);
                 if (city_name.equals(cityEntered)) {
                     isValid = true;
                     System.out.println("The city entered : " + cityEntered + " correspond to : " + city_name);
