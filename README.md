@@ -12,7 +12,7 @@ In order to make some test some demo data are already saved in the Firebase data
 #### Post Worker
 - Abdullah Binjos, binjabdu@gmail.com, @dminHevs01,Rue des pommes 12 1950 Sion, 07961623823. <br />
 - Megane Solliard, smeg@gmail.com, @dminHevs01, Rue des carou 12 3960 Sierre, 0791223434. <br />
-- Central Central, central@poste.ch, @dminHevs01, Rue centrale 1950 Sion, 0000<br />
+- Centrale Centrale, centrale@poste.ch, @dminHevs01, Rue centrale 1950 Sion, 0000<br />
 
 
 
