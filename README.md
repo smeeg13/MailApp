@@ -7,19 +7,19 @@ The postworker has the possibilities to add one mail or to change some informati
 
 ### Information to log in
 
-In order to make some test some demo data are already saved in the room database:
+In order to make some test some demo data are already saved in the Firebase database:
 
 #### Post Worker
 - Abdullah Binjos, binjabdu@gmail.com, @dminHevs01,Rue des pommes 12 1950 Sion, 07961623823. <br />
 - Megane Solliard, Smeg@gmail.com, @dminHevs01, Rue des carou 12 3960 Sierre, 0791223434. <br />
-- admin admin, admin, 1234,Rue admin 1950 Sion,admin<br />
+- Central Central, Central@poste.ch, @dminHevs01, Rue centrale 1950 Sion, 0000<br />
 
 
 
 #### Mails
-- PostWorker Assigned = 3, From Abdullah, To Meg, Type Letter, A-Mail, Rte de Roumaz, 1965 Saviese. 
-- PostWorker Assigned = 3,From Meg, to Emilie, Type Packages, B-Mail, Avenue de la Gare 1950 Sion.
-- PostWorker Assigned =3, from Loic, to Jane, Type Packages, B-Mail, Plaine Bellevue 3960 Sierre.
+- PostWorker Assigned = Centrale, From Abdullah, To Meg, Type Letter, A-Mail, Rte de Roumaz, 1965 Saviese. 
+- PostWorker Assigned = Centrale, From Meg, to Emilie, Type Packages, B-Mail, Avenue de la Gare 1950 Sion.
+- PostWorker Assigned =Megane, From Loic, to Jane, Type Packages, B-Mail, Plaine Bellevue 3960 Sierre.
 
 <br />
 <br />
