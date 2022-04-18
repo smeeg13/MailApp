@@ -117,8 +117,6 @@ public class MyAccountFragment extends Fragment {
                 inputLocation.setText(postWorker.getCity());
                 if (currentWorker.getEmail().equals("centrale@poste.ch")) {
                     inputDeleteButton.setVisibility(View.INVISIBLE);
-                    System.out.println(" ||| The worker connected Is CENTRALE");
-                    System.out.println(" ||| Delete feature is not available for this account");
                 }
             }
         });
