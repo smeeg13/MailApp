@@ -6,10 +6,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
@@ -33,15 +31,11 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
 
         ViewHolder(View v) {
             super(v);
-            System.out.println("-------------------");
-            System.out.println("Constructor ViewHolder");
-            System.out.println("-------------------");
             city = v.findViewById(R.id.RecyclerCity);
             address = v.findViewById(R.id.RecyclerAddress);
             mailto = v.findViewById(R.id.RecyclerTo);
             duedate = v.findViewById(R.id.RecyclerDate);
             statusEntry = v.findViewById(R.id.statusEntry);
-
             moreBtn = v.findViewById(R.id.RecyclerMoreButton);
             doneBtn = v.findViewById(R.id.RecyclerDoneButton);
             editBtn = v.findViewById(R.id.RecyclerEditButton);

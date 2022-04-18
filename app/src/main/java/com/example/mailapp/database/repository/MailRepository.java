@@ -48,7 +48,7 @@ public class MailRepository {
 
     public LiveData<List<MailEntity>> getAllByPostworker(final String idWorker) {
         ArrayList<String> idsmailsofWorker = new ArrayList<>();
-                DatabaseReference mailReference = FirebaseDatabase.getInstance()
+        DatabaseReference mailReference = FirebaseDatabase.getInstance()
                 .getReference("mails");
 
         DatabaseReference workerReference = FirebaseDatabase.getInstance()
@@ -59,23 +59,21 @@ public class MailRepository {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot childDataSnapshot : snapshot.getChildren()) {
-                    idsmailsofWorker.add(childDataSnapshot. getKey());
+                    idsmailsofWorker.add(childDataSnapshot.getKey());
                 } //take back the key for the node Log.
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-        return new MailListLiveData(mailReference,idsmailsofWorker, idWorker);
+        return new MailListLiveData(mailReference, idsmailsofWorker, idWorker);
     }
 
     public void insert(final MailEntity mail, OnAsyncEventListener callback) {
 
         //Ajout dans mail en générant id du mail
-//        DatabaseReference reference = FirebaseDatabase.getInstance()
-//                .getReference("mails");
-//        mail.setIdMail(reference.push().getKey());
         FirebaseDatabase.getInstance().getReference("mails")
                 .child(mail.getIdMail())
                 .setValue(mail, (databaseError, databaseReference) -> {
@@ -96,7 +94,7 @@ public class MailRepository {
                         callback.onFailure(databaseError.toException());
                     } else {
                         callback.onSuccess();
-                        Log.d(TAG, "mail add to postworker : "+ mail.getIdPostWorker());
+                        Log.d(TAG, "mail add to postworker : " + mail.getIdPostWorker());
                     }
                 });
     }
@@ -140,7 +138,6 @@ public class MailRepository {
                         callback.onSuccess();
                     }
                 });
-
     }
 }
 

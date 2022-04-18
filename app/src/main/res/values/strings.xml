@@ -63,4 +63,9 @@
         <item>Black</item>
     </string-array>
     <string name="error_invalid_email">Invalid Login Credentials</string>
+    <string name="pwdPattern"><![CDATA[(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}]]></string>
+    <string name="pwd_strong">The Password is Strong.</string>
+    <string name="pwd_weak">The Password is too Weak.</string>
+    <string name="pwd_not_same">Password are not the Same</string>
+    <string name="empty_field">Can not be empty</string>
 </resources>

@@ -1,13 +1,10 @@
 package com.example.mailapp.database.repository;
 
-import static android.util.Log.INFO;
-
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.mailapp.Enums.Messages;
-import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.firebase.PostWorkerLiveData;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -22,13 +19,14 @@ public class PostworkerRepository {
 
     private static PostworkerRepository instance;
 
-    private PostworkerRepository(){
+    private PostworkerRepository() {
 
     }
-    public static PostworkerRepository getInstance(){
-        if(instance ==null){
-            synchronized (PostworkerRepository.class){
-                if (instance == null){
+
+    public static PostworkerRepository getInstance() {
+        if (instance == null) {
+            synchronized (PostworkerRepository.class) {
+                if (instance == null) {
                     instance = new PostworkerRepository();
                 }
             }
@@ -85,10 +83,11 @@ public class PostworkerRepository {
                                 });
                     } else {
                         callback.onSuccess();
-                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
+                        Log.d(TAG, Messages.ACCOUNT_CREATED.toString());
                     }
                 });
     }
+
     public void insertANewMail(final String idWorker, final String idMail, OnAsyncEventListener callback) {
         FirebaseDatabase.getInstance()
                 .getReference("postworkers")
@@ -101,10 +100,11 @@ public class PostworkerRepository {
                         Log.d(TAG, "Rollback failed: signInWithEmail:failur");
                     } else {
                         callback.onSuccess();
-                        Log.d(TAG,Messages.ACCOUNT_CREATED.toString());
+                        Log.d(TAG, Messages.ACCOUNT_CREATED.toString());
                     }
                 });
     }
+
     public void removeAMail(final String idOldWorker, final String idMail, OnAsyncEventListener callback) {
         FirebaseDatabase.getInstance()
                 .getReference("postworkers")
@@ -118,7 +118,7 @@ public class PostworkerRepository {
                         callback.onSuccess();
                     }
                 });
-        Log.println(Log.WARN,TAG,idMail+" Removed from "+idOldWorker);
+        Log.println(Log.WARN, TAG, idMail + " Removed from " + idOldWorker);
     }
 
     public void update(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
@@ -135,7 +135,8 @@ public class PostworkerRepository {
         FirebaseAuth.getInstance().getCurrentUser().updatePassword(postWorker.getPassword())
                 .addOnFailureListener(
                         e -> Log.d(TAG, "updatePassword failure!", e)
-                );    }
+                );
+    }
 
     public void delete(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         FirebaseDatabase.getInstance()
@@ -149,5 +150,4 @@ public class PostworkerRepository {
                     }
                 });
     }
-
 }

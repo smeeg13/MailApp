@@ -1,16 +1,13 @@
 package com.example.mailapp.viewModel;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.OnAsyncEventListener;
@@ -18,10 +15,7 @@ import com.example.mailapp.util.OnAsyncEventListener;
 public class PostWorkerViewModel extends AndroidViewModel {
 
     private static final String TAG = "PostWorkerViewModel";
-
     private PostworkerRepository repository;
-
-
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<PostWorkerEntity> observablePostworker;
 
@@ -70,7 +64,7 @@ public class PostWorkerViewModel extends AndroidViewModel {
     /**
      * Expose the LiveData ClientEntity query so the UI can observe it.
      */
-    public LiveData<PostWorkerEntity> getClient() {
+    public LiveData<PostWorkerEntity> getWorker() {
         return observablePostworker;
     }
 
@@ -79,9 +73,17 @@ public class PostWorkerViewModel extends AndroidViewModel {
                 .update(client, callback);
     }
 
-    public void deleteClient(PostWorkerEntity client, OnAsyncEventListener callback) {
+    public void insertANewMail(final String idWorker, final String idMail, OnAsyncEventListener callback) {
+        ((BaseApplication) getApplication()).getPostworkerRepository()
+                .insertANewMail(idWorker, idMail,  callback);
+    }
+    public void removeAMail(final String idOldWorker, final String idMail, OnAsyncEventListener callback) {
+        ((BaseApplication) getApplication()).getPostworkerRepository()
+                .removeAMail(idOldWorker, idMail, callback);
+    }
+
+    public void deleteWorker(PostWorkerEntity client, OnAsyncEventListener callback) {
         ((BaseApplication) getApplication()).getPostworkerRepository()
                 .delete(client, callback);
     }
-
 }

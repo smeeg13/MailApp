@@ -33,9 +33,6 @@ public class RecyclerAdapterForAll<T> extends RecyclerView.Adapter<RecyclerAdapt
 
         ViewHolder(View v) {
             super(v);
-            System.out.println("-------------------");
-            System.out.println("Constructor ViewHolder");
-            System.out.println("-------------------");
             city = v.findViewById(R.id.RecyclerCity);
             address = v.findViewById(R.id.RecyclerAddress);
             mailto = v.findViewById(R.id.RecyclerTo);

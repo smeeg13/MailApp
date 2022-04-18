@@ -13,9 +13,7 @@ public class BaseApplication extends Application {
     }
 
  
-    public PostworkerRepository getPostworkerRepository() {
-        return PostworkerRepository.getInstance();
-    }
+    public PostworkerRepository getPostworkerRepository() { return PostworkerRepository.getInstance();}
 
     public MailRepository getMailRepository() {
         return MailRepository.getInstance();

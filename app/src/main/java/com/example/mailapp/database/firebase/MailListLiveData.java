@@ -60,8 +60,6 @@ public class MailListLiveData extends LiveData<List<MailEntity>> {
             for (String s : mailsofworker){
                 if (s.equals(childSnapshot.getKey())) {
                     isAssignedTo = true;
-                    System.out.println(" ||| MAIL : " + childSnapshot.getKey());
-                    System.out.println(" ||| IS ASSIGN TO ME");
                 }
             }
 
