@@ -20,8 +20,10 @@ public class PostWorkerEntity implements Comparable{
     private String zip;
     private String city;
     private String background;
-    //private ArrayList<MailEntity> mails;
 
+    public PostWorkerEntity(){
+
+    }
 
     public PostWorkerEntity(String firstname, String lastname, String phone, @NonNull String email, String password, String address, String zip, String city) {
         setFirstname(firstname);
@@ -32,9 +34,6 @@ public class PostWorkerEntity implements Comparable{
        setAddress(address);
        setZip(zip);
        setCity(city);
-    }
-
-    public PostWorkerEntity() {
     }
 
     @Exclude
@@ -148,8 +147,6 @@ public class PostWorkerEntity implements Comparable{
         return toString().compareTo(o.toString());
     }
 
-
-    //To update specific entity
     @Exclude
     public Map<String,Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();

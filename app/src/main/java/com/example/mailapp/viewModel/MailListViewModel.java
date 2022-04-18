@@ -21,36 +21,22 @@ public class MailListViewModel  extends AndroidViewModel {
 
     private static final String TAG = "MailListViewModel";
 
-
     private MailRepository repository;
-
-
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<List<MailEntity>> observableOwnMails;
-    private final MediatorLiveData<List<MailEntity>> observableOwnMailsInProg;
 
 
     public MailListViewModel(@NonNull Application application,final String IdPostWorker, MailRepository mailRepository, PostworkerRepository postworkerRepository) {
         super(application);
 
         repository = mailRepository;
-
-
         observableOwnMails = new MediatorLiveData<>();
-        observableOwnMailsInProg = new MediatorLiveData<>();
-
         // set by default null, until we get data from the database.
         observableOwnMails.setValue(null);
-        observableOwnMailsInProg.setValue(null);
-
         LiveData<List<MailEntity>> ownMails = repository.getAllByPostworker(IdPostWorker);
-
-         LiveData<List<MailEntity>> ownMailsInProg = repository.getAllByPostworker(IdPostWorker);
-        // LiveData<List<MailEntity>> ownMailsInProg = repository.getInProgressByPostworker(IdPostWorker,"In Progress");
 
         // observe the changes of the entities from the database and forward them
         observableOwnMails.addSource(ownMails, observableOwnMails::setValue);
-        observableOwnMailsInProg.addSource(ownMailsInProg, observableOwnMailsInProg::setValue);
     }
 
     /**
@@ -87,16 +73,8 @@ public class MailListViewModel  extends AndroidViewModel {
     public LiveData<List<MailEntity>> getOwnMails() {
         return observableOwnMails;
     }
-    public LiveData<List<MailEntity>> getOwnMailsInProgress() {
-        return observableOwnMailsInProg;
-    }
 
     public void deleteMail(MailEntity mail, OnAsyncEventListener callback) {
         ((BaseApplication) getApplication()).getMailRepository()
                 .delete(mail, callback);    }
-
-    public void updateMail(MailEntity mail, OnAsyncEventListener callback) {
-        ((BaseApplication) getApplication()).getMailRepository().update(mail, callback);
-    }
-
 }

@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
@@ -26,6 +24,7 @@ import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 public class MyAccountFragment extends Fragment {
 
     private static final String TAG = "AccountDetails";
-    private final String ADMIN_ID = "3";
     private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
     private Button inputDeleteButton;
@@ -43,12 +41,9 @@ public class MyAccountFragment extends Fragment {
     private ArrayList<TextView> inputs = new ArrayList<>();
 
     private String idWorkerConnected;
-    private static final String ID_CENTRALE = "KiiQrVHOOUP9QRLQpyPHh83lcVg1";
+    private static final String ID_CENTRALE = "U9w13HzxjbbAHQ2dfMlMADRcbwk2";
     private PostWorkerEntity currentWorker;
     private MailRepository mailRepository;
-    private int numberOfMails = 0;
-    private ArrayList<MailEntity> mails;
-    private PostworkerRepository postworkerRepository;
     private PostWorkerViewModel currentWorkerViewModel;
     private boolean IsCentrale = false;
 
@@ -82,7 +77,7 @@ public class MyAccountFragment extends Fragment {
 
     public void initialize(View v) {
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
-        postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
+        PostworkerRepository postworkerRepository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
         inputDeleteButton = v.findViewById(R.id.AccountDeletePostWorker);
         inputfloatingEditButton = v.findViewById(R.id.AccountEditButton);
 
@@ -121,7 +116,6 @@ public class MyAccountFragment extends Fragment {
                 inputZip.setText(postWorker.getZip());
                 inputLocation.setText(postWorker.getCity());
                 if (currentWorker.getEmail().equals("centrale@poste.ch")) {
-                    IsCentrale = true;
                     inputDeleteButton.setVisibility(View.INVISIBLE);
                     System.out.println(" ||| The worker connected Is CENTRALE");
                     System.out.println(" ||| Delete feature is not available for this account");
@@ -197,62 +191,74 @@ public class MyAccountFragment extends Fragment {
         ab.setPositiveButton("Yes", (dialog, which) -> {
 
             //get list of the postWorker mails
-            mails = new ArrayList<MailEntity>();
+            ArrayList<MailEntity> mails = new ArrayList<MailEntity>();
             mailRepository.getAllByPostworker(FirebaseAuth.getInstance().getCurrentUser().getUid()).observe(getActivity(), mailEntities -> {
 
-                for (MailEntity mail : mailEntities) {
+                if (mailEntities.size()!=0) {
+                    for (MailEntity mail : mailEntities) {
+                        //Delete mail in the post worker co
+                        currentWorkerViewModel.removeAMail(idWorkerConnected, mail.getIdMail(), new OnAsyncEventListener() {
+                            @Override
+                            public void onSuccess() {
+                                System.out.println("mail " + mail.getIdMail() + " has been delete from worker : " + idWorkerConnected);
+                                //Add it to the centrale
+                                currentWorkerViewModel.insertANewMail(ID_CENTRALE, mail.getIdMail(), new OnAsyncEventListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        System.out.println("mail " + mail.getIdMail() + " has been ADDED from worker : " + ID_CENTRALE);
+                                        deleteWorker();
+                                    }
 
-                    //Delete mail in the post worker co
-                    currentWorkerViewModel.removeAMail(idWorkerConnected, mail.getIdMail(), new OnAsyncEventListener() {
-                        @Override
-                        public void onSuccess() {
-                            System.out.println("mail " + mail.getIdMail() + " has been delete from worker : " + idWorkerConnected);
-                            //Add it to the centrale
-                            currentWorkerViewModel.insertANewMail(ID_CENTRALE, mail.getIdMail(), new OnAsyncEventListener() {
-                                @Override
-                                public void onSuccess() {
-                                    System.out.println("mail " + mail.getIdMail() + " has been ADDED from worker : " + ID_CENTRALE);
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        System.out.println("add failed");
+                                        System.out.println("Error : " + e);
+                                    }
+                                });
+                            }
 
-                                    //Delete of the postworker connected
-                                    currentWorkerViewModel.deleteClient(currentWorker, new OnAsyncEventListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            System.out.println("Worker " + currentWorker.getEmail() + "Has been deleted successfully");
-                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                            startActivity(intent);
-                                        }
-
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            System.out.println("FAILED : Worker " + currentWorker.getEmail() + "Has NOT been deleted !!");
-                                            System.out.println("Error : " + e);
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    System.out.println("add failed");
-                                    System.out.println("Error : " + e);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                            System.out.println("delete failed");
-                            System.out.println("Error : " + e);
-                        }
-                    });
+                            @Override
+                            public void onFailure(Exception e) {
+                                System.out.println("delete failed");
+                                System.out.println("Error : " + e);
+                            }
+                        });
+                    }
+                }
+                else {
+                    deleteWorker();
                 }
             });
         });
         ab.setNegativeButton(R.string.no, (dialog, which) -> dialog.dismiss());
         ab.show();
 
+    }
+
+    private void deleteWorker() {
+        //Delete of the postworker connected
+        currentWorkerViewModel.deleteWorker(currentWorker, new OnAsyncEventListener() {
+            @Override
+            public void onSuccess() {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                System.out.println("delete of the auth user");
+                assert user != null;
+                user.delete().addOnCompleteListener(task -> {
+                    System.out.println(Messages.ACCOUNT_DELETED);
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    startActivity(intent);
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                System.out.println(Messages.ACCOUNT_DELETED_FAILED);
+                System.out.println("Error : " + e);
+            }
+        });
     }
 
 
@@ -270,9 +276,8 @@ public class MyAccountFragment extends Fragment {
         booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPassword.getText().toString());
 
         for (boolean b : booleans) {
-            if (b) {
+            if (b)
                 IsOk++;
-            }
         }
         return IsOk <= 0;
     }
@@ -327,15 +332,6 @@ public class MyAccountFragment extends Fragment {
             showError(inputPassword, String.valueOf(R.string.pwd_weak));
         }
         return isWeak;
-    }
-
-    public void logout() {
-        FirebaseAuth.getInstance().signOut();
-
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
     }
 
     /**

@@ -2,14 +2,13 @@ package com.example.mailapp.Enums;
 
 public enum Messages {
 
-    //DB Msg
-    DB_WILL_BE_CREATED("Database will be initialized",00),
-    DB_CREATED("Database initialized.",01),
-    INSERT_DEMO_DATA("Inserting demo data.",02),
-
     //Validation on fields entry
     EMPTY_FIELDS("Make Sure all Fields are completed", 100),
     INVALID_FIELDS("Some Fields are NOT Valid", 101),
+    INVALID_EMAIL("Email is not valid", 101),
+    WEAK_PWD("Password is too weak", 101),
+    NOT_SAME_PWD("Passwords are not the same", 101),
+
     WRONG_INFO("Wrong Email or Password entered", 150),
     EMAIL_ALREADY_EXIST("Email already used",151),
 
@@ -24,7 +23,9 @@ public enum Messages {
     MAIL_DELETED_FAILED("Mail Deleted Failed ", 300),
     MAIL_DELETED("Mail Deleted", 300),
     MAIL_UPDATED("Mail Updated",300 ),
-    MAIL_UPDATE_FAILED("Mail Update Failed",300 );
+    MAIL_UPDATE_FAILED("Mail Update Failed",300 ),
+    BACKGROUND_UPDATED_FAILED("Background update failed",400),
+    BACKGROUND_UPDATED("Background updated successfully",400);
 
 
     private String stringValue;

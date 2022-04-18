@@ -6,19 +6,16 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.viewModel.MailListViewModel;
@@ -28,13 +25,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -46,7 +40,6 @@ public class MapFragment extends Fragment {
 
     private static final String TAG = "MapFragment";
     private FloatingActionButton myPositionButton;
-    private FusedLocationProviderClient client;
     private SupportMapFragment supportMapFragment;
     private String workerConnectedIdStr;
     private List<MailEntity> mailsInProgress;
@@ -77,7 +70,6 @@ public class MapFragment extends Fragment {
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         myPositionButton = v.findViewById(R.id.myPositionButton);
 
-        client = LocationServices.getFusedLocationProviderClient(getActivity());
         workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //Get back own mails NOT DONE
@@ -108,11 +100,12 @@ public class MapFragment extends Fragment {
                         }
                         if (idmail != null) {
                             LatLng latLng = getLocationFromAddress(getContext(), addressStr);
-
-                            MarkerOptions options = new MarkerOptions().position(latLng)
-                                    .title("ID Mail : " + idmail);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                            googleMap.addMarker(options);
+                            if (latLng==null){
+                                MarkerOptions options = new MarkerOptions().position(latLng)
+                                        .title("ID Mail : " + idmail);
+                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                googleMap.addMarker(options);
+                            }
                         }
                     }
 
@@ -172,23 +165,20 @@ public class MapFragment extends Fragment {
             return;
         }
         fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(requireActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            supportMapFragment.getMapAsync(googleMap -> {
-                                LatLng latLng = new LatLng(location.getLatitude(),
-                                        location.getLongitude());
+                .addOnSuccessListener(requireActivity(), location -> {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        supportMapFragment.getMapAsync(googleMap -> {
+                            LatLng latLng = new LatLng(location.getLatitude(),
+                                    location.getLongitude());
 
-                                MarkerOptions options = new MarkerOptions().position(latLng)
-                                        .title("I'm here !");
+                            MarkerOptions options = new MarkerOptions().position(latLng)
+                                    .title("I'm here !");
 
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                                googleMap.addMarker(options);
-                            });
-                        }
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            googleMap.addMarker(options);
+                        });
                     }
                 });
     }
@@ -219,11 +209,11 @@ public class MapFragment extends Fragment {
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 1);
-            if (address == null) {
-                return null;
-            } else {
+            if (address != null) {
                 Address location = address.get(0);
                 p1 = new LatLng(location.getLatitude(), location.getLongitude());
+            } else {
+                return null;
             }
 
         } catch (IOException ex) {

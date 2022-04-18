@@ -1,40 +1,21 @@
 package com.example.mailapp.database.entities;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class MailEntity {
-
-    private static final DateFormat df2 = new SimpleDateFormat("dd MMMM yyyy");
-    private static final String todayDate = df2.format(Calendar.getInstance().getTime());
-
+public class MailEntity implements Comparable{
 
     public MailEntity() {
     }
 
-    public MailEntity(String  idPostWorker,String mailFrom, String mailTo,String mailType, String shippingType, String address, String zip, String city) {
-        this.mailFrom = mailFrom;
-        this.mailTo = mailTo;
-        this.address = address;
-        this.zip = zip;
-        this.city = city;
-        this.shippingType = shippingType;
-        this.receiveDate = todayDate;
-        this.mailType = mailType;
-        this.idPostWorker = idPostWorker;
-        this.status = "In Progress";
-    }
-
 
     private String idMail;
-
     private String idPostWorker;
-
     private String mailFrom;
     private String mailTo;
     private String address;
@@ -64,8 +45,6 @@ public class MailEntity {
     public void setIdPostWorker(String idPostWorker) {
         this.idPostWorker = idPostWorker;
     }
-
-
 
     public String getMailFrom() {
         return mailFrom;
@@ -139,10 +118,6 @@ public class MailEntity {
         this.status = status;
     }
 
-    public String getReceiveDate() {
-        return receiveDate;
-    }
-
     public void setReceiveDate(String receiveDate) {
         this.receiveDate = receiveDate;
     }
@@ -163,6 +138,13 @@ public class MailEntity {
         MailEntity o = (MailEntity) obj;
         return o.getIdMail() == (this.getIdMail());
     }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        return toString().compareTo(o.toString());
+    }
+
+
 
     @Override
     public String toString() {

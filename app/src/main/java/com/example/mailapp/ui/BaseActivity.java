@@ -10,17 +10,18 @@ import static com.example.mailapp.R.id.MapBtn;
 import static com.example.mailapp.R.id.SettingsBtn;
 import static com.example.mailapp.R.id.myToolbar;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mailapp.BaseApplication;
-import com.example.mailapp.database.repository.PostworkerRepository;
+import com.example.mailapp.database.entities.PostWorkerEntity;
 import com.example.mailapp.databinding.ActivityBaseBinding;
 import com.example.mailapp.ui.Fragments.AboutFragment;
 import com.example.mailapp.ui.Fragments.HomeFragment;
@@ -29,30 +30,27 @@ import com.example.mailapp.ui.Fragments.MapFragment;
 import com.example.mailapp.ui.Fragments.MyAccountFragment;
 import com.example.mailapp.ui.Fragments.SettingsFragment;
 import com.example.mailapp.util.MyAlertDialog;
-import com.example.mailapp.util.OnAsyncEventListener;
+import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "SharedPrefs";
-    public static final String PREFS_USER = "LoggedIn";
-    public static final String PREFS_ID_USER = "idUser";
-    public static final String PREFS_MAIL = "";
     public static final String PREFS_BACKGROUND = "Background";
     private SharedPreferences settings;
-    private SharedPreferences sharedPreferences;
-    private String sharedPrefMail, sharedPrefBackground = null;
-    private PostworkerRepository postworkerRepository;
-
+    private SharedPreferences.Editor editor;
+    private PostWorkerEntity currentWorker;
     protected Toolbar toolbar;
     protected ActivityBaseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        postworkerRepository = ((BaseApplication) getApplication()).getPostworkerRepository();
+        settings= this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         initialize();
         replaceFragment(new HomeFragment(), null);
+
     }
 
     private void initialize() {
@@ -70,6 +68,26 @@ public class BaseActivity extends AppCompatActivity {
         binding.HomeBottomNavBar.setSelectedItemId(HomeBtn);
 
         setContentView(binding.getRoot());
+
+        //Take back user connected
+        PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(this.getApplication(),
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+        PostWorkerViewModel currentWorkerViewModel = new ViewModelProvider(this, factory).get(PostWorkerViewModel.class);
+        currentWorkerViewModel.getWorker().observe(this, postWorker -> {
+            if (postWorker != null) {
+                currentWorker = postWorker;
+                //set right background settings according to his background values in DB
+                editor = this.getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
+                editor.putString(BaseActivity.PREFS_BACKGROUND, currentWorker.getBackground());
+                editor.apply();
+                System.out.println("## Set background to : "+settings.getString("Background","white"));
+                //Change color according to value in stored in db
+                if (currentWorker.getBackground().equals("black"))
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                else
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
     }
 
 
@@ -126,7 +144,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
     /**
-     * MEthod to ask confirmation for Log Out
+     * Method to ask confirmation for Log Out
      * Go to login page after
      */
     public void logout(){

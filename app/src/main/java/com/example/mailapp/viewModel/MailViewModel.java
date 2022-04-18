@@ -16,10 +16,7 @@ import com.example.mailapp.util.OnAsyncEventListener;
 
 public class MailViewModel  extends AndroidViewModel {
 
-
     private MailRepository repository;
-
-
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     private final MediatorLiveData<MailEntity> observableMail;
 
@@ -28,8 +25,6 @@ public class MailViewModel  extends AndroidViewModel {
         super(application);
 
         repository = repo;
-
-
         observableMail = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
         observableMail.setValue(null);
@@ -39,8 +34,6 @@ public class MailViewModel  extends AndroidViewModel {
             // observe the changes of the client entity from the database and forward them
             observableMail.addSource(mail, observableMail::setValue);
         }
-
-
     }
 
     /**

@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.Enums.Status;
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.database.repository.PostworkerRepository;
@@ -44,8 +45,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MailDetailFragment extends Fragment {
     private static final String TAG = "MailFragment";
-    private static final String CENTRAL_EMAIL = "centrale@poste.ch";
-    private static final String CENTRAL_ID = "KiiQrVHOOUP9QRLQpyPHh83lcVg1";
+    private static final String CENTRAL_ID ="U9w13HzxjbbAHQ2dfMlMADRcbwk2";
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy");
     private static final String TODAY = DATE_FORMAT.format(Calendar.getInstance().getTime());
 
@@ -53,10 +53,8 @@ public class MailDetailFragment extends Fragment {
     private Boolean enableEdit = true;
     private Boolean isEditMode;
     private String idMailChooseFromList;
-
     private MailEntity currentMail;
     private MailViewModel currentViewModel;
-
     private String workerConnectedIdStr;
     private View v;
     private PostworkerRepository repository;
@@ -89,7 +87,6 @@ public class MailDetailFragment extends Fragment {
         //Take back the postworker connected
         workerConnectedIdStr = FirebaseAuth.getInstance().getCurrentUser().getUid();
         initialize(v);
-
 
         //Take back the id of the mail we Choose on the list
         Bundle data = getArguments();
@@ -199,7 +196,7 @@ public class MailDetailFragment extends Fragment {
                     city.setError("City doesn't exist in Swiss");
                     System.out.println("The city name entered was : "+newMail.getCity());
                 } else {
-                    newMail.setStatus("In Progress");
+                    newMail.setStatus(Status.IN_PROGRESS.toString());
                     newMail.setReceiveDate(TODAY);
 
                     DatabaseReference reference = FirebaseDatabase.getInstance()
@@ -212,7 +209,7 @@ public class MailDetailFragment extends Fragment {
                         public void onSuccess() {
 
                             Log.d(TAG, "## Create Mail : success");
-                            Toast.makeText(requireActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
                             replaceFragment(new HomeFragment()); //Go back to home after
                             Objects.requireNonNull(getActivity()).getViewModelStore().clear();
 
@@ -244,7 +241,7 @@ public class MailDetailFragment extends Fragment {
                     System.out.println("The city name entered was : "+currentMail.getCity());
                 } else {
                     reAssignToAWorker(currentMail, String.valueOf(oldWorkerID));
-                    currentMail.setStatus("In Progress");
+                    currentMail.setStatus(Status.IN_PROGRESS.toString());
                     currentMail.setReceiveDate(TODAY);
                     currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
                         @Override
@@ -263,7 +260,6 @@ public class MailDetailFragment extends Fragment {
                 }
             }
         } else {
-            //   currentMail.setIdMail(Integer.parseInt(null));
             editAddButton.setImageResource(R.drawable.ic_baseline_save_24);
             enableEdit(true);
             enableEdit = false;
@@ -338,6 +334,7 @@ public class MailDetailFragment extends Fragment {
             mail.setIdPostWorker(workerConnectedIdStr);
         } else {
             PostworkerRepository repo = ((BaseApplication)getActivity().getApplication()).getPostworkerRepository();
+
             mail.setIdPostWorker(CENTRAL_ID);
 
             repo.insertANewMail(CENTRAL_ID, mail.getIdMail(), new OnAsyncEventListener() {
@@ -360,7 +357,7 @@ public class MailDetailFragment extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    System.out.println("Failed adding the mail to postworker : "+CENTRAL_ID);
+                    System.out.println("Failed adding the mail to postworker : "+ CENTRAL_ID);
                 }
             });
 

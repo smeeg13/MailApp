@@ -1,7 +1,6 @@
 package com.example.mailapp.ui;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,14 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.repository.PostworkerRepository;
 import com.example.mailapp.util.MyAlertDialog;
-import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Page For the Login
@@ -25,8 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mail, pwd;
     private TextView SignUpbtn;
-
-    PostworkerRepository postworkerRepository;
+    private PostworkerRepository postworkerRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     mail.setText("");
                     pwd.setText("");
                 } else {
+                    System.out.println(Messages.WRONG_INFO);
                     mail.setError(getString(R.string.error_invalid_email));
                     mail.requestFocus();
                     pwd.setText("");

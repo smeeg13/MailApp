@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mailapp.BaseApplication;
 import com.example.mailapp.Enums.Messages;
+import com.example.mailapp.Enums.Status;
 import com.example.mailapp.R;
 import com.example.mailapp.adapter.RecyclerAdapter;
 import com.example.mailapp.database.entities.MailEntity;
@@ -38,15 +39,11 @@ public class HomeFragment extends Fragment {
     private Button HomeSeeAllMailsBtn;
     private ProgressBar HomeProgressBar;
     private TextView ProgressPercent;
-
     private MailListViewModel viewModelAllMail;
     private List<MailEntity> mailsInProgress;
     private List<MailEntity> mailsAll;
     private RecyclerAdapter<MailEntity> adapter;
-
     private MailRepository mailRepository;
-
-
 
     public HomeFragment() {
         // Required empty public constructor
@@ -130,7 +127,7 @@ public class HomeFragment extends Fragment {
         MailEntity currentMail = new MailEntity();
         currentMail.setIdMail(mailsInProgress.get(position).getIdMail());
         currentMail = mailsInProgress.get(position);
-        currentMail.setStatus("Done");
+        currentMail.setStatus(Status.DONE.toString());
 
         mailRepository.update(currentMail, new OnAsyncEventListener() {
             @Override
@@ -169,7 +166,6 @@ public class HomeFragment extends Fragment {
                 "ID of the Mail : " + mail.getIdMail() + separator + "Are you sure ?";
         final MyAlertDialog myAlert = new MyAlertDialog(getContext(), "Delete Mail", msg, "Yes, Delete");
         boolean hasBeenDeleted = myAlert.DeleteMail(mail, viewModelAllMail, view);
-        System.out.println("@@@@@@@ Alert dialog for deleting the mail has been accepted : "+hasBeenDeleted);
         if (hasBeenDeleted) {
             //To also remove the mail in the postworker
             PostworkerRepository repo = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();

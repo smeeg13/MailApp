@@ -26,7 +26,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText inputfirstname, inputLastName, inputEmail, inputPhone, inputAddress, inputZIP, inputLocation, inputPassword, inputConfirmPwd;
     private final ArrayList<EditText> inputs = new ArrayList<>();
-
     private PostworkerRepository repository;
 
     @Override
@@ -35,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         repository = ((BaseApplication) getApplication()).getPostworkerRepository();
-
         initialize();
        }
 
@@ -129,15 +127,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Check if all entries has been completed
         booleans[0] = CheckEmpty();
-        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches())
+        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches()){
             booleans[1] = true;
+            inputEmail.setError(Messages.INVALID_EMAIL.toString());
+        }
         booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
         booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPwd.getText().toString());
 
         for (boolean b : booleans) {
-            if (b) {
+            if (b)
                 IsOk++;
-            }
         }
         return IsOk <= 0;
     }
@@ -166,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean CheckSamePwd(String pwd, String ConfPwd) {
 
         if (!inputPassword.getText().toString().equals(inputConfirmPwd.getText().toString())) {
-            showError(inputConfirmPwd, getString(R.string.pwd_not_same));
+            showError(inputConfirmPwd, Messages.NOT_SAME_PWD.toString());
             return true;
         } else
             return false;
@@ -188,8 +187,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             isWeak=true;
-            System.out.println(R.string.pwd_weak);
-            showError(inputPassword, getString(R.string.pwd_weak));
+            System.out.println(Messages.WEAK_PWD);
+            showError(inputPassword,Messages.WEAK_PWD.toString());
         }
         return isWeak;
     }
