@@ -10,7 +10,7 @@ The postworker has the possibilities to add one mail or to change some informati
 In order to make some test some demo data are already saved in the Firebase database:
 
 #### Post Worker
-- Abdullah Binjos, binjabdu@gmail.com, @dminHevs01,Rue des pommes 12 1950 Sion, 079. <br />
+- Abdullah Binjos, binjabdu@gmail.com, @dminHevs01,Avenue de la Gare 1950 Sion, 079. <br />
 - Megane Solliard, smeg@gmail.com, @dminHevs01, Rue des carou 12 3960 Sierre, 079. <br />
 - Centrale Centrale, centrale@poste.ch, @dminHevs01, Rue centrale 1950 Sion, 0000<br />
 
@@ -21,6 +21,13 @@ In order to make some test some demo data are already saved in the Firebase data
 - PostWorker Assigned = Centrale, From Meg, to Emilie, Type Packages, B-Mail, Avenue de la Gare 1950 Sion.
 - PostWorker Assigned =Megane, From Loic, to Jane, Type Packages, B-Mail, Plaine Bellevue 3960 Sierre.
 
+<br />
+
+### Information about mail creation
+in order to make the valitation of the shipping address, a JSON file containing all the cities in Switzerland will be load. We will check if the city entered correspond to one of the cities stores in the files.
+<br />
+
+Unfortunately, we haven't found a file containing all the small villages. **Only a city can be entered !**
 <br />
 <br />
 
