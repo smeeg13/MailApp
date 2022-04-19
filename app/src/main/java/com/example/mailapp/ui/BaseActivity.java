@@ -50,6 +50,8 @@ public class BaseActivity extends AppCompatActivity {
 
         initialize();
         replaceFragment(new HomeFragment(), null);
+        binding.HomeTopNavBar.setSelected(false);
+        binding.HomeBottomNavBar.setSelectedItemId(HomeBtn);
     }
 
     private void initialize() {
