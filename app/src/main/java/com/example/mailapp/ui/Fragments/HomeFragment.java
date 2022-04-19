@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
+        getActivity().getViewModelStore().clear();
 
         ProgressPercent = v.findViewById(R.id.ProgressPercent);
         HomeProgressBar = v.findViewById(R.id.HomeProgressBar);

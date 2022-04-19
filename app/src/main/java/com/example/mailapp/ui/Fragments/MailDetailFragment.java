@@ -68,6 +68,7 @@ public class MailDetailFragment extends Fragment {
     private Switch assignedToMe;
     private FloatingActionButton editAddButton, deleteButton, backHomeBtn;
 
+    private FragmentManager fragmentManager;
 
     public MailDetailFragment() {
     }
@@ -113,6 +114,7 @@ public class MailDetailFragment extends Fragment {
             Toast.makeText(getActivity().getBaseContext(), "Now you can Edit the mail choosed !", Toast.LENGTH_SHORT).show();
             isEditMode = true;
         }
+        fragmentManager = getFragmentManager();
          AtomicReference<String> oldWorkerID = new AtomicReference<>();
         //Take back the mail choosed and display the infos
         MailViewModel.Factory factory2 = new MailViewModel.Factory(
@@ -208,7 +210,6 @@ public class MailDetailFragment extends Fragment {
                             Log.d(TAG, "## Create Mail : success");
                             //Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
                             replaceFragment(new HomeFragment());
-                            getActivity().getViewModelStore().clear();
                         }
 
                         @Override
@@ -521,8 +522,6 @@ public class MailDetailFragment extends Fragment {
 
     //Change fragment
     public void replaceFragment(Fragment newfragment) {
-        FragmentManager fragmentManager;
-        fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
         fragmentTransaction.commit();
