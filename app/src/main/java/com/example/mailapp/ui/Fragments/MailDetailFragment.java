@@ -57,7 +57,6 @@ public class MailDetailFragment extends Fragment {
     private MailViewModel currentViewModel;
     private String workerConnectedIdStr;
     private View v;
-    private PostworkerRepository repository;
 
     //UI variables
     private final ArrayList<EditText> editTexts = new ArrayList<>();
@@ -148,7 +147,6 @@ public class MailDetailFragment extends Fragment {
     }
 
     public void initialize(View v) {
-        repository = ((BaseApplication) getActivity().getApplication()).getPostworkerRepository();
 
         mailFrom = v.findViewById(R.id.DetailMailFromEditText);
         editTexts.add(mailFrom);
@@ -207,12 +205,10 @@ public class MailDetailFragment extends Fragment {
                     currentViewModel.createMail(newMail, new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
-
                             Log.d(TAG, "## Create Mail : success");
-                            Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
-                            replaceFragment(new HomeFragment()); //Go back to home after
-                            Objects.requireNonNull(getActivity()).getViewModelStore().clear();
-
+                            //Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
+                            replaceFragment(new HomeFragment());
+                            getActivity().getViewModelStore().clear();
                         }
 
                         @Override
@@ -280,6 +276,7 @@ public class MailDetailFragment extends Fragment {
                         Log.d(TAG, "## Delete Mail: success");
                         Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
                         //Go back to home fragment
+                        getActivity().getViewModelStore().clear();
                         replaceFragment(new HomeFragment());
                     }
 
@@ -524,7 +521,8 @@ public class MailDetailFragment extends Fragment {
 
     //Change fragment
     public void replaceFragment(Fragment newfragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager;
+        fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.HomeFrameLayout, newfragment);
         fragmentTransaction.commit();

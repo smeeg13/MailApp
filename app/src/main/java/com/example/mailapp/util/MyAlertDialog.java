@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatDelegate;
-
 import com.example.mailapp.Enums.Messages;
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
@@ -19,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MyAlertDialog {
 
     private int ThemeID;
-    String dialogTitle, dialogMsg, dialogYesBtn, dialogNoBtn = "Cancel";
+    String dialogYesBtn, dialogNoBtn = "Cancel";
     Context context;
     AlertDialog.Builder myAlert;
 
@@ -66,7 +64,6 @@ public class MyAlertDialog {
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             context.startActivity(intent);
             System.out.println("BACK TO LOGIN PAGE");
-
         });
         myAlert.setNegativeButton(dialogNoBtn, (dialog, which) -> dialog.dismiss());
         myAlert.show();
@@ -99,23 +96,18 @@ public class MyAlertDialog {
         return isDeleted[0];
     }
 
-
     public int getThemeID() {
         return ThemeID;
     }
-
     public void setThemeID(int themeID) {
         ThemeID = themeID;
     }
-
     public void setDialogTitle(String title) {
         myAlert.setTitle(title);
     }
-
     public void setDialogMsg(String msg) {
         myAlert.setMessage(msg);
     }
-
     public void setDialogYesBtn(String dialogYesBtn) {
         this.dialogYesBtn = dialogYesBtn;
     }

@@ -2,6 +2,7 @@ package com.example.mailapp.ui.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.example.mailapp.ui.LoginActivity;
 import com.example.mailapp.util.OnAsyncEventListener;
 import com.example.mailapp.viewModel.PostWorkerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,7 +36,7 @@ import java.util.ArrayList;
 public class MyAccountFragment extends Fragment {
 
     private static final String TAG = "AccountDetails";
-    private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputPassword, inputConfirmPassword, inputTitle, inputAddress;
+    private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation,  inputTitle, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
     private Button inputDeleteButton;
     private Boolean aBoolean = true;
@@ -93,10 +96,6 @@ public class MyAccountFragment extends Fragment {
         inputs.add(inputZip);
         inputLocation = v.findViewById(R.id.AccountLocationTextView);
         inputs.add(inputLocation);
-        inputPassword = v.findViewById(R.id.AccountPasswordTextView);
-        inputs.add(inputPassword);
-        inputConfirmPassword = v.findViewById(R.id.AccountConfirmPassword);
-        inputs.add(inputConfirmPassword);
 
         PostWorkerViewModel.Factory factory = new PostWorkerViewModel.Factory(getActivity().getApplication(),
                 FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -109,8 +108,6 @@ public class MyAccountFragment extends Fragment {
                 lastname = postWorker.getLastname();
                 inputFirstnameAndLastname.setText(new StringBuilder().append(firstname).append(" ").append(lastname).toString());
                 inputEmail.setText(postWorker.getEmail());
-                inputPassword.setText(postWorker.getPassword());
-                inputConfirmPassword.setText(postWorker.getPassword());
                 inputPhone.setText(postWorker.getPhone());
                 inputAddress.setText(postWorker.getAddress());
                 inputZip.setText(postWorker.getZip());
@@ -133,8 +130,7 @@ public class MyAccountFragment extends Fragment {
                 Toast.makeText(getContext(), Messages.INVALID_FIELDS.toString(), Toast.LENGTH_SHORT).show();
             } else {
                 enableEdit(false);
-                currentWorker.setPassword(inputPassword.getText().toString());
-                currentWorker.setEmail(inputEmail.getText().toString());
+
                 currentWorker.setZip(inputZip.getText().toString());
                 currentWorker.setCity(inputLocation.getText().toString());
                 currentWorker.setAddress(inputAddress.getText().toString());
@@ -167,17 +163,12 @@ public class MyAccountFragment extends Fragment {
             inputAddress.setEnabled(true);
             inputZip.setEnabled(true);
             inputLocation.setEnabled(true);
-            inputPassword.setEnabled(true);
-            inputConfirmPassword.setVisibility(View.VISIBLE);
-            inputConfirmPassword.setEnabled(true);
+
         } else {
             inputPhone.setEnabled(false);
             inputAddress.setEnabled(false);
             inputZip.setEnabled(false);
             inputLocation.setEnabled(false);
-            inputPassword.setEnabled(false);
-            inputConfirmPassword.setVisibility(View.INVISIBLE);
-            inputConfirmPassword.setEnabled(false);
         }
     }
 
@@ -238,17 +229,22 @@ public class MyAccountFragment extends Fragment {
         currentWorkerViewModel.deleteWorker(currentWorker, new OnAsyncEventListener() {
             @Override
             public void onSuccess() {
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(currentWorker.getEmail(), currentWorker.getPassword());
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                System.out.println("delete of the auth user");
-                assert user != null;
-                user.delete().addOnCompleteListener(task -> {
-                    System.out.println(Messages.ACCOUNT_DELETED);
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    startActivity(intent);
-                });
+                if (user != null) {
+                    user.reauthenticate(credential).addOnCompleteListener(task -> user.delete().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Log.d("Tag", "User account deleted.");
+                            System.out.println(TAG+" : "+Messages.ACCOUNT_DELETED);
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            startActivity(intent);
+                        }
+                    }));
+                }
             }
 
             @Override
@@ -262,21 +258,10 @@ public class MyAccountFragment extends Fragment {
 
     public boolean InputsAreGood() {
         int IsOk = 0;
-
-        boolean[] booleans = new boolean[4];
-
         //Check if all entries has been completed
-        booleans[0] = CheckEmpty();
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches())
-            booleans[1] = true;
-        booleans[2] = CheckPasswordWeak(inputPassword.getText().toString());
-        System.out.println(inputPassword.getText().toString());
-        booleans[3] = CheckSamePwd(inputPassword.getText().toString(), inputConfirmPassword.getText().toString());
+        if (CheckEmpty())
+            IsOk++;
 
-        for (boolean b : booleans) {
-            if (b)
-                IsOk++;
-        }
         return IsOk <= 0;
     }
 
@@ -298,39 +283,6 @@ public class MyAccountFragment extends Fragment {
         return IsEmpty > 0;
     }
 
-    /**
-     * To Check if the Confirm password entered is the same as the Password
-     * Return true if the two Pwd are not the same
-     */
-    public boolean CheckSamePwd(String pwd, String ConfPwd) {
-
-        if (!pwd.equals(ConfPwd)) {
-            showError(inputConfirmPassword, getString(R.string.pwd_not_same));
-            return true;
-        } else
-            return false;
-    }
-
-
-    /**
-     * To Check if the password entered is strong or not
-     * Return true if the Pwd is Weak
-     */
-    public boolean CheckPasswordWeak(String password) {
-        boolean isWeak = true;
-        String pattern = getString(R.string.pwdPattern);
-        boolean matches = password.matches(pattern);
-
-        if (matches) {
-            isWeak = false;
-            System.out.println(getString(R.string.pwd_strong));
-        } else {
-            isWeak = true;
-            System.out.println(getString(R.string.pwd_weak));
-            showError(inputPassword, String.valueOf(R.string.pwd_weak));
-        }
-        return isWeak;
-    }
 
     /**
      * To Add the Red Info with a message in the field
