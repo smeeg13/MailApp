@@ -62,13 +62,11 @@ public class AllMailFragment extends Fragment {
                 Log.d(TAG, "clicked on: " + mailsAll.get(position).getIdMail());
 
                 if (todo.equals("edit")) { //Clicked on edit
-                    System.out.println("btn clicked edit");
                     Bundle datas = new Bundle();
                     datas.putString("MailID", mailsAll.get(position).getIdMail());
                     datas.putBoolean("Enable", false);
                     replaceFragment(new MailDetailFragment(), datas);
                 } else { //Clicked on done
-                    System.out.println("btn clicked done");
                     UpdateStatusMailChoose(position);
                 }
             }
@@ -96,7 +94,6 @@ public class AllMailFragment extends Fragment {
 
         backHome.setOnClickListener(view -> {
             getActivity().getViewModelStore().clear();
-            System.out.println("Arrow Back Home Clicked");
             if (getFragmentManager() != null) {
                 getFragmentManager().beginTransaction()
                         .replace(R.id.HomeFrameLayout, new HomeFragment())

@@ -2,15 +2,13 @@ package com.example.mailapp.Enums;
 
 
 public enum Status {
-    IN_PROGRESS("In Progress", 0),
-    DONE("Done", 1);
+    IN_PROGRESS("In Progress"),
+    DONE("Done");
 
-    private String stringValue;
-    private int intValue;
+    private final String stringValue;
 
-    private Status(String toString, int value) {
+    Status(String toString) {
         stringValue = toString;
-        intValue = value;
     }
 
     @Override

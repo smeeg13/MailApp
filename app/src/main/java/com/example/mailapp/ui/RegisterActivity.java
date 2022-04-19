@@ -171,7 +171,6 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
     }
 
-
     /**
      * To Check if the password entered is strong or not
      * Return true if the Pwd is Weak
@@ -192,7 +191,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return isWeak;
     }
-
 
     /**
      * To Add the Red Info with a message in the field

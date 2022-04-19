@@ -61,7 +61,6 @@ public class PostworkerRepository {
         });
     }
 
-
     public void insert(final PostWorkerEntity postWorker, OnAsyncEventListener callback) {
         FirebaseDatabase.getInstance()
                 .getReference("postworkers")

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PostWorkerEntity implements Comparable{
+public class PostWorkerEntity implements Comparable {
     private String idPostWorker;
 
     private String firstname;
@@ -21,7 +21,7 @@ public class PostWorkerEntity implements Comparable{
     private String city;
     private String background;
 
-    public PostWorkerEntity(){
+    public PostWorkerEntity() {
 
     }
 
@@ -30,10 +30,10 @@ public class PostWorkerEntity implements Comparable{
         setLastname(lastname);
         setPhone(phone);
         setEmail(email);
-       setPassword(password);
-       setAddress(address);
-       setZip(zip);
-       setCity(city);
+        setPassword(password);
+        setAddress(address);
+        setZip(zip);
+        setCity(city);
     }
 
     @Exclude
@@ -148,7 +148,7 @@ public class PostWorkerEntity implements Comparable{
     }
 
     @Exclude
-    public Map<String,Object> toMap(){
+    public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
 
         result.put("firstname", firstname);
@@ -158,7 +158,7 @@ public class PostWorkerEntity implements Comparable{
         result.put("address", address);
         result.put("zip", zip);
         result.put("city", city);
-        result.put("background",background);
+        result.put("background", background);
         return result;
     }
 }

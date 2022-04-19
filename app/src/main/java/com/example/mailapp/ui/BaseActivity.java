@@ -37,6 +37,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "SharedPrefs";
     public static final String PREFS_BACKGROUND = "Background";
+    private static final String TAG = "BaseActivity";
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private PostWorkerEntity currentWorker;
@@ -81,7 +82,7 @@ public class BaseActivity extends AppCompatActivity {
                 editor = this.getSharedPreferences(BaseActivity.PREFS_NAME, 0).edit();
                 editor.putString(BaseActivity.PREFS_BACKGROUND, currentWorker.getBackground());
                 editor.apply();
-                System.out.println("## Set background to : "+settings.getString("Background","white"));
+                System.out.println(TAG+" :  Set background to : "+settings.getString("Background","white"));
                 //Change color according to value in stored in db
                 if (currentWorker.getBackground().equals("black"))
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

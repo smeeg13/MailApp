@@ -16,12 +16,10 @@ public class MailLiveData extends LiveData<MailEntity> {
     private static final String TAG = "MailLiveData";
 
     private final DatabaseReference reference;
-    private final String worker;
     private final MailLiveData.MyValueEventListener listener = new MailLiveData.MyValueEventListener();
 
     public MailLiveData(DatabaseReference ref) {
         reference = ref;
-        worker = ref.getParent().getParent().getKey();
     }
 
     @Override

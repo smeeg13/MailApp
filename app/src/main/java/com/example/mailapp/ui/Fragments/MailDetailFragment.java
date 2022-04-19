@@ -3,6 +3,7 @@ package com.example.mailapp.ui.Fragments;
 import static com.example.mailapp.ui.Fragments.MapFragment.readCitiesAuthorizedFromJSON;
 import static com.example.mailapp.ui.RegisterActivity.showError;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,7 +195,6 @@ public class MailDetailFragment extends Fragment {
                 //Check on City
                 if (!readCitiesAuthorizedFromJSON(city.getText().toString(),getActivity())) {
                     city.setError("City doesn't exist in Swiss");
-                    System.out.println("The city name entered was : "+newMail.getCity());
                 } else {
                     newMail.setStatus(Status.IN_PROGRESS.toString());
                     newMail.setReceiveDate(TODAY);
@@ -207,14 +207,14 @@ public class MailDetailFragment extends Fragment {
                     currentViewModel.createMail(newMail, new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
-                            Log.d(TAG, "## Create Mail : success");
+                            Log.d(TAG, " Create Mail : success");
                             //Toast.makeText(getActivity(), Messages.MAIL_CREATED.toString(), Toast.LENGTH_LONG).show();
                             replaceFragment(new HomeFragment());
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            Log.d(TAG, "## Create Mail : failure", e);
+                            Log.d(TAG, " Create Mail : failure", e);
                             Toast.makeText(getActivity(), Messages.MAIL_CREATED_FAILED.toString(), Toast.LENGTH_LONG).show();
                         }
                     });
@@ -235,7 +235,6 @@ public class MailDetailFragment extends Fragment {
                 //Check on City
                 if (!readCitiesAuthorizedFromJSON(city.getText().toString(),getActivity())) {
                     city.setError("City doesn't exist in Swiss");
-                    System.out.println("The city name entered was : "+currentMail.getCity());
                 } else {
                     reAssignToAWorker(currentMail, String.valueOf(oldWorkerID));
                     currentMail.setStatus(Status.IN_PROGRESS.toString());
@@ -243,14 +242,14 @@ public class MailDetailFragment extends Fragment {
                     currentViewModel.updateMail(currentMail, new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
-                            Log.d(TAG, "## Update Mail: success");
+                            Log.d(TAG, " Update Mail: success");
                             editAddButton.setImageResource(R.drawable.ic_baseline_edit_24);
                             enableEdit = true;
                             currentMail = null;
                         }
                         @Override
                         public void onFailure(Exception e) {
-                            Log.d(TAG, "## Update Mail: failure", e);
+                            Log.d(TAG, " Update Mail: failure", e);
                         }
                     });
                     getActivity().getViewModelStore().clear();
@@ -274,7 +273,7 @@ public class MailDetailFragment extends Fragment {
                 currentViewModel.deleteMail(mail, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
-                        Log.d(TAG, "## Delete Mail: success");
+                        Log.d(TAG, " Delete Mail: success");
                         Toast.makeText(getActivity().getBaseContext(), Messages.MAIL_DELETED.toString(), Toast.LENGTH_SHORT).show();
                         //Go back to home fragment
                         getActivity().getViewModelStore().clear();
@@ -283,7 +282,7 @@ public class MailDetailFragment extends Fragment {
 
                     @Override
                     public void onFailure(Exception e) {
-                        Log.d(TAG, "## Delete Mail: failure", e);
+                        Log.d(TAG, " Delete Mail: failure", e);
                     }
                 }));
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -342,12 +341,12 @@ public class MailDetailFragment extends Fragment {
                     repo.removeAMail(workerConnectedIdStr, mail.getIdMail(), new OnAsyncEventListener() {
                         @Override
                         public void onSuccess() {
-                            System.out.println("Success ; Removing the mail from the worker : "+workerConnectedIdStr);
+                            System.out.println(TAG+" : "+"Success ; Removing the mail from the worker : "+workerConnectedIdStr);
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            System.out.println("Failed removing the mail from postworker : "+workerConnectedIdStr);
+                            System.out.println(TAG+" : "+"Failed removing the mail from postworker : "+workerConnectedIdStr);
                         }
                     });
                 }
@@ -355,7 +354,7 @@ public class MailDetailFragment extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    System.out.println("Failed adding the mail to postworker : "+ CENTRAL_ID);
+                    System.out.println(TAG+" : "+"Failed adding the mail to postworker : "+ CENTRAL_ID);
                 }
             });
 
@@ -377,7 +376,7 @@ public class MailDetailFragment extends Fragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    System.out.println("Failed adding the mail to postworker : "+CENTRAL_ID);
+                    System.out.println(TAG+" : "+"Failed adding the mail to postworker : "+CENTRAL_ID);
                 }
             });
         }
@@ -406,6 +405,7 @@ public class MailDetailFragment extends Fragment {
     }
 
     //initialize info of the mail to display
+    @SuppressLint("SetTextI18n")
     private void initializeFieldWithMailData(MailEntity mail) {
         idnumber.setText(mail.getIdMail());
         mailFrom.setText(mail.getMailFrom());
@@ -454,7 +454,7 @@ public class MailDetailFragment extends Fragment {
         } else {
             dueDatestr = "";  // Start date
             try {
-                c.setTime(DATE_FORMAT.parse(TODAY));
+                c.setTime(Objects.requireNonNull(DATE_FORMAT.parse(TODAY)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -559,12 +559,10 @@ public class MailDetailFragment extends Fragment {
                     weight.setEnabled(false);
                 } else
                     weight.setEnabled(true);
-                System.out.println("mail type choosed : " + mailTypeChoosed);
             } else {
                 shipTypeChoosed = rb.getText().toString();
                 shipDateStr = calculateShipDate(shipTypeChoosed);
                 dueDate.setText(shipDateStr);
-                System.out.println("ship type choosed : " + shipTypeChoosed);
             }
         }
     }

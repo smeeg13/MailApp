@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,11 +44,9 @@ public class MapFragment extends Fragment {
     private SupportMapFragment supportMapFragment;
     private String workerConnectedIdStr;
     private List<MailEntity> mailsInProgress;
-    private ArrayList<LatLng> markersLatLng = new ArrayList<>();
     private MailListViewModel viewModel;
     List<String> addressesStrings;
     private int markerClicked = 0;
-    private List<Address> addresses;
     private FusedLocationProviderClient fusedLocationClient;
 
     public MapFragment() {
@@ -64,7 +63,6 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        System.out.println("### MAP OPEN");
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -115,7 +113,6 @@ public class MapFragment extends Fragment {
                             markerClicked++;
                         } else {
                             if (markerClicked == 1) {
-                                System.out.println("Marker Clicked Title : " + marker.getTitle());
                                 String idstr = marker.getTitle();
 
                                 if (idstr.contains(" : ")) {
@@ -138,7 +135,6 @@ public class MapFragment extends Fragment {
                         }
                         return false;
                     });
-
                 });
             }
         });
@@ -214,7 +210,7 @@ public class MapFragment extends Fragment {
                 System.out.println(location);
                 p1 = new LatLng(location.getLatitude(), location.getLongitude());
             } else {
-                System.out.println("NULL");
+                System.out.println(TAG+" : "+"Location Is NULL");
                 return null;
             }
 
@@ -225,15 +221,15 @@ public class MapFragment extends Fragment {
     }
 
 
-    static String getJsonFromAssets(Activity activity, String fileName) {
+    static String getJsonFromAssets(Activity activity) {
         String jsonString;
         try {
-            InputStream is = activity.getAssets().open(fileName);
+            InputStream is = activity.getAssets().open("Cities_in_CH.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            jsonString = new String(buffer, "UTF-8");
+            jsonString = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -244,7 +240,7 @@ public class MapFragment extends Fragment {
     public static boolean readCitiesAuthorizedFromJSON(String cityEntered, Activity activity) {
         boolean isValid = false;
         try {
-            JSONArray m_jArry = new JSONArray(getJsonFromAssets(activity, "Cities_in_CH.json"));
+            JSONArray m_jArry = new JSONArray(getJsonFromAssets(activity));
 
             for (int i = 0; i < m_jArry.length(); i++) {
                 JSONObject jo_inside = m_jArry.getJSONObject(i);
@@ -256,7 +252,7 @@ public class MapFragment extends Fragment {
                 cityEntered = cityEntered.toLowerCase(Locale.ROOT);
                 if (city_name.equals(cityEntered)) {
                     isValid = true;
-                    System.out.println("The city entered : " + cityEntered + " correspond to : " + city_name);
+                    System.out.println(TAG+" : "+"The city entered : " + cityEntered + " correspond to : " + city_name);
                     break;
                 }
             }
