@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class MyAccountFragment extends Fragment {
 
     private static final String TAG = "AccountDetails";
-    private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation,  inputTitle, inputAddress;
+    private TextView inputEmail, inputFirstnameAndLastname, inputPhone, inputZip, inputLocation, inputAddress;
     private FloatingActionButton inputfloatingEditButton;
     private Button inputDeleteButton;
     private Boolean aBoolean = true;
@@ -49,7 +49,6 @@ public class MyAccountFragment extends Fragment {
     private PostWorkerEntity currentWorker;
     private MailRepository mailRepository;
     private PostWorkerViewModel currentWorkerViewModel;
-    private boolean IsCentrale = false;
 
     public MyAccountFragment() {
         // Required empty public constructor
@@ -189,27 +188,27 @@ public class MyAccountFragment extends Fragment {
                         currentWorkerViewModel.removeAMail(idWorkerConnected, mail.getIdMail(), new OnAsyncEventListener() {
                             @Override
                             public void onSuccess() {
-                                System.out.println("mail " + mail.getIdMail() + " has been delete from worker : " + idWorkerConnected);
+                                System.out.println(TAG+" : mail " + mail.getIdMail() + " has been delete from worker : " + idWorkerConnected);
                                 //Add it to the centrale
                                 currentWorkerViewModel.insertANewMail(ID_CENTRALE, mail.getIdMail(), new OnAsyncEventListener() {
                                     @Override
                                     public void onSuccess() {
-                                        System.out.println("mail " + mail.getIdMail() + " has been ADDED from worker : " + ID_CENTRALE);
+                                        System.out.println(TAG+" : mail " + mail.getIdMail() + " has been ADDED from worker : " + ID_CENTRALE);
                                         deleteWorker();
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        System.out.println("add failed");
-                                        System.out.println("Error : " + e);
+                                        System.out.println(TAG+" : add failed");
+                                        System.out.println(TAG+" : Error : " + e);
                                     }
                                 });
                             }
 
                             @Override
                             public void onFailure(Exception e) {
-                                System.out.println("delete failed");
-                                System.out.println("Error : " + e);
+                                System.out.println(TAG+" : delete failed");
+                                System.out.println(TAG+" : Error : " + e);
                             }
                         });
                     }
@@ -235,7 +234,6 @@ public class MyAccountFragment extends Fragment {
                 if (user != null) {
                     user.reauthenticate(credential).addOnCompleteListener(task -> user.delete().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Log.d("Tag", "User account deleted.");
                             System.out.println(TAG+" : "+Messages.ACCOUNT_DELETED);
                             Intent intent = new Intent(getActivity(), LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -250,7 +248,7 @@ public class MyAccountFragment extends Fragment {
             @Override
             public void onFailure(Exception e) {
                 System.out.println(Messages.ACCOUNT_DELETED_FAILED);
-                System.out.println("Error : " + e);
+                System.out.println(TAG+" : Error : " + e);
             }
         });
     }

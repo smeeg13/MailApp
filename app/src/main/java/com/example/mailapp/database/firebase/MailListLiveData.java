@@ -23,7 +23,7 @@ public class MailListLiveData extends LiveData<List<MailEntity>> {
     private final String worker;
     private final MyValueEventListener listener = new MyValueEventListener();
 
-    public MailListLiveData(DatabaseReference mailreference,ArrayList<String> workeridsMails, String idWorker) {
+    public MailListLiveData(DatabaseReference mailreference, ArrayList<String> workeridsMails, String idWorker) {
         this.mailreference = mailreference;
         this.worker = idWorker;
         this.mailsofworker = workeridsMails;
@@ -57,7 +57,7 @@ public class MailListLiveData extends LiveData<List<MailEntity>> {
         List<MailEntity> mails = new ArrayList<>();
         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
             boolean isAssignedTo = false;
-            for (String s : mailsofworker){
+            for (String s : mailsofworker) {
                 if (s.equals(childSnapshot.getKey())) {
                     isAssignedTo = true;
                 }

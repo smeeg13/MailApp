@@ -28,12 +28,10 @@ public enum Messages {
     BACKGROUND_UPDATED("Background updated successfully",400);
 
 
-    private String stringValue;
-    private int intValue;
+    private final String stringValue;
 
-     Messages(String toString, int value) {
+    Messages(String toString, int value) {
         stringValue = toString;
-        intValue = value;
     }
 
     @Override

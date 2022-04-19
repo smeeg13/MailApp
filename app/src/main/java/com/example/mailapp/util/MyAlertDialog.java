@@ -35,12 +35,10 @@ public class MyAlertDialog {
         myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {
             dialog.dismiss();
             System.out.println("------------------------");
-            System.out.println("KILL PROCESS DONE");
-            System.out.println(" by the User");
+            System.out.println("KILL PROCESS DONE ; by the User");
             System.out.println("------------------------");
             FirebaseAuth.getInstance().signOut();
             System.out.println("USER : DISCONNECTED");
-            //if you want to kill app . from other then your main avtivity.(Launcher)
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
         });
@@ -52,8 +50,7 @@ public class MyAlertDialog {
         myAlert.setPositiveButton(dialogYesBtn, (dialog, which) -> {
             dialog.dismiss();
             System.out.println("------------------------");
-            System.out.println("LOGOUT  DONE");
-            System.out.println(" by the User");
+            System.out.println("LOGOUT  DONE ; by the User");
             System.out.println("------------------------");
             FirebaseAuth.getInstance().signOut();
             System.out.println("USER : DISCONNECTED");

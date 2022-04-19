@@ -35,7 +35,7 @@ public class PostWorkerLiveData extends LiveData<PostWorkerEntity> {
     private class MyValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if (dataSnapshot.exists()){
+            if (dataSnapshot.exists()) {
                 PostWorkerEntity entity = dataSnapshot.getValue(PostWorkerEntity.class);
                 entity.setIdPostWorker(dataSnapshot.getKey());
                 setValue(entity);

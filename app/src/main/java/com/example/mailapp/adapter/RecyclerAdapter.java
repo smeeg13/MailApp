@@ -6,8 +6,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mailapp.R;
 import com.example.mailapp.database.entities.MailEntity;
 import com.example.mailapp.util.RecyclerViewItemClickListener;
@@ -18,7 +20,7 @@ import java.util.Objects;
 
 public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    static Animation open, close, toright,fromright;
+    static Animation open, close, toright, fromright;
 
     private List<T> mdata;
     private RecyclerViewItemClickListener listener;
@@ -42,11 +44,11 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         }
     }
 
-    public RecyclerAdapter( RecyclerViewItemClickListener listener) {
+    public RecyclerAdapter(RecyclerViewItemClickListener listener) {
         this.listener = listener;
     }
 
-    public RecyclerAdapter( ) {
+    public RecyclerAdapter() {
     }
 
     @Override
@@ -61,7 +63,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
         toright = AnimationUtils.loadAnimation(parent.getContext(), R.anim.to_right_anim);
 
         viewHolder.moreBtn.setOnClickListener(view -> {
-            if (!viewHolder.isOpen){
+            if (!viewHolder.isOpen) {
                 viewHolder.doneBtn.setVisibility(View.VISIBLE);
                 viewHolder.editBtn.setVisibility(View.VISIBLE);
                 viewHolder.doneBtn.startAnimation(fromright);
@@ -69,8 +71,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
                 viewHolder.moreBtn.startAnimation(open);
                 viewHolder.doneBtn.setClickable(true);
                 viewHolder.editBtn.setClickable(true);
-            }
-            else {
+            } else {
                 viewHolder.doneBtn.setVisibility(View.INVISIBLE);
                 viewHolder.editBtn.setVisibility(View.INVISIBLE);
                 viewHolder.doneBtn.startAnimation(toright);
@@ -79,7 +80,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
                 viewHolder.doneBtn.setClickable(false);
                 viewHolder.editBtn.setClickable(false);
             }
-            viewHolder.isOpen= !viewHolder.isOpen;
+            viewHolder.isOpen = !viewHolder.isOpen;
         });
 
         viewHolder.moreBtn.setOnLongClickListener(view -> {
@@ -87,8 +88,8 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             return true;
         });
 
-        viewHolder.editBtn.setOnClickListener(view -> listener.onItemClick("edit",view, viewHolder.getAdapterPosition()));
-        viewHolder.doneBtn.setOnClickListener(view -> listener.onItemClick("done",view, viewHolder.getAdapterPosition()));
+        viewHolder.editBtn.setOnClickListener(view -> listener.onItemClick("edit", view, viewHolder.getAdapterPosition()));
+        viewHolder.doneBtn.setOnClickListener(view -> listener.onItemClick("done", view, viewHolder.getAdapterPosition()));
 
         return viewHolder;
     }
@@ -102,11 +103,12 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
             holder.mailto.setText(((MailEntity) item).getMailTo());
             holder.duedate.setText(((MailEntity) item).getShippedDate());
             holder.statusEntry.setText(((MailEntity) item).getStatus());
-         }
+        }
     }
 
     /**
      * How many mail are displayed in home page
+     *
      * @return
      */
     @Override
@@ -138,8 +140,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
                 @Override
                 public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
                     if (mdata instanceof MailEntity) {
-                        return ((MailEntity) mdata.get(oldItemPosition)).getIdMail() ==
-                                ((MailEntity) mdata.get(newItemPosition)).getIdMail();
+                        return ((MailEntity) mdata.get(oldItemPosition)).getIdMail().equals(((MailEntity) mdata.get(newItemPosition)).getIdMail());
                     }
                     return false;
                 }
@@ -147,7 +148,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerAdapter.Vie
                 @Override
                 public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
                     if (RecyclerAdapter.this.mdata instanceof MailEntity) {
-                       MailEntity newMail = (MailEntity) mdata.get(newItemPosition);
+                        MailEntity newMail = (MailEntity) mdata.get(newItemPosition);
                         MailEntity oldMail = (MailEntity) mdata.get(newItemPosition);
                         return Objects.equals(newMail.getIdMail(), oldMail.getIdMail());
                     }

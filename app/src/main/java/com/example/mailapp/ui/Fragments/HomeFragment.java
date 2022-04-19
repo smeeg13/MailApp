@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -60,6 +59,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         mailRepository = ((BaseApplication) getActivity().getApplication()).getMailRepository();
+        getActivity().getViewModelStore().clear();
 
         ProgressPercent = v.findViewById(R.id.ProgressPercent);
         HomeProgressBar = v.findViewById(R.id.HomeProgressBar);
@@ -77,13 +77,11 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, "clicked on: " + mailsInProgress.get(position).getIdMail());
 
                 if (todo.equals("edit")) { //Clicked on edit
-                    System.out.println("btn edit clicked ");
                     Bundle datas = new Bundle();
                     datas.putString("MailID", mailsInProgress.get(position).getIdMail());
                     datas.putBoolean("Enable", false);
                     replaceFragment(new MailDetailFragment(), datas);
                 } else { //Clicked on done
-                    System.out.println("btn clicked done");
                     UpdateStatusMailChoose(position);
                 }
             }
@@ -106,22 +104,16 @@ public class HomeFragment extends Fragment {
             if (mailEntities != null) {
                 mailsAll = mailEntities;
                 int mailAll = mailEntities.size();
-
                 mailsInProgress = mailsAll;
                 mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
                 int mailInProg = mailsInProgress.size();
                 int mailDone = mailAll-mailInProg;
-                System.out.println("All mails : " + mailAll);
-                System.out.println("Total mail done (progression) : " + mailDone);
-                System.out.println("Mail in progress : "+mailInProg);
-                updateProgressBar(mailAll, mailInProg, mailDone);
+                updateProgressBar(mailAll, mailDone);
                 adapter.setMdata(mailsInProgress);
-
             }
         });
 
         HomeSeeAllMailsBtn.setOnClickListener(view -> {
-            System.out.println("## go to all mail Frag");
             getFragmentManager().beginTransaction()
                     .replace(R.id.HomeFrameLayout, new AllMailFragment())
                     .commit();
@@ -138,20 +130,20 @@ public class HomeFragment extends Fragment {
         mailRepository.update(currentMail, new OnAsyncEventListener() {
             @Override
             public void onSuccess() {
-                System.out.println(Messages.MAIL_UPDATED);
+                System.out.println(TAG+" : "+Messages.MAIL_UPDATED);
             }
             @Override
             public void onFailure(Exception e) {
-                System.out.println(Messages.MAIL_UPDATE_FAILED);
+                System.out.println(TAG+" : "+Messages.MAIL_UPDATE_FAILED);
             }
         });
     }
 
-    private void updateProgressBar(int all, int inProg, int done) {
+    private void updateProgressBar(int all, int done) {
         HomeProgressBar.setMax(all);
         HomeProgressBar.setMin(0);
         HomeProgressBar.setProgress(done);
-        ProgressPercent.setText(done + " / " + all);
+        ProgressPercent.setText(new StringBuilder().append(done).append(" / ").append(all).toString());
     }
 
     private void replaceFragment(MailDetailFragment newfragment, Bundle datas) {

@@ -7,12 +7,10 @@ import com.google.firebase.database.Exclude;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class MailEntity implements Comparable{
+public class MailEntity implements Comparable {
 
     public MailEntity() {
     }
-
 
     private String idMail;
     private String idPostWorker;
@@ -145,22 +143,21 @@ public class MailEntity implements Comparable{
     }
 
 
-
     @Override
     public String toString() {
-        return "/////////////////"+
-                "ID : " + idMail+
-                "Mail from : " + mailFrom+
-                "Mail to : " + mailTo+
-                "Address : " + address+
-                "City : " + city+
-                "Zip : " + zip+
-                "Mail type : " + mailType+
-                "weight : " + weight+
-                "Shipping type : " + shippingType+
-                "Shipped date : " + shippedDate+
-                "Receive date in central : " + receiveDate+
-                "Status : " + status+
+        return "/////////////////" +
+                "ID : " + idMail +
+                "Mail from : " + mailFrom +
+                "Mail to : " + mailTo +
+                "Address : " + address +
+                "City : " + city +
+                "Zip : " + zip +
+                "Mail type : " + mailType +
+                "weight : " + weight +
+                "Shipping type : " + shippingType +
+                "Shipped date : " + shippedDate +
+                "Receive date in central : " + receiveDate +
+                "Status : " + status +
                 "/////////////////";
     }
 

@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsFragment extends Fragment {
 
+    private static final String TAG ="SettingsFragment";
     private View v;
     private SharedPreferences settings;
     private String sharedPrefBackground = null;
@@ -65,7 +66,6 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 String color = "black";
                 changeBackground(color);
-                System.out.println("black");
             }
         });
 
@@ -84,7 +84,7 @@ public class SettingsFragment extends Fragment {
                     editor.putString(BaseActivity.PREFS_BACKGROUND, "black");
                     editor.apply();
                     sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
-                    System.out.println("editor : black -> " + sharedPrefBackground);
+                    System.out.println(TAG+" : editor : black -> " + sharedPrefBackground);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     currentWorker.setBackground(color);
                     saveIntoDB(currentWorkerViewModel, currentWorker);
@@ -92,7 +92,7 @@ public class SettingsFragment extends Fragment {
                     editor.putString(BaseActivity.PREFS_BACKGROUND, "white");
                     editor.apply();
                     sharedPrefBackground = settings.getString(BaseActivity.PREFS_BACKGROUND, null);
-                    System.out.println("editor : white -> " + sharedPrefBackground);
+                    System.out.println(TAG+" : editor : white -> " + sharedPrefBackground);
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     currentWorker.setBackground(color);
                     saveIntoDB(currentWorkerViewModel, currentWorker);
@@ -106,13 +106,13 @@ public class SettingsFragment extends Fragment {
         currentWorkerViewModel.updatePostWorker(currentWorker, new OnAsyncEventListener() {
             @Override
             public void onSuccess() {
-                System.out.println(Messages.BACKGROUND_UPDATED + " for " + currentWorker.getEmail());
+                System.out.println(TAG+" : "+Messages.BACKGROUND_UPDATED + " for " + currentWorker.getEmail());
             }
 
             @Override
             public void onFailure(Exception e) {
-                System.out.println(Messages.BACKGROUND_UPDATED_FAILED + " for " + currentWorker.getEmail());
-                System.out.println("Error : " + e);
+                System.out.println(TAG+" : "+Messages.BACKGROUND_UPDATED_FAILED + " for " + currentWorker.getEmail());
+                System.out.println(TAG+" : Error : " + e);
             }
         });
     }
@@ -123,7 +123,7 @@ public class SettingsFragment extends Fragment {
         radioGroup = v.findViewById(R.id.SettingsRadioGroup);
 
         if (sharedPrefBackground == null) {
-            System.out.println("the background is null");
+            System.out.println(TAG+" : the background is null");
         } else {
             if (sharedPrefBackground.equals("white")) {
                 buttonWhite.setChecked(true);
