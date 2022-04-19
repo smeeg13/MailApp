@@ -105,12 +105,18 @@ public class HomeFragment extends Fragment {
         viewModelAllMail.getOwnMails().observe(getViewLifecycleOwner(), mailEntities -> {
             if (mailEntities != null) {
                 mailsAll = mailEntities;
+                int mailAll = mailEntities.size();
 
                 mailsInProgress = mailsAll;
                 mailsInProgress.removeIf(mail -> !mail.getStatus().equals("In Progress"));
+                int mailInProg = mailsInProgress.size();
+                int mailDone = mailAll-mailInProg;
+                System.out.println("All mails : " + mailAll);
+                System.out.println("Total mail done (progression) : " + mailDone);
+                System.out.println("Mail in progress : "+mailInProg);
+                updateProgressBar(mailAll, mailInProg, mailDone);
                 adapter.setMdata(mailsInProgress);
 
-                updateProgressBar(mailsAll.size(), mailsInProgress.size());
             }
         });
 
@@ -141,13 +147,11 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void updateProgressBar(int All, int inProg) {
-        HomeProgressBar.setMax(All);
+    private void updateProgressBar(int all, int inProg, int done) {
+        HomeProgressBar.setMax(all);
         HomeProgressBar.setMin(0);
-        HomeProgressBar.setProgress(All - inProg);
-        System.out.println("Todo mail All : " + All);
-        System.out.println("Total mail done (progression) : " + HomeProgressBar.getProgress());
-        ProgressPercent.setText(HomeProgressBar.getProgress() + " / " + All);
+        HomeProgressBar.setProgress(done);
+        ProgressPercent.setText(done + " / " + all);
     }
 
     private void replaceFragment(MailDetailFragment newfragment, Bundle datas) {
